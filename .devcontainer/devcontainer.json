@@ -1,0 +1,36 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/java
+{
+	"name": "Container Featureflag",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "featureflag-app",
+	"workspaceFolder": "/workspaces",
+	"remoteUser": "root",
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "java -version",
+	"postCreateCommand": "bash /workspaces/.devcontainer/setup.sh",
+	"postStartCommand": "mvn clean install && mvn spring-boot:run",
+	
+	// Configure tool-specific properties.
+		// Configure tool-specific properties.
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"vmware.vscode-boot-dev-pack",
+				"usernamehw.errorlens",
+				"pkief.material-icon-theme",
+				"eamodio.gitlens",
+				"ckolkman.vscode-postgres",
+				"vmware.vscode-boot-dev-pack",
+				"42crunch.vscode-openapi"
+			]
+		}
+	}
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}
