@@ -1,0 +1,14 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: featureflag
+
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET_KEY}
+      expiration: ${ACCESS_TOKEN_EXPIRATION} #a day
+
+api:
+  auth: /api/auth
