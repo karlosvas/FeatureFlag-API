@@ -82,4 +82,10 @@ public class JwtUtil {
             return false;
         }
     }
+
+
+    public String getRoleFromJWT(String token) {
+        Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        return (String) claims.get("role");
+    }
 }

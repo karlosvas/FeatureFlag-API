@@ -1,88 +1,71 @@
 package com.equipo01.featureflag.featureflag.config;
 
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.equipo01.featureflag.featureflag.model.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  *
  * @author alex
  */
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     // Dependencia para trabajar con tokens JWT (generar , validar , extraer datos )
     private final JwtUtil jwtUtil;
-    private final CustomUserDetailsService userDetails;
+    private final AuthenticationManager authenticationManager;
 
-    // Constructor que recibe el JwTokenProvider
-    public JwtAuthenticationFilter(JwtUtil jwtUtil, CustomUserDetailsService userDetails) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+        this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
-        this.userDetails = userDetails;
     }
 
-    /**
-     * Mètodo principal del filtro . Se ejecuta una vez por cada petición HTTP
-     * debido a que extiende a (OncePerRequestFilter).
-     * 
-     * @param request     Petición HTTP.
-     * @param response    Respuesta HTTP.
-     * @param filterChain Cadena de filtros de Spring Security.
-     * @throws ServletException
-     * @throws IOException
-     * 
-     *                          Proceso :
-     *                          1.Extrae el token JWT en la cabecera Authorization
-     *                          2.Si el token existe y es válido -> Obtiene el
-     *                          username
-     *                          3. (Falta) Crear un objeto Authentiacation y
-     *                          guardarlo en SecurityContextHolder.
-     *                          4. Continua con la cadena de filtros
-     *                          (filterChain.doFilter).
-     */
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
-        // Paso 1
-        String token = getJwtFromRequest(request);
-        // Paso 2
-        if (token != null && jwtUtil.validateToken(token)) {
-            String username = jwtUtil.getUsernameFromJWT(token);
-            // Paso 3
-            UserDetails uds = userDetails.loadUserByUsername(username);
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+            throws AuthenticationException {
+        try {
+            User creds = new ObjectMapper().readValue(request.getInputStream(), User.class);
 
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(uds,
-                    null, uds.getAuthorities());
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    creds.getUsername(),
+                    creds.getPassword());
 
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            // Delagamos la autenticación a autenticationManager
+            return authenticationManager.authenticate(authToken);
 
+        } catch (IOException e) {
+            throw new RuntimeException("Error al leer las credenciales del usuario", e);
         }
-        filterChain.doFilter(request, response);
-
     }
 
-    /**
-     * Función que captura y devuelve el token JWT enviado en la cabecera de la
-     * petición Athorization
-     * 
-     * @param request
-     * @return
-     */
-    private String getJwtFromRequest(HttpServletRequest request) {
+    @Override
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+            Authentication authResult) throws IOException, ServletException {
 
-        String bearerToken = request.getHeader("Authorization");
+        String token = jwtUtil.generateToken(authResult);
 
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
+        // Agregar el token en la cabecera Authorization
+        response.addHeader("Authorization", "Bearer " + token);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationException failed) throws IOException, ServletException {
+
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().write("Error de autenticación: " + failed.getMessage());
+
     }
 
 }
