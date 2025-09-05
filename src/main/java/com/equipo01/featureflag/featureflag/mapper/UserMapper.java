@@ -1,12 +1,14 @@
 package com.equipo01.featureflag.featureflag.mapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.equipo01.featureflag.featureflag.dto.UserDTO;
-import com.equipo01.featureflag.featureflag.model.User;
 import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.equipo01.featureflag.featureflag.dto.UserDTO;
+import com.equipo01.featureflag.featureflag.model.User;
  
 /**
  * Mapper que convierte la entidad User a DTO y la DTO a entidad
@@ -27,13 +29,11 @@ public interface UserMapper {
     UserDTO userToUserDTO(User user);
     
     // UserDTO -> User
-    @Mapping(target = "password", ignore = true)
     User userDTOToUser(UserDTO userDTO);
 
     // List<User> -> List<UserDTO>
     List<UserDTO> userListToUserDTOList(List<User> listUsers);
 
     // List<UserDTO> -> List<User>
-     @Mapping(target = "password", ignore = true)
     List<User> userDTOListToUsersList(List<UserDTO> listUsersDTOs);
 }

@@ -4,6 +4,8 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import com.equipo01.featureflag.featureflag.model.User;
+import java.util.Optional;
+
 
 /**
  * Repositorio para la entidad User.
@@ -12,4 +14,6 @@ import com.equipo01.featureflag.featureflag.model.User;
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
+    // Método para encontrar un usuario por su nombre de usuario
+    Optional<User> findByEmail(String email);
 }
