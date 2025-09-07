@@ -1,0 +1,26 @@
+version: "3"
+services:
+  featureflag-app:
+    image: mcr.microsoft.com/devcontainers/java:21-bookworm
+    volumes:
+      - ../:/workspaces
+    command: sleep infinity
+    env_file:
+      - devcontainer.env
+  ### Postgres database for Featureflag
+  db-featureflag:
+    env_file:
+      - devcontainer.env
+    container_name: db-featureflag
+    image: postgres:15.2
+    restart: unless-stopped
+    volumes:
+      - featureflag-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    expose:
+      - 5432
+    command: -p 5432
+
+volumes:
+  featureflag-data:

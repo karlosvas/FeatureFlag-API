@@ -6,17 +6,17 @@ import java.util.Optional;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties.Authentication;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.equipo01.featureflag.featureflag.dto.UserDTO;
 import com.equipo01.featureflag.featureflag.dto.UserRequestDTO;
 import com.equipo01.featureflag.featureflag.mapper.UserMapper;
 import com.equipo01.featureflag.featureflag.model.User;
 import com.equipo01.featureflag.featureflag.repository.UserRepository;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-
 import com.equipo01.featureflag.featureflag.anotations.SwaggerApiResponses;
+import com.equipo01.featureflag.featureflag.config.JwtUtil;
 import com.equipo01.featureflag.featureflag.config.SecurityConfig;
 
 /**
@@ -27,60 +27,60 @@ import com.equipo01.featureflag.featureflag.config.SecurityConfig;
  */
 @Service
 public class UserService {
-     private final UserRepository userRepository;
-     private final UserMapper userMapper;
-     private final SecurityConfig passwordEncoder;
-     private final AuthenticationManager authenticationManager;
-    // private final JwtUtil jwt; // TODO:: Configuracion de JWT user story 2
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final JwtUtil jwtUtil;
+    private final SecurityConfig passwordEncoder;
     private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    public UserService(UserRepository userRepository, UserMapper userMapper, SecurityConfig passwordEncoder, AuthenticationManager authenticationManager) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, JwtUtil jwtUtil, SecurityConfig passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
     }
 
     /**
     * Registra un nuevo usuario en el sistema.
-    * 
+    *
     * @param userRequestDTO el DTO del usuario que contiene la información necesaria para el registro
     * @return un token JWT si el registro es exitoso
     */
     @SwaggerApiResponses
-    public String registerUser(UserDTO userDTO) {
+    public UserDTO registerUser(UserDTO userDTO) {
         try {
             // Comprobamos que no existiera previamente un usuario con el mismo email
-            Optional<User> userSearch = userRepository.findByEmail(userDTO.getEmail());
+            // Optional<User> userSearch = userRepository.findByEmail(userDTO.getEmail());
 
-            // Si el usuario ya existe, lanzamos una excepción ya que no puede haver registro duplicado
-            if(userSearch.isPresent()) 
-                throw new Exception(); // TODO:: Manejar errores con error handler
+            // // Si el usuario ya existe, lanzamos una excepción ya que no puede haver registro duplicado
+            // if(userSearch.isPresent())
+            //     throw new Exception(); // TODO:: Manejar errores con error handler
 
-            // UserDTO -> User
-            User user = userMapper.userDTOToUser(userDTO);
+            // // UserDTO -> User
+            // User user = userMapper.userDTOToUser(userDTO);
             
-            // Ciframos la contraseña
-            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-            logger.info("Password encoded for user: " + user.getEmail());
+            // // Ciframos la contraseña
+            // user.setPassword(passwordEncoder.passwordEncoder(userDTO.getPassword()));
+            // logger.info("Password encoded for user: " + user.getEmail());
 
-            // Guardar en la base de datos el User
-            userRepository.save(user);
+            // // Guardar en la base de datos el User
+            // userRepository.save(user);
 
 
-            // Creamos el objecto authentication
-            Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    userDTO.getUsername(),
-                    userDTO.getPassword()
-                )
-            );
+            // // Creamos el objecto authentication
+            // Authentication authentication = authenticationManager.authenticate(
+            //     new UsernamePasswordAuthenticationToken(
+            //         userDTO.getUsername(),
+            //         userDTO.getPassword()
+            //     )
+            // );
             
             // Generar y devolver JWT 
             // return jwt.generateToken(authentication); TODO:: COnfiguracion de JWT user story 2
         } catch (Exception e) {
-            System.err.println("Error"); // TODO: Herror handler
+            throw new RuntimeException("Error al registrar usuario", e);
         }
+        return null;
     }
    
     /**
@@ -95,12 +95,12 @@ public class UserService {
     public String logginUser(UserDTO userDTO)  {
         try {
             // Autenticar al usuario usando las credenciales proporcionadas
-            Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    userDTO.getUsername(),      // Email proporcionado por el usuario
-                    userDTO.getPassword()    // Contraseña proporcionada por el usuario
-                )
-            );
+            // Authentication authentication = authenticationManager.authenticate(
+            //     new UsernamePasswordAuthenticationToken(
+            //         userDTO.getUsername(),      // Email proporcionado por el usuario
+            //         userDTO.getPassword()    // Contraseña proporcionada por el usuario
+            //     )
+            // );
             
             // Si la autenticación es exitosa (no lanza excepción), genera un token JWT
             // return jwt.generateToken(authentication); // TODO: DEVOLBER TOKEN DE AUTENTIFICAION
@@ -109,5 +109,6 @@ public class UserService {
             // Si las credenciales son inválidas o hay otro problema
              System.err.println("Error");  // TODO:: Manejar errores con error handler
         }
+        return null;
     }
 }

@@ -1,0 +1,19 @@
+server:
+  port: 8080
+spring:
+  config:
+    activate:
+      on-profile: staging
+  datasource:
+    url: ${DB_URL_STAGING}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+

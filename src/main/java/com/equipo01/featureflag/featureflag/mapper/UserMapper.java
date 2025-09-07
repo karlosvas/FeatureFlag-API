@@ -1,12 +1,8 @@
 package com.equipo01.featureflag.featureflag.mapper;
 
 import java.util.List;
-
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.equipo01.featureflag.featureflag.dto.UserDTO;
 import com.equipo01.featureflag.featureflag.model.User;
  
@@ -20,10 +16,6 @@ import com.equipo01.featureflag.featureflag.model.User;
  */
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    /**
-     * Logger para el mapeo de usuarios.
-     */
-    public final Logger logger = LoggerFactory.getLogger(UserMapper.class);
 
     // User -> UserDTO
     UserDTO userToUserDTO(User user);

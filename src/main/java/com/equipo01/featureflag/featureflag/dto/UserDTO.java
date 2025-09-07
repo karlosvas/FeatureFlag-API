@@ -10,7 +10,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import java.util.Set;
 
 /**
  * DTO que representa a un usuario en el sistema.
@@ -21,7 +20,7 @@ import java.util.Set;
  * email: Email del usuario.
  * roles: Roles asignados (USER, ADMIN, VIEWER).
  * active: Usuario activo/inactivo.
- * 
+ *
  * {@link Getter} Genera los métodos get automáticamente.
  * {@link Setter} Genera los métodos set automáticamente.
  * {@link Builder} Genera el patrón builder para la clase.
@@ -43,6 +42,10 @@ public class UserDTO {
 	@NotBlank
 	private String email;
 
+	@NotBlank
+	@Size(min = 8, max = 100)
+	private String password;
+
 	@NotNull
-	private Set<Role> roles;
+	private Role role;
 }

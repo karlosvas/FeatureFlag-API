@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.equipo01.featureflag.featureflag.model.User;
 import java.util.Optional;
 
-
 /**
  * Repositorio para la entidad User.
  * Extiende JpaRepository para proporcionar operaciones CRUD y de paginación.
@@ -14,6 +13,6 @@ import java.util.Optional;
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-    // Método para encontrar un usuario por su nombre de usuario
+    Optional<User> findByUsername(String username);
     Optional<User> findByEmail(String email);
 }

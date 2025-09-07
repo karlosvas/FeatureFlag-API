@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Environment Variables
+.devcontainer/devcontainer.env
+
+### Variables de entorno 
+.env
