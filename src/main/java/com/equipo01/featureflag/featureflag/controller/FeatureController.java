@@ -1,7 +1,6 @@
 package com.equipo01.featureflag.featureflag.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,9 +26,7 @@ public class FeatureController {
 
     @PostMapping("path")    
     public ResponseEntity<FeatureResponseDto> createFeature(@Valid @RequestBody FeatureRequestDto requestDto) {
-        log.info("POST /api/features - Creating new feature: {}", requestDto.getName());
         FeatureResponseDto responseDto = featureService.createFeature(requestDto);
-        log.info("Feature created with ID: {}", responseDto.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 }

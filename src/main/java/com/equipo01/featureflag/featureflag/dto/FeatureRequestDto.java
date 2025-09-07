@@ -16,9 +16,11 @@ public class FeatureRequestDto {
     @NotBlank(message = "Feature name is required")
     private String name;
 
+    @NotBlank(message = "Feature description is required")
     private String description;
 
     @NotNull(message = "Feature enabledByDefault status is required")
-    private Boolean enabledByDefault;
+    @Builder.Default
+    private Boolean enabledByDefault = true;
 
 }
