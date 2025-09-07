@@ -2,6 +2,7 @@ package com.equipo01.featureflag.featureflag.config;
 
 import com.equipo01.featureflag.featureflag.model.User;
 import com.equipo01.featureflag.featureflag.repository.UserRepository;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,7 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
      * -2.Si el usuario no existe lanzda una excepción UsernameNotFoundException.
      * -3.Si el usuario existe, convierte el objeto User en un UserDetails de Spring
      * Security.
-     * 
+     *
      * @param username nombre de usuario a buscar
      * @throws UsernameNotFoundException si el usuario no existe
      * @return un objeto UserDetails con la información del usuario
@@ -50,8 +51,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         return org.springframework.security.core.userdetails.User.builder()
             .username(userEntity.getUsername())
             .password(userEntity.getPassword())
-            .roles(userEntity.getRole().name())
-            .disabled(!userEntity.getActive())
+            .roles(userEntity.getAuthorities().stream().map(GrantedAuthority::getAuthority).toArray(String[]::new))
+            .disabled(!userEntity.isEnabled())
             .build();
     }
 
