@@ -10,6 +10,9 @@ import java.util.Optional;
  * Repositorio para la entidad User.
  * Extiende JpaRepository para proporcionar operaciones CRUD y de paginación.
  * Utiliza UUID como tipo de identificador.
+ * 
+ * Anotaciones utilizadas:
+ * - {@link Repository} Anotación de Spring que indica que esta interfaz es un repositorio.
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {

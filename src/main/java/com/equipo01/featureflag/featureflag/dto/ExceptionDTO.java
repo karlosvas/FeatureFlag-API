@@ -17,6 +17,13 @@ import java.util.Map;
  * {@link AllArgsConstructor} Anotación de Lombok que genera un constructor con todos los campos como parámetros.
  * {@link NoArgsConstructor} Anotación de Lombok que genera un constructor sin parámetros
  * {@link Builder} Anotación de Lombok que permite crear instancias de la clase utilizando el patrón Builder.
+ * 
+ * Atributos
+ * - title: Título de la excepción.
+ * - detail: Detalle de la excepción.
+ * - status: Código de estado HTTP asociado a la excepción.
+ * - reasons: Razones específicas de la excepción.
+ * - timestamp: Marca de tiempo de cuando ocurrió la excepción.
  */
 @Data
 @AllArgsConstructor

@@ -34,6 +34,3 @@ build/
 
 ### Environment Variables
 .devcontainer/devcontainer.env
-
-### Variables de entorno 
-.env

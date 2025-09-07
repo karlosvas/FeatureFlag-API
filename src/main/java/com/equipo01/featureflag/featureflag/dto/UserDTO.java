@@ -15,23 +15,23 @@ import lombok.ToString;
  * DTO que representa a un usuario en el sistema.
  * Incluye detalles como nombre de usuario, roles y estado activo.
  * 
- * id: Identificador único del usuario.
- * username: Nombre de usuario para login.
- * email: Email del usuario.
- * roles: Roles asignados (USER, ADMIN, VIEWER).
- * active: Usuario activo/inactivo.
- *
  * {@link Getter} Genera los métodos get automáticamente.
  * {@link Setter} Genera los métodos set automáticamente.
  * {@link Builder} Genera el patrón builder para la clase.
  * {@link ToString} Para poder imprimir por consola
+ * 
+ * Atributos
+ * - id: Identificador único del usuario.
+ * - username: Nombre de usuario para login.
+ * - email: Email del usuario.
+ * - roles: Roles asignados (USER, ADMIN, VIEWER).
+ * - active: Usuario activo/inactivo.
  */
 @Getter
 @Setter
 @Builder
 @ToString
 public class UserDTO {
-	@NotNull
 	private UUID id;
 
 	@NotBlank
@@ -48,4 +48,7 @@ public class UserDTO {
 
 	@NotNull
 	private Role role;
+
+	@NotNull
+	private Boolean active;
 }

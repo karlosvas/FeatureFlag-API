@@ -1,10 +1,12 @@
 package com.equipo01.featureflag.featureflag.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.equipo01.featureflag.featureflag.dto.UserDTO;
+import com.equipo01.featureflag.featureflag.dto.UserRequestDTO;
 import com.equipo01.featureflag.featureflag.service.UserService;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * Controlador para gestionar las operaciones relacionadas con los usuarios.
@@ -13,6 +15,8 @@ import com.equipo01.featureflag.featureflag.service.UserService;
  * Proporciona endpoints para crear, actualizar y eliminar usuarios.
  * {@link RestController} Anotación de Spring que indica que esta clase es un
  * controlador REST.
+ * {@link RequestMapping} Anotación de Spring que define la ruta base para
+ * todos los endpoints en este controlador.
  */
 @RestController
 @RequestMapping("/api/auth")
@@ -24,12 +28,22 @@ public class UserController {
     }
 
     /**
+     * Endpoint para verificar el estado del servicio.
+     */    
+    @GetMapping("/health")
+    public String healthCheck() {
+        return "OK";
+    }
+
+
+    /**
      * Endpoint para registrar un nuevo usuario.
      *
-     * @param userDTO objeto que contiene la información del usuario a registrar.
+     * @param UserRequestDTO objeto que contiene la información del usuario a registrar.
      * @return el usuario registrado.
      */
-    public UserDTO registerUser(UserDTO userDTO) {
+    @PostMapping("/register")
+    public String registerUser(@RequestBody UserRequestDTO userDTO) {
         return userService.registerUser(userDTO);
     }
 
@@ -39,17 +53,8 @@ public class UserController {
      * @param userDTO objeto que contiene la información del usuario que intenta iniciar sesión.
      * @return un mensaje indicando el resultado del intento de inicio de sesión.
      */
-    public String logginUser(UserDTO userDTO) {
+    @PostMapping("/login")
+    public String logginUser(@RequestBody UserRequestDTO userDTO) {
         return userService.logginUser(userDTO);
-    }
-
-    @GetMapping("/hello")
-    public String unsecured() {
-        return "RUTA PUBLICA";
-    }
-
-    @GetMapping("/securizated")
-    public String secured() {
-        return "RUTA PROTEGIDA";
     }
 }
