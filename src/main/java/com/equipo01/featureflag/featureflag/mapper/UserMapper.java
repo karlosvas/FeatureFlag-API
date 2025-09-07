@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.equipo01.featureflag.featureflag.dto.UserDTO;
 import com.equipo01.featureflag.featureflag.model.User;
