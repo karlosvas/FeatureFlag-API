@@ -1,18 +1,16 @@
 package com.equipo01.featureflag.featureflag.dto;
 
-import java.util.Set;
 import java.util.UUID;
-
-import com.equipo01.featureflag.featureflag.model.enums.Role;
-
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Email;
+import com.equipo01.featureflag.featureflag.model.enums.Role;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import java.util.Set;
 
 /**
  * DTO que representa a un usuario en el sistema.
@@ -27,6 +25,7 @@ import lombok.ToString;
  * {@link Getter} Genera los métodos get automáticamente.
  * {@link Setter} Genera los métodos set automáticamente.
  * {@link Builder} Genera el patrón builder para la clase.
+ * {@link ToString} Para poder imprimir por consola
  */
 @Getter
 @Setter
@@ -46,7 +45,4 @@ public class UserDTO {
 
 	@NotNull
 	private Set<Role> roles;
-
-	@NotNull
-	private Boolean active;
 }

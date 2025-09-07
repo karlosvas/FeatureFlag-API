@@ -1,5 +1,7 @@
 package com.equipo01.featureflag.featureflag.service;
 
+package com.equipo01.featureflag.featureflag.service;
+
 import org.springframework.stereotype.Service;
 import com.equipo01.featureflag.featureflag.repository.UserRepository;
 
