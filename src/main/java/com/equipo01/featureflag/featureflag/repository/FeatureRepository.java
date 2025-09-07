@@ -15,4 +15,5 @@ import java.util.UUID;
  */
 @Repository
 public interface FeatureRepository extends JpaRepository<Feature, UUID> {
+    boolean existsByName(String name);
 }

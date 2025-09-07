@@ -3,7 +3,6 @@ package com.equipo01.featureflag.featureflag.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -63,10 +62,10 @@ public class Feature {
 
     private String description;
 
-    private boolean enableByDefault;
+    private boolean enabledByDefault;
 
     // 1:N -> Una Feature tiene muchas configuraciones
     @OneToMany(mappedBy = "feature", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
     private List<FeatureConfig> configs = new ArrayList<>();
-    }
+}
