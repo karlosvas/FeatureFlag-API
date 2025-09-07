@@ -1,5 +1,6 @@
 package com.equipo01.featureflag.featureflag.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -18,29 +19,44 @@ import com.equipo01.featureflag.featureflag.service.FeatureService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-
-
 @RestController
 @RequestMapping("${api.features}")
 @RequiredArgsConstructor
 public class FeatureController {
-    
+
     private final FeatureService featureService;
 
-    @PostMapping("/")    
+    /**
+     * Creates a new feature flag.
+     *
+     * @param requestDto the feature flag data to create
+     * @return the created feature flag with HTTP 201 status
+     */
+    @PostMapping("")
     public ResponseEntity<FeatureResponseDto> createFeature(@Valid @RequestBody FeatureRequestDto requestDto) {
         FeatureResponseDto responseDto = featureService.createFeature(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-    @GetMapping("/")
-    public ResponseEntity<?> getFeatures() {
-        return ResponseEntity.ok("List features");
+    /**
+     * Retrieves a list of all feature flags.
+     *
+     * @return a list of feature flags
+     */
+    @GetMapping("")
+    public ResponseEntity<List<FeatureResponseDto>> getFeatures() {
+        return ResponseEntity.ok(featureService.getAllFeatures());
     }
 
+    /**
+     * Retrieves details of a specific feature flag by its UUID.
+     *
+     * @param featureId the UUID of the feature flag
+     * @return the feature flag details
+     */
     @GetMapping("/{featureId}")
-    public ResponseEntity<?> getFeature(@PathVariable UUID featureId) {
-        return ResponseEntity.ok("Feature details " + featureId);
+    public ResponseEntity<FeatureResponseDto> getFeature(@PathVariable UUID featureId) {
+        return ResponseEntity.ok(featureService.getFeatureById(featureId));
     }
-    
+
 }
