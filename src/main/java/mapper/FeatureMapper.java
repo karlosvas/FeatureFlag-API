@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 
 import com.equipo01.featureflag.featureflag.dto.FeatureRequestDto;
 import com.equipo01.featureflag.featureflag.dto.FeatureResponseDto;
+import com.equipo01.featureflag.featureflag.model.Feature;
 
 @Mapper(componentModel = "spring")
 public interface FeatureMapper {

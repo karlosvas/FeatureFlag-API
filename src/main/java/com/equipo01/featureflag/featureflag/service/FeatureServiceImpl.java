@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.equipo01.featureflag.featureflag.dto.FeatureRequestDto;
 import com.equipo01.featureflag.featureflag.dto.FeatureResponseDto;
 import com.equipo01.featureflag.featureflag.exception.FeatureAlreadyExistsException;
+import com.equipo01.featureflag.featureflag.model.Feature;
+import com.equipo01.featureflag.featureflag.repository.FeatureRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

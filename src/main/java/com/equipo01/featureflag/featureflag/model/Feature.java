@@ -26,7 +26,7 @@ public class Feature {
 
     private String description;
 
-    private boolean enableByDefault;
+    private boolean enabledByDefault;
 
     // 1:N -> Una Feature tiene muchas configuraciones
     @OneToMany(mappedBy = "feature", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
