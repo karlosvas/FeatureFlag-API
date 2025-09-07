@@ -13,6 +13,9 @@ import com.equipo01.featureflag.featureflag.service.FeatureService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -22,9 +25,15 @@ public class FeatureController {
     
     private final FeatureService featureService;
 
-    @PostMapping("path")    
+    @PostMapping("/")    
     public ResponseEntity<FeatureResponseDto> createFeature(@Valid @RequestBody FeatureRequestDto requestDto) {
         FeatureResponseDto responseDto = featureService.createFeature(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
+
+    @GetMapping("/get")
+    public String getMethodName(@RequestParam String param) {
+        return new String();
+    }
+    
 }

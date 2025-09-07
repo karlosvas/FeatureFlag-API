@@ -1,4 +1,4 @@
-package mapper;
+package com.equipo01.featureflag.featureflag.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

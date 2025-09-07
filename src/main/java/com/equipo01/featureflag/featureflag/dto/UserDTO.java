@@ -10,7 +10,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import java.util.Set;
 
 /**
  * DTO que representa a un usuario en el sistema.
@@ -44,5 +43,5 @@ public class UserDTO {
 	private String email;
 
 	@NotNull
-	private Set<Role> roles;
+	private Role roles;
 }
