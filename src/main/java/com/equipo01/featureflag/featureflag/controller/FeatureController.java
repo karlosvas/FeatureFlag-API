@@ -12,14 +12,12 @@ import com.equipo01.featureflag.featureflag.service.FeatureService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
 @RestController
 @RequestMapping("/api/features")
 @RequiredArgsConstructor
-@Slf4j
 public class FeatureController {
     
     private final FeatureService featureService;
