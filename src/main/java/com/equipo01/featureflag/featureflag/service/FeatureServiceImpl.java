@@ -33,9 +33,7 @@ public class FeatureServiceImpl implements FeatureService {
                 throw new FeatureAlreadyExistsException(requestDto.getName());
             }
 
-            logger.info("FEATUREEEEEEE" + requestDto);
             Feature feature = featureMapper.toEntity(requestDto);
-            logger.info("FEATUREEEEEEE 2" + feature);
             logger.info("Feature entity created: " + feature);
             Feature savedFeature = featureRepository.save(feature);
 

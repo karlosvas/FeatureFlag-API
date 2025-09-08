@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
-import java.util.Map;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
@@ -32,18 +31,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @NoArgsConstructor
 @Builder
 @Schema(description = "DTO para transportar información de excepciones en la API.")
-public class ExceptionDTO {
+public class ErrorResponse {
     @Schema(description = "Título de la excepción", example = "Unauthorized")
-    private String title;
-
+    private String message;
+    
     @Schema(description = "Detalle de la excepción", example = "No tienes permisos para acceder a este recurso.")
-    private String detail;
+    private String description;
 
     @Schema(description = "Código de estado HTTP asociado a la excepción", example = "401")
-    private int status;
-
-    @Schema(description = "Razones específicas de la excepción (clave-valor)", example = "{ 'field': 'El campo es obligatorio' }")
-    private Map<String, String> reasons;
+    private int code;
 
     @Schema(description = "Marca de tiempo de cuando ocurrió la excepción", example = "2025-09-08T12:34:56")
     private LocalDateTime timestamp;
