@@ -13,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
@@ -57,14 +56,18 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers( 
+                            "/api/auth/**",
+                            "/v3/api-docs/**",
+                            "/swagger-ui/**",
+                            "/swagger-ui.html").permitAll()
                         .requestMatchers("/api/features/**").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.setContentType("application/json");
-                            response.getWriter().write("{\"error\": \"No autorizado\"}");
+                            response.getWriter().write("{\"error\": \"Unauthorized\"}");
                         }))
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

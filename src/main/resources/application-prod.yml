@@ -1,18 +1,17 @@
-server:
-  port: 8080
 spring:
   config:
     activate:
       on-profile: prod
   datasource:
+    driver-class-name: org.postgresql.Driver
     url: ${DB_URL_PROD}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
-
   jpa:
     generate-ddl: true
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 

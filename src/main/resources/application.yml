@@ -8,7 +8,7 @@ application:
   security:
     jwt:
       secret-key: ${JWT_SECRET_KEY}
-      expiration: ${ACCESS_TOKEN_EXPIRATION} #a day
+      expiration: ${ACCESS_TOKEN_EXPIRATION}
 
 api:
   auth: /api/auth
