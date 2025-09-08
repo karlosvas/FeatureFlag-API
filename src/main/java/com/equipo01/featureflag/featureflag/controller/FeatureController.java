@@ -32,7 +32,7 @@ public class FeatureController {
      * @param requestDto the feature flag data to create
      * @return the created feature flag with HTTP 201 status
      */
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<FeatureResponseDto> createFeature(@Valid @RequestBody FeatureRequestDto requestDto) {
         FeatureResponseDto responseDto = featureService.createFeature(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
@@ -43,7 +43,7 @@ public class FeatureController {
      *
      * @return a list of feature flags
      */
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<List<FeatureResponseDto>> getFeatures() {
         return ResponseEntity.ok(featureService.getAllFeatures());
     }
