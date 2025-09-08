@@ -5,16 +5,18 @@ spring:
     activate:
       on-profile: dev
   datasource:
+    driver-class-name: org.postgresql.Driver
     url: ${DB_URL_DEV}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
-
   jpa:
-    generate-ddl: true
+    hibernate:
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 logging:
   level:
@@ -30,4 +32,3 @@ logging:
     com:
       equipo01:
         featureflag: DEBUG
-  

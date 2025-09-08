@@ -17,11 +17,10 @@ import org.springframework.stereotype.Component;
 public class JwtUtil {
 
     // Clave secreta para firmar y validar los tokens JWT
-    //@Value("${JWT_SECRET_KEY}")
-    private String secret = "secret";
-    // Tiempo de expiración del token en milisegundos
-    //@Value("${ACCESS_TOKEN_EXPIRATION}")
-    private Long expiration = 86400000L; // 1 día
+    @Value("${JWT_SECRET_KEY}")
+    private String secret;
+    @Value("${ACCESS_TOKEN_EXPIRATION}")
+    private Long expiration;
 
     /**
      * Genera un token JWT para un usuario autenticado.

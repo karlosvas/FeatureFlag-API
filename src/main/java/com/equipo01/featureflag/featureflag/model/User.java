@@ -26,18 +26,23 @@ import java.util.List;
  * activo.
  * Utilizado para autenticación y autorización.
  * 
+ * Anotaciones utilizadas
+ * - {@link Entity} Anotación de JPA que indica que esta clase es una entidad persistente.
+ * - {@link Table} Anotación de JPA que especifica el nombre de la tabla
+ * - {@link NoArgsConstructor} Genera un constructor sin argumentos.
+ * - {@link AllArgsConstructor} Genera un constructor con todos los argumentos.
+ * - {@link Getter} Genera los métodos get automáticamente.
+ * - {@link Setter} Genera los métodos set automáticamente.
+ * - {@link Builder} Genera el patrón builder para la clase.
+ * - {@link Columns} Se utiliza para especificar detalles sobre las columnas de la base de datos.
+ * - {@link UserDetails} Interfaz que proporciona información sobre el usuario para la autenticación y autorización.
+ *
+ * Atributos
  * id: Identificador único del usuario.
  * username: Nombre de usuario para login.
  * password: Contraseña (hashed).
  * roles: Roles asignados (USER, ADMIN, GUEST).
  * active: Usuario activo/inactivo.
- * 
- * {@link Getter} Genera los métodos get automáticamente.
- * {@link Setter} Genera los métodos set automáticamente.
- * {@link Builder} Genera el patrón builder para la clase.
- * {@link Entity} Anotación de JPA que indica que esta clase es una entidad
- * persistente.
- * {@link Table} Anotación de JPA que especifica el nombre de la tabla
  */
 @NoArgsConstructor
 @AllArgsConstructor
@@ -47,6 +52,10 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
+    /**
+    * {@link Id} Indica el identificador único de la entidad.
+    * {@link GeneratedValue} Especifica la estrategia de generación de valores para el identificador.
+     */
     @Id
     @GeneratedValue
     private UUID id;

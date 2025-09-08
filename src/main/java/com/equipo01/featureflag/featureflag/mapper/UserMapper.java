@@ -1,10 +1,8 @@
 package com.equipo01.featureflag.featureflag.mapper;
 
 import java.util.List;
-
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
 import com.equipo01.featureflag.featureflag.dto.UserDTO;
 import com.equipo01.featureflag.featureflag.model.User;
  
@@ -21,8 +19,9 @@ public interface UserMapper {
 
     // User -> UserDTO
     UserDTO userToUserDTO(User user);
-
     
+    // UserDTO -> User
+    User userDTOToUser(UserDTO userDTO);
 
     // List<User> -> List<UserDTO>
     List<UserDTO> userListToUserDTOList(List<User> listUsers);
