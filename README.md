@@ -2,10 +2,23 @@
 # FeatureFlag API
 
 Una API REST robusta para la gestión dinámica de feature flags en entornos de producción, desarrollada con Spring Boot y PostgreSQL.
+Este proyecto es parte de una iniciativa educativa y colaborativa para aprender buenas prácticas en desarrollo backend. Propuesto por Bytes Colaborativos una comunidad de desarrolladores.
 
 ## 📋 Descripción
 
 FeatureFlag API permite crear, activar y desactivar funcionalidades de manera dinámica según entornos específicos (dev, staging, prod) o clientes particulares. Ideal para despliegues controlados, pruebas A/B y activación gradual de nuevas características.
+
+## Equipo de Desarrollo 🫂
+@karlosvas  
+@alexDAW-IOC  
+@angelAntezana  
+@JosCarRub  
+@nescaruncho  
+
+Creadores de Bytes Colaborativos
+@dev-tech @Jorexbp
+Canal de Twitch: https://www.twitch.tv/bytescolaborativos  
+Canal de Discord: https://discord.com/invite/YGGcPMzSQk
 
 ## 🛠️ Tecnologías
 
@@ -47,34 +60,13 @@ cd FeatureFlag-API
 
 2. **Configurar variables de entorno:**
 
+El archivo de ejemplo de archivo `.env` (basado en configuración de desarrollo), se encuentra en `.devcontainer/devcontainer.env.example`. Cópialo y edítalo con tus valores.:
 ```bash
 # Crear archivo de configuración
-touch .env
+cp .devcontainer/devcontainer.env.example .devcontainer/devcontainer.env
 
 # Editar variables de entorno
-nano .env
-```
-
-Ejemplo de archivo `.env` (basado en configuración de desarrollo):
-
-```env
-# Database Configuration
-POSTGRES_DB=featureflag
-POSTGRES_USER=featureflag
-POSTGRES_PASSWORD=password
-
-DB_NAME=featureflag
-DB_USER=featureflag
-DB_PASSWORD=password
-
-# Database URLs per Environment
-DB_URL_DEV=jdbc:postgresql://db-featureflag:5432/featureflag
-DB_URL_STAGING=jdbc:postgresql://db-featureflag:5432/featureflag
-DB_URL_PROD=jdbc:postgresql://db-featureflag:5432/featureflag
-
-# Security Configuration
-JWT_SECRET_KEY=your_secret_key_here
-ACCESS_TOKEN_EXPIRATION=86400000
+nano .devcontainer/devcontainer.env
 ```
 
 ### Ejecución con DevContainers
@@ -107,6 +99,7 @@ docker-compose logs -f app
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
+| GET  | `/api/auth/health` | Verificar estado del servicio |
 | POST | `/api/auth/register` | Registro de usuario |
 | POST | `/api/auth/login` | Login y obtención de JWT |
 
@@ -122,6 +115,28 @@ docker-compose logs -f app
 | GET | `/api/features/check` | Verificar estado de feature |
 
 ## 💾 Modelo de datos
+
+## UserRequestDTO
+
+```java
+{
+    "username": "string",
+    "email": "string",
+    "password": "string"
+}
+```
+
+## UserDTO
+
+```java
+{
+    "id": "uuid",
+    "username": "string",
+    "email": "string",
+    "roles": ["USER", "ADMIN", "GUEST"],
+    "active": "boolean"
+}
+```
 
 ### Feature
 
@@ -174,15 +189,24 @@ El sistema verifica en orden de prioridad:
 
 ## 📖 Documentación
 
-Accede a la documentación interactiva en: `http://localhost:8080/swagger-ui.html`
+Accede a la documentación interactiva de Swagger en: `http://localhost:8080/swagger-ui.html`
+O accede a la documentacion de JavaDoc en: `target/site/apidocs/index.html`
 
 ## 🤝 Contribución
 
 1. Fork del proyecto
-2. Crear rama feature (`git checkout -b feature/nueva-funcionalidad`)
+2. Crear rama feature (`git checkout -b feature/nueva-funcionalidad`) 
 3. Commit cambios (`git commit -am 'Agregar nueva funcionalidad'`)
 4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
 5. Crear Pull Request
+
+### Opcionalmente puedes utilizar la nueva nomenclatura de ramas como 
+1. Fork del proyecto
+2. Crear rama feature (`git branch feature/nueva-funcionalidad`)
+3. Cambiar a la nueva rama (`git switch feature/nueva-funcionalidad`)
+4. Hacer tus cambios y guardarlos (`git add .` y `git commit -m "Agregar nueva funcionalidad"`)
+5. Subir la rama al repositorio remoto (`git push --set-upstream origin feature/nueva-funcionalidad`)
+6. Crear Pull Request
 
 ## 📄 Licencia
 
