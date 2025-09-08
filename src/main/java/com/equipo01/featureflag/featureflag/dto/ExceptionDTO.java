@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * {@link AllArgsConstructor} Anotación de Lombok que genera un constructor con todos los campos como parámetros.
  * {@link NoArgsConstructor} Anotación de Lombok que genera un constructor sin parámetros
  * {@link Builder} Anotación de Lombok que permite crear instancias de la clase utilizando el patrón Builder.
+ * {@link Schema} Anotación de Swagger que proporciona información sobre la API.
  * 
  * Atributos
  * - title: Título de la excepción.
@@ -26,11 +27,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * - reasons: Razones específicas de la excepción.
  * - timestamp: Marca de tiempo de cuando ocurrió la excepción.
  */
-@Schema(description = "DTO para transportar información de excepciones en la API.")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Schema(description = "DTO para transportar información de excepciones en la API.")
 public class ExceptionDTO {
     @Schema(description = "Título de la excepción", example = "Unauthorized")
     private String title;

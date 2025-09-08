@@ -4,12 +4,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.equipo01.featureflag.featureflag.anotations.SwaggerApiResponses;
 import com.equipo01.featureflag.featureflag.dto.UserRequestDTO;
 import com.equipo01.featureflag.featureflag.service.UserService;
-
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -52,7 +51,7 @@ public class UserController {
     @PostMapping("/register")
     @SwaggerApiResponses
     @Operation(summary = "Registra un nuevo usuario", description = "Registra un nuevo usuario con los datos proporcionados y devuelve el token JWT del uusuario.")
-    public String registerUser(@RequestBody UserRequestDTO userDTO) {
+    public String registerUser(@Valid @RequestBody UserRequestDTO userDTO) {
         return userService.registerUser(userDTO);
     }
 
@@ -65,7 +64,7 @@ public class UserController {
     @PostMapping("/login")
     @SwaggerApiResponses
     @Operation(summary = "Inicia sesión de un usuario", description = "Inicia sesión de un usuario con los datos proporcionados y devuelve el token JWT del usuario.")
-    public String logginUser(@RequestBody UserRequestDTO userDTO) {
+    public String logginUser(@Valid @RequestBody UserRequestDTO userDTO) {
         return userService.logginUser(userDTO);
     }
 }

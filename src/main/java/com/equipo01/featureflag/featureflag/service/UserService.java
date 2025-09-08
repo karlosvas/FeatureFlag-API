@@ -1,6 +1,7 @@
 package com.equipo01.featureflag.featureflag.service;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
@@ -9,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.equipo01.featureflag.featureflag.dto.UserDTO;
 import com.equipo01.featureflag.featureflag.dto.UserRequestDTO;
+import com.equipo01.featureflag.featureflag.exception.InvalidCredentialsException;
+import com.equipo01.featureflag.featureflag.exception.UserAlreadyExistsException;
 import com.equipo01.featureflag.featureflag.mapper.UserMapper;
 import com.equipo01.featureflag.featureflag.model.User;
 import com.equipo01.featureflag.featureflag.model.enums.Role;
@@ -56,12 +59,16 @@ public class UserService {
     public String registerUser(UserRequestDTO userDTO) {
         try {
             // Comprueba que no existiera previamente un usuario con el mismo email
-            Optional<User> userSearch = userRepository.findByEmail(userDTO.getEmail());
+            Optional<User> userByEmail = userRepository.findByEmail(userDTO.getEmail());
+            Optional<User> userByUsername = userRepository.findByUsername(userDTO.getUsername());
 
             // Si el usuario ya existe, lanza una excepción ya que no puede haver registro duplicado
-            if(userSearch.isPresent())
-                throw new RuntimeException("El usuario ya existe con ese email");   // TODO:: Manejar errores con error handler
-          
+            if (userByEmail.isPresent())
+                throw new UserAlreadyExistsException("The email " + userDTO.getEmail() + " is already in use.");
+            if (userByUsername.isPresent())
+                throw new UserAlreadyExistsException("The username " + userDTO.getUsername() + " is already in use.");
+        
+
             // Crea el user por defecto basandonos en la request
             UserDTO newUserDTO = UserDTO.builder()
                 .username(userDTO.getUsername())
@@ -92,10 +99,12 @@ public class UserService {
 
             // Genera y devuelve JWT
             return jwtUtil.generateToken(authentication);
+         } catch (UserAlreadyExistsException e) {
+            logger.error("User already exists: " + e.getMessage());
+            throw e;
         } catch (Exception e) {
-            // TODO: Manejar errores con error handler
-            logger.error("Error al registrar usuario: " + e.getMessage(), e);
-            throw new RuntimeException(e.getMessage());
+            logger.error("Error with user registration: " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
    
@@ -119,11 +128,14 @@ public class UserService {
             );
             
             // Si la autenticación es exitosa (no lanza excepción), genera un token JWT
-            return jwtUtil.generateToken(authentication); 
+            return jwtUtil.generateToken(authentication);
+        } catch (BadCredentialsException e) {
+            logger.error("Invalid credentials for user: " + userDTO.getUsername());
+            throw e; // <-- Esto sí lo capturará tu handler
         } catch (Exception e) {
-            // Si las credenciales son inválidas o hay otro problema
+            // Si las credenciales son inválidas o hay otro problema lo lanzamos
             logger.error("Error during login: " + e.getMessage(), e);
-            throw new RuntimeException("Error"); // TODO:: Manejar errores con error handler
+            throw new RuntimeException(e); 
         }
     }
 }

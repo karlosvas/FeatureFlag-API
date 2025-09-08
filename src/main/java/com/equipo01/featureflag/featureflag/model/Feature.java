@@ -17,6 +17,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Representa una característica del sistema.
@@ -47,6 +48,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class Feature {
     /**
     * {@link Id} Indica el identificador único de la entidad.
@@ -60,8 +62,10 @@ public class Feature {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @Column(nullable = true)
     private String description;
 
+    @Column(nullable = false, name = "enabled_by_default")
     private boolean enabledByDefault;
 
     // 1:N -> Una Feature tiene muchas configuraciones
