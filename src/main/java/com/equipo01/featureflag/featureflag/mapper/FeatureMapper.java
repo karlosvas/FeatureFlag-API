@@ -1,5 +1,7 @@
 package com.equipo01.featureflag.featureflag.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -15,5 +17,7 @@ public interface FeatureMapper {
     Feature toEntity(FeatureRequestDto dto);
 
     FeatureResponseDto toDto(Feature entity);
-    
+
+    List<FeatureResponseDto> toDtoList(List<Feature> entities);
+
 }

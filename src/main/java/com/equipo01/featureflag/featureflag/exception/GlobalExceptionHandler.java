@@ -1,13 +1,11 @@
 package com.equipo01.featureflag.featureflag.exception;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -17,24 +15,22 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
     
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<List<ErrorResponse>> handleValidationException(MethodArgumentNotValidException ex) {
 
-        Map<String, String> errors = new HashMap<>();
+        List<ErrorResponse> errorResponses = new ArrayList<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
+               ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .code(HttpStatus.BAD_REQUEST.value())
+                .description(errorMessage)
+                .message("Invalid input data")
+                .build();
+                errorResponses.add(errorResponse);
         });
 
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.BAD_REQUEST.value())
-                .error("Validation Error")
-                .message("Invalid input data")
-                .validationErrors(errors)
-                .build();
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponses);
     }
 
     @ExceptionHandler(FeatureAlreadyExistsException.class)
@@ -42,10 +38,9 @@ public class GlobalExceptionHandler {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
-                .status(HttpStatus.CONFLICT.value())
-                .error("Feature Conflict")
-                .message(ex.getFeatureName() + " already exists.")
-                .errorCode("FEATURE_NAME_CONFLICT")
+                .code(HttpStatus.CONFLICT.value())
+                .message("Feature already exists.")
+                .description(ex.getMessage())
                 .build();
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
@@ -56,10 +51,9 @@ public class GlobalExceptionHandler {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
-                .status(HttpStatus.NOT_FOUND.value())
-                .error("Feature Not Found")
-                .message(ex.getMessage())
-                .errorCode("FEATURE_NOT_FOUND")
+                .code(HttpStatus.NOT_FOUND.value())
+                .message("Feature not found.")
+                .description(ex.getMessage())
                 .build();
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
@@ -70,9 +64,9 @@ public class GlobalExceptionHandler {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
-                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .error("Internal Server Error")
+                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .message("An unexpected error occurred")
+                .description(ex.getMessage())
                 .build();
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
