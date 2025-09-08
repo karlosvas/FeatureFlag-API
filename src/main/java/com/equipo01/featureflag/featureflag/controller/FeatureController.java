@@ -2,7 +2,6 @@ package com.equipo01.featureflag.featureflag.controller;
 
 import java.util.List;
 import java.util.UUID;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,10 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.equipo01.featureflag.featureflag.anotations.SwaggerApiResponses;
 import com.equipo01.featureflag.featureflag.dto.FeatureRequestDto;
 import com.equipo01.featureflag.featureflag.dto.FeatureResponseDto;
 import com.equipo01.featureflag.featureflag.service.FeatureService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +34,8 @@ public class FeatureController {
      * @return the created feature flag with HTTP 201 status
      */
     @PostMapping
+    @SwaggerApiResponses
+    @Operation(summary = "Crea una nueva feature flag", description = "Crea una nueva feature flag con los datos proporcionados y devuelve la feature creada.")
     public ResponseEntity<FeatureResponseDto> createFeature(@Valid @RequestBody FeatureRequestDto requestDto) {
         FeatureResponseDto responseDto = featureService.createFeature(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
@@ -44,6 +47,8 @@ public class FeatureController {
      * @return a list of feature flags
      */
     @GetMapping
+    @SwaggerApiResponses
+    @Operation(summary = "Obtiene todas las feature flags", description = "Devuelve una lista de todas las feature flags disponibles.")
     public ResponseEntity<List<FeatureResponseDto>> getFeatures() {
         return ResponseEntity.ok(featureService.getAllFeatures());
     }
@@ -55,6 +60,8 @@ public class FeatureController {
      * @return the feature flag details
      */
     @GetMapping("/{featureId}")
+    @SwaggerApiResponses
+    @Operation(summary = "Obtiene una feature flag por su ID", description = "Devuelve los detalles de una feature flag específica identificada por su UUID.")
     public ResponseEntity<FeatureResponseDto> getFeature(@PathVariable UUID featureId) {
         return ResponseEntity.ok(featureService.getFeatureById(featureId));
     }

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.Map;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * ExceptionDTO es una clase que se utiliza para transportar datos de excepciones
@@ -25,14 +26,24 @@ import java.util.Map;
  * - reasons: Razones específicas de la excepción.
  * - timestamp: Marca de tiempo de cuando ocurrió la excepción.
  */
+@Schema(description = "DTO para transportar información de excepciones en la API.")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class ExceptionDTO {
+    @Schema(description = "Título de la excepción", example = "Unauthorized")
     private String title;
+
+    @Schema(description = "Detalle de la excepción", example = "No tienes permisos para acceder a este recurso.")
     private String detail;
+
+    @Schema(description = "Código de estado HTTP asociado a la excepción", example = "401")
     private int status;
+
+    @Schema(description = "Razones específicas de la excepción (clave-valor)", example = "{ 'field': 'El campo es obligatorio' }")
     private Map<String, String> reasons;
+
+    @Schema(description = "Marca de tiempo de cuando ocurrió la excepción", example = "2025-09-08T12:34:56")
     private LocalDateTime timestamp;
 }

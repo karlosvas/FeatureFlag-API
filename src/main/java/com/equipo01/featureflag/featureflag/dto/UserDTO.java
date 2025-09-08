@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * DTO que representa a un usuario en el sistema.
@@ -31,24 +32,31 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
+@Schema(description = "DTO que representa a un usuario en el sistema.")
 public class UserDTO {
+	@Schema(description = "Identificador único del usuario", example = "123e4567-e89b-12d3-a456-426614174000")
 	private UUID id;
 
+	@Schema(description = "Nombre de usuario para login", example = "usuario01")
 	@NotBlank
 	@Size(min = 3, max = 50)
 	private String username;
 
+	@Schema(description = "Email del usuario", example = "usuario01@email.com")
 	@Email
 	@NotBlank
 	private String email;
 
+	@Schema(description = "Contraseña del usuario", example = "passwordSeguro123")
 	@NotBlank
 	@Size(min = 8, max = 100)
 	private String password;
 
+	@Schema(description = "Rol asignado al usuario", example = "USER")
 	@NotNull
 	private Role role;
 
+	@Schema(description = "Indica si el usuario está activo", example = "true")
 	@NotNull
 	private Boolean active;
 }
