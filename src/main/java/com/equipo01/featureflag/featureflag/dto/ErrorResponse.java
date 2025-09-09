@@ -1,11 +1,14 @@
 package com.equipo01.featureflag.featureflag.dto;
 
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * ExceptionDTO es una clase que se utiliza para transportar datos de excepciones
@@ -42,5 +45,6 @@ public class ErrorResponse {
     private int code;
 
     @Schema(description = "Marca de tiempo de cuando ocurrió la excepción", example = "2025-09-08T12:34:56")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
 }

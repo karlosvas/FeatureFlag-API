@@ -1,8 +1,10 @@
 package com.equipo01.featureflag.featureflag.mapper;
 
 import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+
 import com.equipo01.featureflag.featureflag.dto.UserDTO;
 import com.equipo01.featureflag.featureflag.model.User;
  
@@ -14,7 +16,7 @@ import com.equipo01.featureflag.featureflag.model.User;
  * {@link Mapper} Anotación de MapStruct que indica que esta interfaz es un mapper.
  * {@link Mapping} Anotación de MapStruct que indica cómo se deben mapear
  */
-@Mapper(componentModel = "spring")
+@Mapper(config = MapperConfiguration.class)
 public interface UserMapper {
 
     // User -> UserDTO

@@ -13,7 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import jakarta.servlet.http.HttpServletResponse;
+
+import com.equipo01.featureflag.featureflag.exception.CustomAccessDeniedHandler;
+import com.equipo01.featureflag.featureflag.exception.CustomAuthenticationEntryPoint;
 
 /**
  * Configuración de seguridad para la aplicación.
@@ -38,8 +40,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(CustomUserDetailsService userDetailsService) {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return new ProviderManager(authProvider);
     }
@@ -50,7 +51,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthorizationFilter jwtAuthorizationFilter)
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, 
+    JwtAuthorizationFilter jwtAuthorizationFilter,
+    CustomAccessDeniedHandler customAccessDeniedHandler,
+    CustomAuthenticationEntryPoint customAuthenticationEntryPoint)
             throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
@@ -63,11 +67,9 @@ public class SecurityConfig {
                             "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                            response.setContentType("application/json");
-                            response.getWriter().write("{\"error\": \"Unauthorized\"}");
-                        }))
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler)
+                        )
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

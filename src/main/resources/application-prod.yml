@@ -1,4 +1,6 @@
 spring:
+  devtools:
+    add-properties: false
   config:
     activate:
       on-profile: prod
@@ -12,6 +14,12 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
 
 
+logging:
+  level:
+    web: ERROR
+    root: ERROR
+    org.springframework.web: ERROR
+    com.equipo01.featureflag: ERROR
