@@ -1,16 +1,20 @@
 package com.equipo01.featureflag.featureflag.dto;
 
 import java.util.UUID;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import jakarta.validation.constraints.Email;
+
 import com.equipo01.featureflag.featureflag.model.enums.Role;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * DTO que representa a un usuario en el sistema.
@@ -32,31 +36,43 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Setter
 @Builder
 @ToString
-@Schema(description = "DTO que representa a un usuario en el sistema.")
+@NoArgsConstructor
+@AllArgsConstructor
+@Schema(description = "DTO that represents a user in the system")
 public class UserDTO {
-	@Schema(description = "Identificador único del usuario", example = "123e4567-e89b-12d3-a456-426614174000")
+	@Schema(description = "Identifier unique to the user", example = "123e4567-e89b-12d3-a456-426614174000")
 	private UUID id;
 
-	@Schema(description = "Nombre de usuario para login", example = "usuario01")
+	@Schema(description = "Username for login", example = "usuario01")
 	@NotBlank
 	@Size(min = 3, max = 50)
 	private String username;
 
-	@Schema(description = "Email del usuario", example = "usuario01@email.com")
+	@Schema(description = "Email of the user", example = "usuario01@email.com")
 	@Email
 	@NotBlank
 	private String email;
 
-	@Schema(description = "Contraseña del usuario", example = "passwordSeguro123")
+	@Schema(description = "User password", example = "passwordSeguro123")
 	@NotBlank
-	@Size(min = 8, max = 100)
+	@Size(min = 6, max = 100)
 	private String password;
 
-	@Schema(description = "Rol asignado al usuario", example = "USER")
+	@Schema(description = "Role assigned to the user", example = "USER")
 	@NotNull
 	private Role role;
 
-	@Schema(description = "Indica si el usuario está activo", example = "true")
+	@Schema(description = "Indicates if the user is active", example = "true")
 	@NotNull
 	private Boolean active;
+
+	public static UserDTO buildUserDtoDefault(UserRequestDTO userRequestDTO) {
+		return UserDTO.builder()
+                .username(userRequestDTO.getUsername())
+                .email(userRequestDTO.getEmail())
+                .password(userRequestDTO.getPassword())
+                .role(Role.USER)
+                .active(true)
+                .build();
+	}
 }

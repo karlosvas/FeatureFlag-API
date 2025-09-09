@@ -5,17 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
-import com.equipo01.featureflag.featureflag.dto.ErrorResponse;
+import com.equipo01.featureflag.featureflag.dto.ErrorDto;
+import com.equipo01.featureflag.featureflag.exception.enums.MessageError;
 
 /**
  * GlobalExceptionHandler gestiona de forma centralizada las excepciones
@@ -24,7 +23,7 @@ import com.equipo01.featureflag.featureflag.dto.ErrorResponse;
  * Utiliza {@link RestControllerAdvice} para interceptar y personalizar las
  * respuestas de error en toda la API.
  * Cada método maneja un tipo específico de excepción y construye una respuesta
- * estructurada usando {@link ErrorResponse}.
+ * estructurada usando {@link ErrorDto}.
  *
  * Validaciones: Devuelve una lista de errores detallados si los datos de
  * entrada no cumplen las restricciones.
@@ -43,17 +42,17 @@ public class GlobalExceptionHandler {
      *
      * @param ex excepción genérica lanzada en cualquier parte de la aplicación.
      * @return Error informando que ocurrió un problema inesperado. Devuelve un
-     *         {@link ErrorResponse} con código 500 (INTERNAL SERVER ERROR).
+     *         {@link ErrorDto} con código 500 (INTERNAL SERVER ERROR).
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .message("Internal Server Error")
+    public ResponseEntity<ErrorDto> handleGenericException(Exception ex) {
+        ErrorDto errorResponse = ErrorDto.builder()
+                .message(MessageError.INTERNAL_SERVER_ERROR.getMessage())
                 .description(ex.getMessage())
-                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .code(MessageError.INTERNAL_SERVER_ERROR.getStatus().value())
                 .timestamp(LocalDateTime.now())
                 .build();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        return ResponseEntity.status(MessageError.INTERNAL_SERVER_ERROR.getStatus()).body(errorResponse);
     }
 
     /**
@@ -61,17 +60,17 @@ public class GlobalExceptionHandler {
      *
      * @param ex excepción lanzada cuando se interactua con la base de datos.
      * @return Error informando que ocurrió un problema en base de datos. Devuelve
-     *         un {@link ErrorResponse} con código 500 (INTERNAL SERVER ERROR).
+     *         un {@link ErrorDto} con código 500 (INTERNAL SERVER ERROR).
      */
     @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<ErrorResponse> handleDataAccessException(DataAccessException ex) {
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .message("Error accessing data")
+    public ResponseEntity<ErrorDto> handleDataAccessException(DataAccessException ex) {
+        ErrorDto errorResponse = ErrorDto.builder()
+                .message(MessageError.DATA_ACCESS_ERROR.getMessage())
                 .description(ex.getMessage())
-                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .code(MessageError.DATA_ACCESS_ERROR.getStatus().value())
                 .timestamp(LocalDateTime.now())
                 .build();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        return ResponseEntity.status(MessageError.DATA_ACCESS_ERROR.getStatus()).body(errorResponse);
     }
 
     /**
@@ -83,21 +82,21 @@ public class GlobalExceptionHandler {
      *
      * @param ex excepción lanzada por Spring al fallar la validación.
      * @return Lista de errores con detalles y mensajes específicos, devueltos en
-     *         una lista de {@link ErrorResponse} con código 400 (BAD REQUEST).
+     *         una lista de {@link ErrorDto} con código 400 (BAD REQUEST).
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<List<ErrorResponse>> handleValidationException(MethodArgumentNotValidException ex) {
-        List<ErrorResponse> errorResponses = new ArrayList<>();
+    public ResponseEntity<List<ErrorDto>> handleValidationException(MethodArgumentNotValidException ex) {
+        List<ErrorDto> errorResponses = new ArrayList<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
-            ErrorResponse errorResponse = ErrorResponse.builder()
-                    .message("Validation Error")
+            ErrorDto errorResponse = ErrorDto.builder()
+                    .message(MessageError.DTO_FIELDS_NOT_VALID.getMessage())
                     .description(error.getDefaultMessage())
-                    .code(HttpStatus.BAD_REQUEST.value())
+                    .code(MessageError.DTO_FIELDS_NOT_VALID.getStatus().value())
                     .timestamp(LocalDateTime.now())
                     .build();
             errorResponses.add(errorResponse);
         });
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponses);
+        return ResponseEntity.status(MessageError.DTO_FIELDS_NOT_VALID.getStatus()).body(errorResponses);
     }
 
     /**
@@ -105,17 +104,17 @@ public class GlobalExceptionHandler {
      *
      * @param ex excepción lanzada por Spring cuando el JSON no se puede leer.
      * @return Error informando que el cuerpo de la solicitud no es un JSON válido.
-     *         Devuelve un {@link ErrorResponse} con código 400 (BAD REQUEST).
+     *         Devuelve un {@link ErrorDto} con código 400 (BAD REQUEST).
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorResponse> handleJsonParseError(HttpMessageNotReadableException ex) {
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .message("Malformed JSON Request")
+    public ResponseEntity<ErrorDto> handleJsonParseError(HttpMessageNotReadableException ex) {
+        ErrorDto errorResponse = ErrorDto.builder()
+                .message(MessageError.MALFORMED_JSON.getMessage())
                 .description(ex.getMessage())
-                .code(HttpStatus.BAD_REQUEST.value())
+                .code(MessageError.MALFORMED_JSON.getStatus().value())
                 .timestamp(LocalDateTime.now())
                 .build();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        return ResponseEntity.status(MessageError.MALFORMED_JSON.getStatus()).body(errorResponse);
     }
 
     /**
@@ -123,21 +122,21 @@ public class GlobalExceptionHandler {
      *
      * @param ex excepción lanzada por el sistema de validación de Java.
      * @return Error informando que una restricción de validación fue violada.
-     *         Devuelve un {@link ErrorResponse} con código 400 (BAD REQUEST).
+     *         Devuelve un {@link ErrorDto} con código 400 (BAD REQUEST).
      */
     @ExceptionHandler(HandlerMethodValidationException.class)
-    public ResponseEntity<List<ErrorResponse>> handleMethodValidation(HandlerMethodValidationException ex) {
-        List<ErrorResponse> errorResponses = new ArrayList<>();
+    public ResponseEntity<List<ErrorDto>> handleMethodValidation(HandlerMethodValidationException ex) {
+        List<ErrorDto> errorResponses = new ArrayList<>();
         ex.getAllErrors().forEach((error) -> {
-            ErrorResponse errorResponse = ErrorResponse.builder()
-                    .message("Constraint Violation")
+            ErrorDto errorResponse = ErrorDto.builder()
+                    .message(MessageError.VALIDATION_PARAMETER_NOT_VALID.getMessage())
                     .description(error.getDefaultMessage())
-                    .code(HttpStatus.BAD_REQUEST.value())
+                    .code(MessageError.VALIDATION_PARAMETER_NOT_VALID.getStatus().value())
                     .timestamp(LocalDateTime.now())
                     .build();
             errorResponses.add(errorResponse);
         });
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponses);
+        return ResponseEntity.status(MessageError.VALIDATION_PARAMETER_NOT_VALID.getStatus()).body(errorResponses);
     }
 
     /**
@@ -145,93 +144,37 @@ public class GlobalExceptionHandler {
      *
      * @param ex excepción lanzada por Spring cuando el método HTTP no es soportado.
      * @return Error informando que el método HTTP no está permitido. Devuelve un
-     *         {@link ErrorResponse} con código 405 (METHOD NOT ALLOWED).
+     *         {@link ErrorDto} con código 405 (METHOD NOT ALLOWED).
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ErrorResponse> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .message("Method Not Allowed")
+    public ResponseEntity<ErrorDto> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
+        ErrorDto errorResponse = ErrorDto.builder()
+                .message(MessageError.METHOD_NOT_ALLOWED.getMessage())
                 .description(ex.getMessage())
-                .code(HttpStatus.METHOD_NOT_ALLOWED.value())
+                .code(MessageError.METHOD_NOT_ALLOWED.getStatus().value())
                 .timestamp(LocalDateTime.now())
                 .build();
-        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(errorResponse);
+        return ResponseEntity.status(MessageError.METHOD_NOT_ALLOWED.getStatus()).body(errorResponse);
     }
 
-    /**
-     * Maneja la excepción cuando las credenciales de autenticación son inválidas.
-     *
-     * @param ex excepción lanzada.
-     * @return Error informando que las credenciales son incorrectas. Devuelve un
-     *         {@link ErrorResponse} con código 400 (BAD_REQUEST).
-     */
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex) {
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .message("Authentication Failed")
-                .description(ex.getMessage())
-                .code(HttpStatus.BAD_REQUEST.value())
-                .timestamp(LocalDateTime.now())
-                .build();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-    }
 
-    /////////////////////////// FEATURES /////////////////////////////////////////
+    /////////////////////////// CUSTOM EXCEPTION ///////////////////////////
 
     /**
-     * Maneja la excepción cuando se intenta crear una feature que ya existe.
+     * Maneja la excepción personalizada.
      *
      * @param ex excepción personalizada lanzada por la lógica de negocio.
-     * @return Error informando que la feature ya existe. Devuelve un
-     *         {@link ErrorResponse} con código 409 (CONFLICT) y detalles del error.
+     * @return Error informando validaciones de lógica de negocio. Devuelve un
+     *         {@link ErrorDto}.
      */
-    @ExceptionHandler(FeatureAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleFeatureAlreadyExists(FeatureAlreadyExistsException ex) {
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .message("Feature Already Exists")
-                .description(ex.getMessage())
-                .code(HttpStatus.CONFLICT.value())
+    @ExceptionHandler(FeatureFlagException.class)
+    public ResponseEntity<ErrorDto> handleFeatureFlagException(FeatureFlagException ex) {
+        ErrorDto errorResponse = ErrorDto.builder()
+                .message(ex.getMessage())
+                .description(ex.getDescription())
+                .code(ex.getStatus().value())
                 .timestamp(LocalDateTime.now())
                 .build();
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
-    }
-
-    /**
-     * Maneja la excepción cuando no se encuentra una feature solicitada.
-     *
-     * @param ex excepción personalizada lanzada por la lógica de negocio.
-     * @return Error informando que la feature no existe. Devuelve un
-     *         {@link ErrorResponse} con código 404 (NOT FOUND) y detalles del
-     *         error.
-     */
-    @ExceptionHandler(FeatureNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleFeatureNotFound(FeatureNotFoundException ex) {
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .message("Feature Not Found")
-                .description(ex.getMessage())
-                .code(HttpStatus.NOT_FOUND.value())
-                .timestamp(LocalDateTime.now())
-                .build();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-    }
-
-    /////////////////////////// USER ///////////////////////////
-
-    /**
-     * Maneja la excepción cuando un usuario ya existe.
-     *
-     * @param ex excepción personalizada lanzada por la lógica de negocio.
-     * @return Error informando que el usuario ya existe. Devuelve un
-     *         {@link ErrorResponse} con código 409 (CONFLICT).
-     */
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleUserAlreadyExists(UserAlreadyExistsException ex) {
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .message("User Already Exists")
-                .description(ex.getMessage())
-                .code(HttpStatus.CONFLICT.value())
-                .timestamp(LocalDateTime.now())
-                .build();
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+        return ResponseEntity.status(ex.getStatus()).body(errorResponse);
     }
 }

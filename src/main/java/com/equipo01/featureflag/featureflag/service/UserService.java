@@ -1,13 +1,29 @@
 package com.equipo01.featureflag.featureflag.service;
 
+import java.util.Optional;
+
+import org.springframework.security.core.Authentication;
+
 import com.equipo01.featureflag.featureflag.dto.LoginRequestDto;
 import com.equipo01.featureflag.featureflag.dto.UserRequestDTO;
+import com.equipo01.featureflag.featureflag.model.User;
 
 /**
  * Interfaz para los servicios de usuario.
  * Define las operaciones disponibles para la gestión de usuarios.
  */
 public interface UserService {
+
+    public Optional<User> findByEmail(String email);
+
+    public Optional<User> findByUsername(String username);
+
+    public void checkRegister(String email, String username);
+
+    public void checkLogin(LoginRequestDto loginRequestDto);
+
+    public Authentication buildAuthentication(String username, String password);
+
     /**
      * Registra un nuevo usuario en el sistema.
      *
