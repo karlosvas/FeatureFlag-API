@@ -1,18 +1,25 @@
-server:
-  port: 8080
 spring:
+  devtools:
+    add-properties: false
   config:
     activate:
       on-profile: prod
   datasource:
+    driver-class-name: org.postgresql.Driver
     url: ${DB_URL_PROD}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
-
   jpa:
     generate-ddl: true
     properties:
       hibernate:
         format_sql: true
+    open-in-view: false
 
 
+logging:
+  level:
+    web: ERROR
+    root: ERROR
+    org.springframework.web: ERROR
+    com.equipo01.featureflag: ERROR

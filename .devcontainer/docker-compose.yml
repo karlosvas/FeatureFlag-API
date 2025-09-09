@@ -1,6 +1,5 @@
-version: '3'
+version: "3"
 services:
-
   featureflag-app:
     image: mcr.microsoft.com/devcontainers/java:21-bookworm
     volumes:
@@ -11,7 +10,7 @@ services:
   ### Postgres database for Featureflag
   db-featureflag:
     env_file:
-        - devcontainer.env
+      - devcontainer.env
     container_name: db-featureflag
     image: postgres:15.2
     restart: unless-stopped
