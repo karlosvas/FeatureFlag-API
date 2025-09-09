@@ -21,6 +21,18 @@ on:
     branches:
       - main
 
+env:
+  POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+  POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+  POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+  DB_NAME: ${{ secrets.DB_NAME }}
+  DB_USER: ${{ secrets.DB_USER }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  DB_URL_DEV: ${{ secrets.DB_URL_DEV }}
+  DB_URL_PROD: ${{ secrets.DB_URL_PROD }}
+  JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+  ACCESS_TOKEN_EXPIRATION: ${{ secrets.ACCESS_TOKEN_EXPIRATION }}
+
 jobs:
   test-build:
     runs-on: ubuntu-latest

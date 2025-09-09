@@ -3,6 +3,7 @@ package com.equipo01.featureflag.featureflag;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
 /**
  * Pruebas de integración para la aplicación Feature Flag.
