@@ -67,6 +67,6 @@ public class UserController {
     @SwaggerApiResponses
     @Operation(summary = "Inicia sesión de un usuario", description = "Inicia sesión de un usuario con los datos proporcionados y devuelve el token JWT del usuario.")
     public String logginUser(@Valid @RequestBody LoginRequestDto loginRequestDto) {
-        return userService.logginUser(loginRequestDto);
+        return userService.loginUser(loginRequestDto);
     }
 }

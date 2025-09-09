@@ -1,4 +1,4 @@
-package com.equipo01.featureflag.featureflag.service;
+package com.equipo01.featureflag.featureflag.service.impl;
 
 import java.util.List;
 import java.util.UUID;
@@ -13,6 +13,7 @@ import com.equipo01.featureflag.featureflag.exception.FeatureNotFoundException;
 import com.equipo01.featureflag.featureflag.mapper.FeatureMapper;
 import com.equipo01.featureflag.featureflag.model.Feature;
 import com.equipo01.featureflag.featureflag.repository.FeatureRepository;
+import com.equipo01.featureflag.featureflag.service.FeatureService;
 import lombok.RequiredArgsConstructor;
 
 @Service
