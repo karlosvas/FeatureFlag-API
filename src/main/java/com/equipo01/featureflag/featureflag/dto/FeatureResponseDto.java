@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
@@ -27,6 +28,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Schema(description = "DTO para la respuesta de una feature flag.")
 public class FeatureResponseDto {
     

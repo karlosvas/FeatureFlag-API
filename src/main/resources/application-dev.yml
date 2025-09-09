@@ -16,19 +16,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 logging:
   level:
-    org:
-      hibernate:
-        type:
-          descriptor:
-            sql:
-              BasicBinder: TRACE
-        SQL: DEBUG
-      springframework: DEBUG
-
-    com:
-      equipo01:
-        featureflag: DEBUG
+    web: DEBUG
+    root: INFO
+    org.springframework.web: DEBUG
+    com.equipo01.featureflag: DEBUG

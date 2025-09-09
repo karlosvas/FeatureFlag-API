@@ -1,10 +1,14 @@
 package com.equipo01.featureflag.featureflag.config;
 
 import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import io.jsonwebtoken.*;
 import org.springframework.stereotype.Component;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 /**
  * Utilidad para trabajar con tokens JWT.

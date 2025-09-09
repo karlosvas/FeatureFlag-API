@@ -2,6 +2,7 @@ package com.equipo01.featureflag.featureflag.controller;
 
 import java.util.List;
 import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import com.equipo01.featureflag.featureflag.service.FeatureService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -62,8 +64,9 @@ public class FeatureController {
     @GetMapping("/{featureId}")
     @SwaggerApiResponses
     @Operation(summary = "Obtiene una feature flag por su ID", description = "Devuelve los detalles de una feature flag específica identificada por su UUID.")
-    public ResponseEntity<FeatureResponseDto> getFeature(@PathVariable UUID featureId) {
-        return ResponseEntity.ok(featureService.getFeatureById(featureId));
+    public ResponseEntity<FeatureResponseDto> getFeature(@PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String featureId) {
+            UUID uuid = UUID.fromString(featureId);
+        return ResponseEntity.ok(featureService.getFeatureById(uuid));
     }
 
 }

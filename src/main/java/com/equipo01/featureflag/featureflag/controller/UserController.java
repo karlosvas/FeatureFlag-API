@@ -2,16 +2,17 @@ package com.equipo01.featureflag.featureflag.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.equipo01.featureflag.featureflag.anotations.SwaggerApiResponses;
+import com.equipo01.featureflag.featureflag.dto.LoginRequestDto;
 import com.equipo01.featureflag.featureflag.dto.UserRequestDTO;
 import com.equipo01.featureflag.featureflag.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
-
-import org.springframework.web.bind.annotation.RequestBody;
+import jakarta.validation.Valid;
 
 /**
  * Controlador para gestionar las operaciones relacionadas con los usuarios.
@@ -52,20 +53,20 @@ public class UserController {
     @PostMapping("/register")
     @SwaggerApiResponses
     @Operation(summary = "Registra un nuevo usuario", description = "Registra un nuevo usuario con los datos proporcionados y devuelve el token JWT del uusuario.")
-    public String registerUser(@RequestBody UserRequestDTO userDTO) {
+    public String registerUser(@Valid @RequestBody UserRequestDTO userDTO) {
         return userService.registerUser(userDTO);
     }
 
     /**
      * Endpoint para iniciar sesión de un usuario.
      *
-     * @param userDTO objeto que contiene la información del usuario que intenta iniciar sesión.
+     * @param loginRequestDto objeto que contiene la información del usuario que intenta iniciar sesión.
      * @return un mensaje indicando el resultado del intento de inicio de sesión.
      */
     @PostMapping("/login")
     @SwaggerApiResponses
     @Operation(summary = "Inicia sesión de un usuario", description = "Inicia sesión de un usuario con los datos proporcionados y devuelve el token JWT del usuario.")
-    public String logginUser(@RequestBody UserRequestDTO userDTO) {
-        return userService.logginUser(userDTO);
+    public String logginUser(@Valid @RequestBody LoginRequestDto loginRequestDto) {
+        return userService.loginUser(loginRequestDto);
     }
 }

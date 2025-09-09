@@ -1,12 +1,12 @@
 package com.equipo01.featureflag.featureflag.config;
 
-import com.equipo01.featureflag.featureflag.model.User;
-import com.equipo01.featureflag.featureflag.repository.UserRepository;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import com.equipo01.featureflag.featureflag.model.User;
+import com.equipo01.featureflag.featureflag.repository.UserRepository;
 
 /**
  * Servicio personalizado para cargar los detalles del usuario.
@@ -51,7 +51,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return org.springframework.security.core.userdetails.User.builder()
             .username(userEntity.getUsername())
             .password(userEntity.getPassword())
-            .roles(userEntity.getAuthorities().stream().map(GrantedAuthority::getAuthority).toArray(String[]::new))
+            .roles(userEntity.getRole().toString())
             .disabled(!userEntity.isEnabled())
             .build();
     }

@@ -41,6 +41,5 @@ public class FeatureRequestDto {
     @Schema(description = "Indica si la feature está habilitada por defecto", example = "true")
     @NotNull(message = "Feature enabledByDefault status is required")
     @Builder.Default
-    private Boolean enabledByDefault = true;
-
+    private boolean enabledByDefault = true;
 }
