@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-import com.equipo01.featureflag.featureflag.dto.ErrorResponse;
+import com.equipo01.featureflag.featureflag.dto.ErrorDto;
+import com.equipo01.featureflag.featureflag.exception.enums.MessageError;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -55,10 +55,10 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
   public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
       throws IOException, ServletException {
 
-    ErrorResponse re = ErrorResponse.builder()
-        .message("Unauthorized")
-        .description("JWT token is missing or invalid")
-        .code(HttpStatus.UNAUTHORIZED.value())
+    ErrorDto re = ErrorDto.builder()
+        .message(MessageError.UNAUTHORIZED.getMessage())
+        .description(MessageError.UNAUTHORIZED.getDescription())
+        .code(MessageError.UNAUTHORIZED.getStatus().value())
         .timestamp(LocalDateTime.now())
         .build();
 

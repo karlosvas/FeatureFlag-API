@@ -4,8 +4,10 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import com.equipo01.featureflag.featureflag.dto.FeatureRequestDto;
-import com.equipo01.featureflag.featureflag.dto.FeatureResponseDto;
+
+import com.equipo01.featureflag.featureflag.dto.request.FeatureRequestDto;
+import com.equipo01.featureflag.featureflag.dto.response.FeatureResponseDto;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 
@@ -34,10 +36,12 @@ public interface FeatureController {
     public ResponseEntity<List<FeatureResponseDto>> getFeatures();
 
     /**
-     * Obtiene los detalles de una feature flag específica identificada por su UUID.
+     * Retrieves details of a specific feature flag by its UUID.
      *
-     * @param featureId UUID de la feature flag
-     * @return detalles de la feature flag
+     * @param featureId the UUID of the feature flag
+     * @return the feature flag details
      */
-    public ResponseEntity<FeatureResponseDto> getFeature(@PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Formato de UUID inválido") String featureId);
+    public ResponseEntity<FeatureResponseDto> getFeature(@PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String featureId);
+
+    public ResponseEntity<Boolean> checkFeatureIsActive(@PathVariable String nameFeature, @PathVariable String clientID, @PathVariable String environment);
 }

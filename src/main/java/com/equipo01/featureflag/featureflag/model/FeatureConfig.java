@@ -18,9 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.UUID;
-
 import org.hibernate.annotations.Columns;
-import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * Representa la configuración de un feature toggle.

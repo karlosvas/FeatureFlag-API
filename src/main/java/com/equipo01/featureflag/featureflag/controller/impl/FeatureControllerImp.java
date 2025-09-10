@@ -12,13 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.equipo01.featureflag.featureflag.anotations.SwaggerApiResponses;
 import com.equipo01.featureflag.featureflag.controller.FeatureController;
-import com.equipo01.featureflag.featureflag.dto.FeatureRequestDto;
-import com.equipo01.featureflag.featureflag.dto.FeatureResponseDto;
+import com.equipo01.featureflag.featureflag.dto.request.FeatureRequestDto;
+import com.equipo01.featureflag.featureflag.dto.response.FeatureResponseDto;
 import com.equipo01.featureflag.featureflag.service.FeatureService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
+import com.equipo01.featureflag.featureflag.model.enums.Environment;
 
 /**
  * Implementación del controlador para gestionar las feature flags.
@@ -73,8 +74,14 @@ public class FeatureControllerImp implements FeatureController {
     @SwaggerApiResponses
     @Operation(summary = "Obtiene una feature flag por su ID", description = "Devuelve los detalles de una feature flag específica identificada por su UUID.")
     public ResponseEntity<FeatureResponseDto> getFeature(@PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String featureId) {
-            UUID uuid = UUID.fromString(featureId);
+        UUID uuid = UUID.fromString(featureId);
         return ResponseEntity.ok(featureService.getFeatureById(uuid));
     }
 
+    public ResponseEntity<Boolean> checkFeatureIsActive(@PathVariable String nameFeature, @PathVariable String clientID, @PathVariable String environment) {
+        Environment env = Environment.valueOf(environment);
+        UUID uuid = UUID.fromString(clientID);
+        Boolean isActive = featureService.checkFeatureIsActive(nameFeature, uuid, env);
+        return ResponseEntity.ok(isActive);
+    }
 }

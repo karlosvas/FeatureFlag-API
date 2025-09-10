@@ -1,8 +1,10 @@
 package com.equipo01.featureflag.featureflag.controller;
 
 import org.springframework.web.bind.annotation.RequestBody;
-import com.equipo01.featureflag.featureflag.dto.LoginRequestDto;
-import com.equipo01.featureflag.featureflag.dto.UserRequestDTO;
+
+import com.equipo01.featureflag.featureflag.dto.request.LoginRequestDto;
+import com.equipo01.featureflag.featureflag.dto.request.UserRequestDTO;
+
 import jakarta.validation.Valid;
 
 public interface UserController {

@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
-import com.equipo01.featureflag.featureflag.dto.ErrorResponse;
+import com.equipo01.featureflag.featureflag.dto.ErrorDto;
+import com.equipo01.featureflag.featureflag.exception.enums.MessageError;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -56,10 +56,10 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
             HttpServletResponse response,
             AccessDeniedException accessDeniedException) throws IOException, ServletException {
 
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .message("Forbidden")
-                .description("You don't have permission to access this resource")
-                .code(HttpStatus.FORBIDDEN.value())
+        ErrorDto errorResponse = ErrorDto.builder()
+                .message(MessageError.FORBIDDEN.getMessage())
+                .description(MessageError.FORBIDDEN.getDescription())
+                .code(MessageError.FORBIDDEN.getStatus().value())
                 .timestamp(LocalDateTime.now())
                 .build();
 
