@@ -34,7 +34,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Schema(description = "DTO para transportar información de excepciones en la API.")
-public class ErrorResponse {
+public class ErrorDto {
     @Schema(description = "Título de la excepción", example = "Unauthorized")
     private String message;
     

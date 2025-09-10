@@ -19,19 +19,19 @@ import lombok.Getter;
  * - password: Contraseña del usuario.
  */
 @Getter
-@Schema(description = "DTO para la solicitud de creación de un nuevo usuario.")
+@Schema(description = "DTO for user creation request")
 public class UserRequestDTO {
-    @Schema(description = "Nombre de usuario para login", example = "usuario01")
+    @Schema(description = "Username for login", example = "usuario01")
     @NotBlank(message =  "Username is required")
     @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
     private String username;
 
-    @Schema(description = "Email del usuario", example = "usuario01@email.com")
+    @Schema(description = "Email of the user", example = "usuario01@email.com")
     @Email(message = "Email is not valid")
     @NotBlank(message = "Email is required")
     private String email;
 
-    @Schema(description = "Contraseña del usuario", example = "passwordSeguro123")
+    @Schema(description = "User password", example = "passwordSeguro123")
     @NotBlank(message = "Password is required")
     @Size(min = 6, max = 100, message = "Password must be between 6 and 100 characters")
     private String password;

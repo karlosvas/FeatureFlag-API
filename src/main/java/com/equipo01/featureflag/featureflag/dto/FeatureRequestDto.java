@@ -1,12 +1,12 @@
 package com.equipo01.featureflag.featureflag.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * DTO para la solicitud de creación de una nueva feature flag.
@@ -27,19 +27,18 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "DTO para la solicitud de creación de una nueva feature flag.")
+@Schema(description = "DTO for creating a new feature flag")
 public class FeatureRequestDto {
-    
-    @Schema(description = "Nombre de la feature flag", example = "dark_mode")
+
+    @Schema(description = "Name of the feature flag", example = "dark_mode")
     @NotBlank(message = "Feature name is required")
     private String name;
 
-    @Schema(description = "Descripción de la feature flag", example = "Activa el modo oscuro en la aplicación")
+    @Schema(description = "Description of the feature flag", example = "Activates dark mode in the application")
     @NotBlank(message = "Feature description is required")
     private String description;
 
-    @Schema(description = "Indica si la feature está habilitada por defecto", example = "true")
+    @Schema(description = "Indicates if the feature is enabled by default", example = "true")
     @NotNull(message = "Feature enabledByDefault status is required")
-    @Builder.Default
-    private boolean enabledByDefault = true;
+    private boolean enabledByDefault;
 }

@@ -1,7 +1,6 @@
 package com.equipo01.featureflag.featureflag.controller;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,8 +64,7 @@ public class FeatureController {
     @SwaggerApiResponses
     @Operation(summary = "Obtiene una feature flag por su ID", description = "Devuelve los detalles de una feature flag específica identificada por su UUID.")
     public ResponseEntity<FeatureResponseDto> getFeature(@PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String featureId) {
-            UUID uuid = UUID.fromString(featureId);
-        return ResponseEntity.ok(featureService.getFeatureById(uuid));
+        return ResponseEntity.ok(featureService.getFeatureById(featureId));
     }
 
 }
