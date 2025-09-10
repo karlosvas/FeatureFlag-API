@@ -1,14 +1,16 @@
 package com.equipo01.featureflag.featureflag.controller;
 
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.equipo01.featureflag.featureflag.dto.request.FeatureRequestDto;
 import com.equipo01.featureflag.featureflag.dto.response.FeatureResponseDto;
+import com.equipo01.featureflag.featureflag.dto.response.GetFeatureResponseDto;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 
 /**
@@ -29,11 +31,19 @@ public interface FeatureController {
     public ResponseEntity<FeatureResponseDto> createFeature(@Valid @RequestBody FeatureRequestDto requestDto);
 
     /**
-     * Obtiene una lista de todas las feature flags.
+     * Obtiene una lista paginada de todas las feature flags, con filtros opcionales por nombre y estado habilitado.
      *
-     * @return una lista de feature flags
+     * @param name             filtro opcional por nombre (coincidencia parcial)
+     * @param enabledByDefault filtro opcional por estado habilitado
+     * @param page             número de página para la paginación (predeterminado: 0)
+     * @param size             tamaño de página para la paginación (predeterminado: 10)
+     * @return una lista paginada de feature flags que coinciden con los filtros aplicados
      */
-    public ResponseEntity<List<FeatureResponseDto>> getFeatures();
+    public ResponseEntity<GetFeatureResponseDto> getFeatures(
+        @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "enabled", required = false) Boolean enabledByDefault,
+            @RequestParam(value = "page", defaultValue = "0", required = false) @Min(value = 0, message = "Page must be at least 0") Integer page,
+            @RequestParam(value = "size", defaultValue = "10", required = false) @Min(value = 1, message = "Size must be at least 1") Integer size);
 
     /**
      * Retrieves details of a specific feature flag by its UUID.
@@ -43,5 +53,5 @@ public interface FeatureController {
      */
     public ResponseEntity<FeatureResponseDto> getFeature(@PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String featureId);
 
-    public ResponseEntity<Boolean> checkFeatureIsActive(@PathVariable String nameFeature, @PathVariable String clientID, @PathVariable String environment);
+    public ResponseEntity<Boolean> checkFeatureIsActive(@RequestParam String nameFeature, @RequestParam String clientID, @RequestParam String environment);
 }
