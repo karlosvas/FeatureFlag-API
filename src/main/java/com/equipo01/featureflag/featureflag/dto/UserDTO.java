@@ -67,6 +67,7 @@ public class UserDTO {
 	@NotNull
 	private Boolean active;
 
+	// TODO:: Mapper??
 	public static UserDTO buildUserDtoDefault(UserRequestDTO userRequestDTO) {
 		return UserDTO.builder()
                 .username(userRequestDTO.getUsername())

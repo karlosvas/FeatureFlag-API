@@ -67,7 +67,7 @@ public class FeatureConfig {
     private String clientId;
 
     @Column(nullable = false)
-    private boolean enabled;
+    private Boolean enabled;
 
     //  N:1 -> Muchas configuraciones pertenecen a una Feature
     @ManyToOne(fetch = FetchType.LAZY)

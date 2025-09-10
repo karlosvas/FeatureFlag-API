@@ -23,6 +23,7 @@ public interface FeatureService {
      */
     boolean existsByName(String name);
 
+    boolean existsById(UUID id);
     /**
      * Retrieves a feature flag by its UUID.
      *

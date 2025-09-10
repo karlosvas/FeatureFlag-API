@@ -3,7 +3,6 @@ package com.equipo01.featureflag.featureflag.service.impl;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.equipo01.featureflag.featureflag.dto.request.FeatureRequestDto;
@@ -118,6 +117,17 @@ public class FeatureServiceImpl implements FeatureService {
                     MessageError.FEATURE_ALREADY_EXISTS.getMessage(),
                     MessageError.FEATURE_ALREADY_EXISTS.getDescription());
         }
+        return false;
+    }
+
+    public boolean existsById(UUID id) {
+        if (featureRepository.existsById(id)){
+            log.warn("Feature id already exists: {}", id);
+            throw new FeatureFlagException(
+                    MessageError.FEATURE_ALREADY_EXISTS.getStatus(),
+                    MessageError.FEATURE_ALREADY_EXISTS.getMessage(),
+                    MessageError.FEATURE_ALREADY_EXISTS.getDescription());
+        };
         return false;
     }
 

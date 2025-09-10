@@ -23,7 +23,7 @@ import jakarta.validation.Valid;
  * todos los endpoints en este controlador.
  */
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("${api.auth}")
 public class UserControllerImp {
     private final UserService userService;
 

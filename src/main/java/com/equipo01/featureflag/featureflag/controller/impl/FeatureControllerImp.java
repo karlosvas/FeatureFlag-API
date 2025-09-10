@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.equipo01.featureflag.featureflag.anotations.SwaggerApiResponses;
 import com.equipo01.featureflag.featureflag.controller.FeatureController;
@@ -78,7 +79,10 @@ public class FeatureControllerImp implements FeatureController {
         return ResponseEntity.ok(featureService.getFeatureById(uuid));
     }
 
-    public ResponseEntity<Boolean> checkFeatureIsActive(@PathVariable String nameFeature, @PathVariable String clientID, @PathVariable String environment) {
+    @SwaggerApiResponses
+    @Operation(summary = "Verifica si una feature está activa para un cliente en un entorno específico", description = "Devuelve true si la feature está activa, false en caso contrario.")
+    @GetMapping("/check")
+    public ResponseEntity<Boolean> checkFeatureIsActive(@RequestParam String nameFeature, @RequestParam String clientID, @RequestParam String environment) {
         Environment env = Environment.valueOf(environment);
         UUID uuid = UUID.fromString(clientID);
         Boolean isActive = featureService.checkFeatureIsActive(nameFeature, uuid, env);
