@@ -1,6 +1,11 @@
 package com.equipo01.featureflag.featureflag.model;
 
+import java.util.UUID;
+
+import org.hibernate.annotations.Columns;
+
 import com.equipo01.featureflag.featureflag.model.enums.Environment;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -17,8 +22,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.UUID;
-import org.hibernate.annotations.Columns;
 
 /**
  * Representa la configuración de un feature toggle.
@@ -71,7 +74,7 @@ public class FeatureConfig {
 
     //  N:1 -> Muchas configuraciones pertenecen a una Feature
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "feature_id", nullable = false)
+    @JoinColumn(name = "feature_id", referencedColumnName = "feature_id", nullable = false)
     private Feature feature;
 }
 

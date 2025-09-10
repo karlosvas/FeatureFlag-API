@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -169,6 +170,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(FeatureFlagException.class)
     public ResponseEntity<ErrorDto> handleFeatureFlagException(FeatureFlagException ex) {
+        if (HttpStatus.NO_CONTENT.equals(ex.getStatus())) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
         ErrorDto errorResponse = ErrorDto.builder()
                 .message(ex.getMessage())
                 .description(ex.getDescription())

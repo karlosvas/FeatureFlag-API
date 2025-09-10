@@ -1,7 +1,7 @@
 package com.equipo01.featureflag.featureflag.controller.impl;
 
-import java.util.List;
 import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,16 +11,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.equipo01.featureflag.featureflag.anotations.SwaggerApiResponses;
 import com.equipo01.featureflag.featureflag.controller.FeatureController;
 import com.equipo01.featureflag.featureflag.dto.request.FeatureRequestDto;
 import com.equipo01.featureflag.featureflag.dto.response.FeatureResponseDto;
+import com.equipo01.featureflag.featureflag.dto.response.GetFeatureResponseDto;
+import com.equipo01.featureflag.featureflag.model.enums.Environment;
 import com.equipo01.featureflag.featureflag.service.FeatureService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
-import com.equipo01.featureflag.featureflag.model.enums.Environment;
 
 /**
  * Implementación del controlador para gestionar las feature flags.
@@ -61,10 +65,11 @@ public class FeatureControllerImp implements FeatureController {
     @GetMapping
     @SwaggerApiResponses
     @Operation(summary = "Obtiene todas las feature flags", description = "Devuelve una lista de todas las feature flags disponibles.")
-    public ResponseEntity<List<FeatureResponseDto>> getFeatures() {
-        return ResponseEntity.ok(featureService.getAllFeatures());
+        public ResponseEntity<GetFeatureResponseDto> getFeatures(String name, Boolean enabledByDefault,
+            @Min(value = 0, message = "Page must be at least 0") Integer page,
+            @Min(value = 1, message = "Size must be at least 1") Integer size)  {
+        return ResponseEntity.ok(featureService.getFeatures(name, enabledByDefault, page, size));
     }
-
     /**
      * Obtiene los detalles de una feature flag específica identificada por su UUID.
      *
@@ -75,8 +80,7 @@ public class FeatureControllerImp implements FeatureController {
     @SwaggerApiResponses
     @Operation(summary = "Obtiene una feature flag por su ID", description = "Devuelve los detalles de una feature flag específica identificada por su UUID.")
     public ResponseEntity<FeatureResponseDto> getFeature(@PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String featureId) {
-        UUID uuid = UUID.fromString(featureId);
-        return ResponseEntity.ok(featureService.getFeatureById(uuid));
+        return ResponseEntity.ok(featureService.getFeatureById(featureId));
     }
 
     @SwaggerApiResponses
