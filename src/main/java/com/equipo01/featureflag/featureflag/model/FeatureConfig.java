@@ -18,9 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.UUID;
-
 import org.hibernate.annotations.Columns;
-import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * Representa la configuración de un feature toggle.
@@ -69,7 +67,7 @@ public class FeatureConfig {
     private String clientId;
 
     @Column(nullable = false)
-    private boolean enabled;
+    private Boolean enabled;
 
     //  N:1 -> Muchas configuraciones pertenecen a una Feature
     @ManyToOne(fetch = FetchType.LAZY)

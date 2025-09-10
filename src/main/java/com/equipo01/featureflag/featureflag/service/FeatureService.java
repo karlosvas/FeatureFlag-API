@@ -3,8 +3,9 @@ package com.equipo01.featureflag.featureflag.service;
 import java.util.List;
 import java.util.UUID;
 
-import com.equipo01.featureflag.featureflag.dto.FeatureRequestDto;
-import com.equipo01.featureflag.featureflag.dto.FeatureResponseDto;
+import com.equipo01.featureflag.featureflag.model.enums.Environment;
+import com.equipo01.featureflag.featureflag.dto.request.FeatureRequestDto;
+import com.equipo01.featureflag.featureflag.dto.response.FeatureResponseDto;
 import com.equipo01.featureflag.featureflag.model.Feature;
 
 /**
@@ -22,6 +23,7 @@ public interface FeatureService {
      */
     boolean existsByName(String name);
 
+    boolean existsById(UUID id);
     /**
      * Retrieves a feature flag by its UUID.
      *
@@ -51,5 +53,7 @@ public interface FeatureService {
      * @param featureId the ID of the feature flag as a string
      * @return the feature flag as a response DTO
      */
-    FeatureResponseDto getFeatureById(String featureId);
+    FeatureResponseDto getFeatureById(UUID featureId);
+
+    Boolean checkFeatureIsActive(String nameFeature, UUID clientID, Environment environment);
 }

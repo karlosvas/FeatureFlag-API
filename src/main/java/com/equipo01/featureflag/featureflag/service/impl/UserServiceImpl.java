@@ -1,6 +1,7 @@
 package com.equipo01.featureflag.featureflag.service.impl;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.equipo01.featureflag.featureflag.config.JwtUtil;
 import com.equipo01.featureflag.featureflag.config.SecurityConfig;
-import com.equipo01.featureflag.featureflag.dto.LoginRequestDto;
 import com.equipo01.featureflag.featureflag.dto.UserDTO;
-import com.equipo01.featureflag.featureflag.dto.UserRequestDTO;
+import com.equipo01.featureflag.featureflag.dto.request.LoginRequestDto;
+import com.equipo01.featureflag.featureflag.dto.request.UserRequestDTO;
 import com.equipo01.featureflag.featureflag.exception.FeatureFlagException;
 import com.equipo01.featureflag.featureflag.exception.enums.MessageError;
 import com.equipo01.featureflag.featureflag.mapper.UserMapper;
@@ -178,4 +179,14 @@ public class UserServiceImpl implements UserService {
                 password);
     }
 
+    @Override
+    public Boolean existsByClientID(UUID clientID) {
+        if (!userRepository.existsById(clientID)) {
+            throw new FeatureFlagException(
+                    MessageError.USER_NOT_FOUND.getStatus(),
+                    MessageError.USER_NOT_FOUND.getMessage(),
+                    MessageError.USER_NOT_FOUND.getDescription());
+        }
+        return true;
+    }
 }

@@ -1,11 +1,12 @@
 package com.equipo01.featureflag.featureflag.service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.security.core.Authentication;
 
-import com.equipo01.featureflag.featureflag.dto.LoginRequestDto;
-import com.equipo01.featureflag.featureflag.dto.UserRequestDTO;
+import com.equipo01.featureflag.featureflag.dto.request.LoginRequestDto;
+import com.equipo01.featureflag.featureflag.dto.request.UserRequestDTO;
 import com.equipo01.featureflag.featureflag.model.User;
 
 /**
@@ -45,4 +46,6 @@ public interface UserService {
      * @return un token JWT si la autenticación es exitosa
      */
     public String loginUser(LoginRequestDto loginRequestDto);
+
+    public Boolean existsByClientID(UUID clientID);
 }

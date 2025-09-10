@@ -66,7 +66,7 @@ public class Feature {
     private String description;
 
     @Column(nullable = false, name = "enabled_by_default")
-    private boolean enabledByDefault;
+    private Boolean enabledByDefault;
 
     // 1:N -> Una Feature tiene muchas configuraciones
     @OneToMany(mappedBy = "feature", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
