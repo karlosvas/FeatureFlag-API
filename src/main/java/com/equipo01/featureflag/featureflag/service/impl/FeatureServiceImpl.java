@@ -237,10 +237,10 @@ public class FeatureServiceImpl implements FeatureService {
 
         // Iterate through feature configs and look for the configuration for the given
         // environment
-        for (FeatureConfig config : featureConfigList)
+        for (FeatureConfig config : featureConfigList) {
             if (config.getEnvironment() == environment && config.getEnabled())
                 return true;
-
+        }
         // If the environment was not found or was found but not enabled, return false
         return false;
     }

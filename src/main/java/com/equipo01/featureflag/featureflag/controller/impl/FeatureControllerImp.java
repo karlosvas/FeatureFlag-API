@@ -65,10 +65,14 @@ public class FeatureControllerImp implements FeatureController {
     @GetMapping
     @SwaggerApiResponses
     @Operation(summary = "Obtiene todas las feature flags", description = "Devuelve una lista de todas las feature flags disponibles.")
-        public ResponseEntity<GetFeatureResponseDto> getFeatures(String name, Boolean enabledByDefault,
-            @Min(value = 0, message = "Page must be at least 0") Integer page,
-            @Min(value = 1, message = "Size must be at least 1") Integer size)  {
-        return ResponseEntity.ok(featureService.getFeatures(name, enabledByDefault, page, size));
+        public ResponseEntity<GetFeatureResponseDto> getFeatures(@RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "enabled", required = false) Boolean enabledByDefault,
+            @RequestParam(value = "page", defaultValue = "0", required = false) @Min(value = 0, message = "Page must be at least 0") Integer page,
+            @RequestParam(value = "size", defaultValue = "10", required = false) @Min(value = 1, message = "Size must be at least 1") Integer size)  {
+        
+                GetFeatureResponseDto getFeatureResponseDto = featureService.getFeatures(name, enabledByDefault, page, size);
+                return ResponseEntity.ok()
+        .body(getFeatureResponseDto);
     }
     /**
      * Obtiene los detalles de una feature flag específica identificada por su UUID.

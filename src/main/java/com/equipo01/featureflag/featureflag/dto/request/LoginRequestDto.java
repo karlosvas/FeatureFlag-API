@@ -3,9 +3,13 @@ package com.equipo01.featureflag.featureflag.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
+@Builder
 @Schema(description = "DTO for user login request")
 public class LoginRequestDto {
     @Schema(description = "Username for login", example = "usuario01")

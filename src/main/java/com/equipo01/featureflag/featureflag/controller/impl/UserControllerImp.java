@@ -1,14 +1,18 @@
 package com.equipo01.featureflag.featureflag.controller.impl;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.equipo01.featureflag.featureflag.anotations.SwaggerApiResponses;
 import com.equipo01.featureflag.featureflag.dto.request.LoginRequestDto;
 import com.equipo01.featureflag.featureflag.dto.request.UserRequestDTO;
 import com.equipo01.featureflag.featureflag.service.UserService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
@@ -53,8 +57,8 @@ public class UserControllerImp {
     @PostMapping("/register")
     @SwaggerApiResponses
     @Operation(summary = "Registra un nuevo usuario", description = "Registra un nuevo usuario con los datos proporcionados y devuelve el token JWT del uusuario.")
-    public String registerUser(@Valid @RequestBody UserRequestDTO userDTO) {
-        return userService.registerUser(userDTO);
+    public ResponseEntity<String> registerUser(@Valid @RequestBody UserRequestDTO userDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.registerUser(userDTO));
     }
 
     /**
@@ -66,7 +70,7 @@ public class UserControllerImp {
     @PostMapping("/login")
     @SwaggerApiResponses
     @Operation(summary = "Inicia sesión de un usuario", description = "Inicia sesión de un usuario con los datos proporcionados y devuelve el token JWT del usuario.")
-    public String logginUser(@Valid @RequestBody LoginRequestDto loginRequestDto) {
-        return userService.loginUser(loginRequestDto);
+    public ResponseEntity<String> logginUser(@Valid @RequestBody LoginRequestDto loginRequestDto) {
+        return ResponseEntity.ok(userService.loginUser(loginRequestDto));
     }
 }
