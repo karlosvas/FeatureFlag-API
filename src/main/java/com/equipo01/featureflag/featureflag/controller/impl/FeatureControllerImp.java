@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.equipo01.featureflag.featureflag.anotations.SwaggerApiResponses;
 import com.equipo01.featureflag.featureflag.controller.FeatureController;
 import com.equipo01.featureflag.featureflag.dto.request.FeatureRequestDto;
+import com.equipo01.featureflag.featureflag.dto.request.FeatureToggleRequestDto;
 import com.equipo01.featureflag.featureflag.dto.response.FeatureResponseDto;
 import com.equipo01.featureflag.featureflag.dto.response.GetFeatureResponseDto;
 import com.equipo01.featureflag.featureflag.model.enums.Environment;
@@ -28,22 +29,25 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * Implementación del controlador para gestionar las feature flags.
- * Proporciona endpoints para crear, obtener todas y obtener una feature flag por su ID.
+ * Proporciona endpoints para crear, obtener todas y obtener una feature flag
+ * por su ID.
  * Utiliza FeatureService para la lógica de negocio.
  *
  * Anotación
  * - {@link RestController}: Indica que esta clase es un controlador REST.
- * - {@link RequiredArgsConstructor}: Genera un constructor con los campos finales.
- * - {@link RequestMapping}: Define la ruta base para los endpoints del controlador.
+ * - {@link RequiredArgsConstructor}: Genera un constructor con los campos
+ * finales.
+ * - {@link RequestMapping}: Define la ruta base para los endpoints del
+ * controlador.
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("${api.features}")
+@RequestMapping("/api/features")
 public class FeatureControllerImp implements FeatureController {
 
     private final FeatureService featureService;
 
-     /**
+    /**
      * Crea una nueva feature flag.
      *
      * @param requestDto datos de la feature flag a crear
@@ -65,11 +69,12 @@ public class FeatureControllerImp implements FeatureController {
     @GetMapping
     @SwaggerApiResponses
     @Operation(summary = "Obtiene todas las feature flags", description = "Devuelve una lista de todas las feature flags disponibles.")
-        public ResponseEntity<GetFeatureResponseDto> getFeatures(String name, Boolean enabledByDefault,
+    public ResponseEntity<GetFeatureResponseDto> getFeatures(String name, Boolean enabledByDefault,
             @Min(value = 0, message = "Page must be at least 0") Integer page,
-            @Min(value = 1, message = "Size must be at least 1") Integer size)  {
+            @Min(value = 1, message = "Size must be at least 1") Integer size) {
         return ResponseEntity.ok(featureService.getFeatures(name, enabledByDefault, page, size));
     }
+
     /**
      * Obtiene los detalles de una feature flag específica identificada por su UUID.
      *
@@ -79,17 +84,57 @@ public class FeatureControllerImp implements FeatureController {
     @GetMapping("/{featureId}")
     @SwaggerApiResponses
     @Operation(summary = "Obtiene una feature flag por su ID", description = "Devuelve los detalles de una feature flag específica identificada por su UUID.")
-    public ResponseEntity<FeatureResponseDto> getFeature(@PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String featureId) {
+    public ResponseEntity<FeatureResponseDto> getFeature(
+            @PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String featureId) {
         return ResponseEntity.ok(featureService.getFeatureById(featureId));
     }
 
     @SwaggerApiResponses
     @Operation(summary = "Verifica si una feature está activa para un cliente en un entorno específico", description = "Devuelve true si la feature está activa, false en caso contrario.")
     @GetMapping("/check")
-    public ResponseEntity<Boolean> checkFeatureIsActive(@RequestParam String nameFeature, @RequestParam String clientID, @RequestParam String environment) {
+    public ResponseEntity<Boolean> checkFeatureIsActive(@RequestParam String nameFeature, @RequestParam String clientID,
+            @RequestParam String environment) {
         Environment env = Environment.valueOf(environment);
         UUID uuid = UUID.fromString(clientID);
         Boolean isActive = featureService.checkFeatureIsActive(nameFeature, uuid, env);
         return ResponseEntity.ok(isActive);
+    }
+
+    @PostMapping("/enable/{featureId}")
+    @SwaggerApiResponses
+    @Operation(summary = "Habilita una feature flag", description = "Habilita una feature flag específica identificada por su UUID.")
+    public ResponseEntity<?> enableFreature(@PathVariable String featureId, @RequestBody FeatureRequestDto requestDto) {
+        // featureService.enableFeature(featureId, requestDto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PostMapping("/disable/{featureId}")
+    @SwaggerApiResponses
+    @Operation(summary = "Deshabilita una feature flag", description = "Deshabilita una feature flag específica identificada por su UUID.")
+    public ResponseEntity<?> disableFreature(@PathVariable String featureId,
+            @RequestBody FeatureRequestDto requestDto) {
+        // featureService.disableFeature(featureId, requestDto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PostMapping("/{id}/enable")
+    @SwaggerApiResponses
+    @Operation(summary = "Habilita una feature flag para un cliente o entorno específico", description = "Habilita una feature flag específica identificada por su UUID y aplica las configuraciones proporcionadas.")
+    public ResponseEntity<?> enableFeatureForClientOrEnvironment(
+            @PathVariable("id") @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String id,
+            @RequestBody FeatureToggleRequestDto toggleRequestDto) {
+
+        featureService.enableFeatureForClientOrEnvironment(UUID.fromString(id), toggleRequestDto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PostMapping("/{id}/disable")
+    @SwaggerApiResponses
+    @Operation(summary = "Deshabilita una feature flag para un cliente o entorno específico", description = "Deshabilita una feature flag específica identificada por su UUID y deshabilita la configuracion para el cliente o el entorno especificado")
+    public ResponseEntity<?> disableFeatureForClientOrEnvironment(
+            @PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String id,
+            @RequestBody FeatureToggleRequestDto toggleRequestDto) {
+        featureService.disableFeatureForClientOrEnvironment(UUID.fromString(id), toggleRequestDto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

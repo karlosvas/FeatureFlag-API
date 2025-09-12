@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.equipo01.featureflag.featureflag.dto.request.FeatureRequestDto;
+import com.equipo01.featureflag.featureflag.dto.request.FeatureToggleRequestDto;
 import com.equipo01.featureflag.featureflag.dto.response.FeatureResponseDto;
 import com.equipo01.featureflag.featureflag.dto.response.GetFeatureResponseDto;
 
@@ -54,4 +55,13 @@ public interface FeatureController {
     public ResponseEntity<FeatureResponseDto> getFeature(@PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String featureId);
 
     public ResponseEntity<Boolean> checkFeatureIsActive(@RequestParam String nameFeature, @RequestParam String clientID, @RequestParam String environment);
+
+    public ResponseEntity<?> enableFreature(@PathVariable String featureId, @RequestBody FeatureRequestDto requestDto);
+
+    public ResponseEntity<?> disableFreature(@PathVariable String featureId, @RequestBody FeatureRequestDto requestDto);
+
+    public ResponseEntity<?> enableFeatureForClientOrEnvironment(@PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String id, @RequestBody FeatureToggleRequestDto toggleRequestDto);
+
+    public ResponseEntity<?> disableFeatureForClientOrEnvironment(@PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String id, @RequestBody FeatureToggleRequestDto toggleRequestDto);
+
 }

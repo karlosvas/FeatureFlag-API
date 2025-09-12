@@ -4,12 +4,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.aspectj.bridge.Message;
+import org.springframework.beans.propertyeditors.UUIDEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.equipo01.featureflag.featureflag.dto.request.FeatureRequestDto;
+import com.equipo01.featureflag.featureflag.dto.request.FeatureToggleRequestDto;
+
 import com.equipo01.featureflag.featureflag.dto.response.FeatureResponseDto;
 import com.equipo01.featureflag.featureflag.dto.response.GetFeatureResponseDto;
 import com.equipo01.featureflag.featureflag.exception.FeatureFlagException;
@@ -244,4 +250,128 @@ public class FeatureServiceImpl implements FeatureService {
         // If the environment was not found or was found but not enabled, return false
         return false;
     }
+
+    /**
+     * Enables a feature flag identified by its UUID.
+     * This method validates the feature and the request,
+     * then updates de relevan configurations to set them as enabled.
+     * 
+     * @override
+     * @param featureId        the UUID of the feature to be enabled
+     * @param toggleRequestDto a DTO containing the clientID and/or environment
+     *                         where the feature should be enabled
+     * @throws FeatureFlagException if the feature does not exist, if the requestDto
+     *                              is invalid, or if no matching configuration is
+     *                              found
+     */
+
+    @Override
+    public void enableFeatureForClientOrEnvironment(UUID featureId, FeatureToggleRequestDto toggleRequestDto) {
+        // 1. Retrives the feature by its ID, if not found, throws an exception
+        Feature feature = findById(featureId);
+
+        // 2. Validates the request DTO (must contain at least clientId or environment)
+        validateFeatureToggleRequest(toggleRequestDto);
+
+        // 3. Get the list of configurations associates with this feature
+        List<FeatureConfig> featureConfigList = feature.getConfigs();
+
+        // 4. Filter configurations that match the request conditions:
+        // - If clientId is null, ignore it, otherwise compare with FeatureConfig
+        // clientId
+        // - If environment is null, ignore it, otherwise compare with FeatureConfig
+        // environment
+        List<FeatureConfig> targetConfig = featureConfigList.stream()
+                .filter(fc -> {
+                    boolean clientIdMatch = toggleRequestDto.getClientId() == null
+                            || toggleRequestDto.getClientId().equals(fc.getClientId());
+                    boolean environmentMatch = toggleRequestDto.getEnvironment() == null
+                            || toggleRequestDto.getEnvironment() == fc.getEnvironment();
+                    return clientIdMatch && environmentMatch;
+                })
+                .toList();
+        // 5. If matching configurations exists:
+        // -Set enabled to true for each configuration
+        // -Save the parent feature (cascade will persist the child configs)
+        if (!targetConfig.isEmpty()) {
+            // Enable all matching configurations
+            targetConfig.forEach(fc -> fc.setEnabled(true));
+            featureRepository.save(feature);
+        } else {
+            // No configuration matches the clientId/environment criteria
+
+           throw new FeatureFlagException(
+                    HttpStatus.NOT_FOUND,
+                    MessageError.FEATURE_NOT_FOUND.getMessage(),
+                    MessageError.FEATURES_NOT_FOUND.getDescription());
+        }
+    }
+
+    /**
+     * Disables a feature flag identified by its UUID.
+     * This method validates the feature and the request,
+     * then updates de relevan configurations to set them as disabled.
+     * 
+     * @override
+     * @param featureId        the UUID of the feature to be disabled
+     * @param toggleRequestDto a DTO containing the clientID and/or environment
+     *                         where the feature
+     *                         should be disabled
+     * @throws FeatureFlagException if the feature does not exist, if the requestDto
+     *                              is
+     */
+
+    @Override
+    public void disableFeatureForClientOrEnvironment(UUID featureId, FeatureToggleRequestDto toggleRequestDto) {
+
+        // 1. Retrives the feature by its ID, if not found, throws an exception
+        Feature feature = findById(featureId);
+
+        // 2. Validates the request DTO (must contain at least clientId or environment)
+        validateFeatureToggleRequest(toggleRequestDto);
+
+        // 3. Get the list of configurations associates with this feature
+        List<FeatureConfig> featureConfigList = feature.getConfigs();
+
+        // 4. Filter configurations that match the request conditions:
+        // - If clientId is null, ignore it, otherwise compare with FeatureConfig
+        // clientId
+        // - If environment is null, ignore it, otherwise compare with FeatureConfig
+        // environment
+
+        List<FeatureConfig> targetConfig = featureConfigList.stream()
+                .filter(fc -> {
+                    boolean clientIdMatch = toggleRequestDto.getClientId() == null
+                            || toggleRequestDto.getClientId().equals(fc.getClientId());
+                    boolean environmentMatch = toggleRequestDto.getEnvironment() == null
+                            || toggleRequestDto.getEnvironment() == fc.getEnvironment();
+                    return clientIdMatch && environmentMatch;
+                })
+                .toList();
+
+        if (!targetConfig.isEmpty()) {
+            targetConfig.forEach(fc -> fc.setEnabled(false));
+            featureRepository.save(feature);
+        } else {
+            throw new FeatureFlagException(
+                    HttpStatus.NOT_FOUND,
+                    MessageError.FEATURE_NOT_FOUND.getMessage(),
+                    MessageError.FEATURES_NOT_FOUND.getDescription());
+
+        }
+
+    }
+
+    private void validateFeatureToggleRequest(FeatureToggleRequestDto toggleRequestDto) {
+        boolean clientIdEmpty = toggleRequestDto.getClientId() == null || toggleRequestDto.getClientId().isBlank();
+        boolean environmentEmpty = toggleRequestDto.getEnvironment() == null;
+
+        if (clientIdEmpty && environmentEmpty) {
+            throw new FeatureFlagException(
+                    HttpStatus.NOT_FOUND,
+                    MessageError.FEATURE_TOGGLE_REQUEST_INVALID.getMessage(),
+                    MessageError.FEATURE_TOGGLE_REQUEST_INVALID.getDescription());
+        }
+    }
+
 }

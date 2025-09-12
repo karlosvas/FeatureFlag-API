@@ -33,7 +33,14 @@ public enum MessageError {
     DTO_FIELDS_NOT_VALID(HttpStatus.BAD_REQUEST, "DTO_FIELDS_NOT_VALID", ""),
     DATA_ACCESS_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "DATA_ACCESS_ERROR", ""),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", ""),
-    MAP_QUERY_PARAMS_NOT_VALID(HttpStatus.BAD_REQUEST, "MAP_QUERY_PARAMS_NOT_VALID", "The map of query parameters is not valid.");    
+    MAP_QUERY_PARAMS_NOT_VALID(HttpStatus.BAD_REQUEST, "MAP_QUERY_PARAMS_NOT_VALID", "The map of query parameters is not valid."),
+    
+    //FEATURE CONFIG ERRORS
+    FEATURE_CONFIG_NOT_FOUND(HttpStatus.NOT_FOUND, "FEATURE CONFIG NOT FOUND", "No matching configuration found for the given clientId or environment."),
+    FEATURE_TOGGLE_REQUEST_INVALID(HttpStatus.BAD_REQUEST, "FEATURE_TOGGLE_REQUEST_INVALID", "Either clientId or environment must be provided.");
+
+    
+    
     private final HttpStatus status;
     private final String message;
     private final String description;
