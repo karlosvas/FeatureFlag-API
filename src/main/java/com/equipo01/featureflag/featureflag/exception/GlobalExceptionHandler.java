@@ -8,6 +8,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -47,6 +49,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDto> handleGenericException(Exception ex) {
+            if (ex instanceof AccessDeniedException || ex instanceof AuthenticationException) {
+        throw (RuntimeException) ex; // deja que lo maneje Spring Security
+    }
         ErrorDto errorResponse = ErrorDto.builder()
                 .message(MessageError.INTERNAL_SERVER_ERROR.getMessage())
                 .description(ex.getMessage())

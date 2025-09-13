@@ -6,6 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.equipo01.featureflag.featureflag.dto.UserDTO;
+import com.equipo01.featureflag.featureflag.dto.request.UserRequestDTO;
 import com.equipo01.featureflag.featureflag.model.User;
  
 /**
@@ -30,4 +31,9 @@ public interface UserMapper {
 
     // List<UserDTO> -> List<User>
     List<User> userDTOListToUsersList(List<UserDTO> listUsersDTOs);
+
+    // UserRequestDTO -> User
+    @Mapping(target = "role", constant = "USER")
+    @Mapping(target = "active", constant = "true")
+    UserDTO defaultUserDto(UserRequestDTO userRequestDTO);
 }

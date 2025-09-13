@@ -30,7 +30,7 @@ import com.equipo01.featureflag.featureflag.exception.CustomAuthenticationEntryP
  */
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean

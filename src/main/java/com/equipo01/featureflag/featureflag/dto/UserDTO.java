@@ -2,7 +2,6 @@ package com.equipo01.featureflag.featureflag.dto;
 
 import java.util.UUID;
 
-import com.equipo01.featureflag.featureflag.dto.request.UserRequestDTO;
 import com.equipo01.featureflag.featureflag.model.enums.Role;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -67,14 +66,4 @@ public class UserDTO {
 	@NotNull
 	private Boolean active;
 
-	// TODO:: Mapper??
-	public static UserDTO buildUserDtoDefault(UserRequestDTO userRequestDTO) {
-		return UserDTO.builder()
-                .username(userRequestDTO.getUsername())
-                .email(userRequestDTO.getEmail())
-                .password(userRequestDTO.getPassword())
-                .role(Role.USER)
-                .active(true)
-                .build();
-	}
 }

@@ -4,7 +4,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * DTO que representa la solicitud de creación de un nuevo usuario.
@@ -19,6 +21,8 @@ import lombok.Getter;
  * - password: Contraseña del usuario.
  */
 @Getter
+@Setter
+@Builder
 @Schema(description = "DTO for user creation request")
 public class UserRequestDTO {
     @Schema(description = "Username for login", example = "usuario01")
