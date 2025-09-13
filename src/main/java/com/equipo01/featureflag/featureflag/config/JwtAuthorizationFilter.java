@@ -41,9 +41,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
   /**
    * Mètodo que se ejecuta para cada petición HTTP. -1.Obtiene el token JWT de la cabecera
-   * Authorization. -2.Valida el token usando {@link JwtUtil}. -3.Si el token es válido, extrae el
-   * nombre de usuario y crea un objeto de autenticación. -4.Estalece la autenticación en el
-   * contexto de seguridad -5.Continúa con la cadena de filtros.
+   * Authorization.
+   * -2.Valida el token usando {@link JwtUtil}.
+   * -3.Si el token es válido, extrae el
+   * nombre de usuario y crea un objeto de autenticación. 
+   * -4.Estalece la autenticación en el
+   * contexto de seguridad 
+   * -5.Continúa con la cadena de filtros.
    *
    * @param request petición HTTP
    * @param response respuesta HTTP
@@ -73,9 +77,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
   }
 
   /**
-   * Método que obtiene el token JWT de la cabecera Authorization de la petición HTTP. -1. Obtenemos
-   * el contenido de la cabecera Authorization. -2. Verificamos que la cabecera no sea nula y
-   * comience con Bearer . -3. Extraemos el token quitando el prefijo Bearer . -4. Si la cabecera no
+   * Método que obtiene el token JWT de la cabecera Authorization de la petición HTTP.
+   * -1. Obtenemos
+   * el contenido de la cabecera Authorization.
+   * -2. Verificamos que la cabecera no sea nula y
+   * comience con Bearer . 
+   * -3. Extraemos el token quitando el prefijo Bearer . -4. Si la cabecera no
    * es válida, retornamos null.
    *
    * @param request petición HTTP

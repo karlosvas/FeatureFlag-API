@@ -1,14 +1,18 @@
 package com.equipo01.featureflag.featureflag.controller.impl;
 
 import com.equipo01.featureflag.featureflag.anotations.SwaggerApiResponses;
+import com.equipo01.featureflag.featureflag.dto.UserDTO;
 import com.equipo01.featureflag.featureflag.dto.request.LoginRequestDto;
 import com.equipo01.featureflag.featureflag.dto.request.UserRequestDTO;
 import com.equipo01.featureflag.featureflag.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import java.util.List;
 import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -81,7 +85,56 @@ public class UserControllerImp {
     return ResponseEntity.ok(userService.loginUser(loginRequestDto));
   }
 
+  /**
+ * Endpoint to register a new admin user.
+ *
+ * Allows the creation of a new admin user in the system.
+ *
+ * @param userDTO the DTO containing the information of the admin user to register
+ * @return ResponseEntity with a message indicating the result of the registration
+ */
+  @PostMapping("/register/admin")
+  public ResponseEntity<String> registerAdmin(@Valid @RequestBody UserRequestDTO userDTO) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(userService.registerAdmin(userDTO));
+  }
+
+    /**
+   * Endpoint to retrieve all users in the system.
+   *
+   * Accessible by users with ADMIN or USER roles.
+   *
+   * @return ResponseEntity containing a list of all user DTOs.
+   */
+  @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+  @GetMapping("/users")
+  public ResponseEntity<List<UserDTO>> getAllUsers() {
+    return ResponseEntity.ok(userService.getAllUsers());
+  }
+
+  /**
+   * Endpoint to obtain a user by email.
+   *
+   * Accessible by users with ADMIN or USER roles.
+   *
+   * @param email the email of the user to retrieve
+   * @return ResponseEntity containing the user DTO.
+   */
+  @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+  @GetMapping("/user/{email}")
+  public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
+    return ResponseEntity.ok(userService.getUserByEmail(email));
+  }
+
+  /**
+   * Endpoint to delete a user by their UUID.
+   *
+   * Accessible only by users with ADMIN role.
+   *
+   * @param userId the UUID of the user to delete
+   * @return ResponseEntity with no content if deletion is successful.
+   */
   @DeleteMapping("/{userId}")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Void> deleteUser(@PathVariable String userId) {
     UUID uuid = UUID.fromString(userId);
     userService.deleteUser(uuid);

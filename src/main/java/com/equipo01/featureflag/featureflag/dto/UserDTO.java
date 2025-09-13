@@ -49,11 +49,6 @@ public class UserDTO {
   @NotBlank
   private String email;
 
-  @Schema(description = "User password", example = "passwordSeguro123")
-  @NotBlank
-  @Size(min = 6, max = 100)
-  private String password;
-
   @Schema(description = "Role assigned to the user", example = "USER")
   @NotNull
   private Role role;

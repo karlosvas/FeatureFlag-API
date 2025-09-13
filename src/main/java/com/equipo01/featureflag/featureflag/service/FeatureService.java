@@ -21,9 +21,9 @@ public interface FeatureService {
    * @param name the name of the feature flag
    * @return true if a feature flag with the given name exists, false otherwise
    */
-  boolean existsByName(String name);
+  public boolean existsByName(String name);
 
-  boolean existsById(UUID id);
+  public boolean existsById(UUID id);
 
   /**
    * Retrieves a feature flag by its UUID.
@@ -31,7 +31,7 @@ public interface FeatureService {
    * @param featureId the UUID of the feature flag
    * @return the Feature entity if found
    */
-  Feature findById(UUID featureId);
+  public Feature findById(UUID featureId);
 
   /**
    * Creates a new feature flag.
@@ -39,7 +39,7 @@ public interface FeatureService {
    * @param requestDto the data for the new feature flag
    * @return the created feature flag as a response DTO
    */
-  FeatureResponseDto createFeature(FeatureRequestDto requestDto);
+  public FeatureResponseDto createFeature(FeatureRequestDto requestDto);
 
   /**
    * Retrieves a feature flag by its ID as a string.
@@ -47,9 +47,9 @@ public interface FeatureService {
    * @param featureId the ID of the feature flag as a string
    * @return the feature flag as a response DTO
    */
-  FeatureResponseDto getFeatureById(String featureId);
+  public FeatureResponseDto getFeatureById(String featureId);
 
-  Boolean checkFeatureIsActive(String nameFeature, UUID clientID, Environment environment);
+  public Boolean checkFeatureIsActive(String nameFeature, UUID clientID, Environment environment);
 
   /**
    * Retrieves a paginated list of feature flags, optionally filtered by name and enabled status.
@@ -60,7 +60,7 @@ public interface FeatureService {
    * @param size the number of items per page
    * @return a paginated response DTO containing the list of feature flags
    */
-  GetFeatureResponseDto getFeatures(
+  public GetFeatureResponseDto getFeatures(
       String name, Boolean enabledByDefault, Integer page, Integer size);
 
   /**
@@ -69,7 +69,7 @@ public interface FeatureService {
    * @param featurePage the page of features to check
    * @throws FeatureFlagException if the page is empty
    */
-  void isPageEmpty(Page<Feature> featurePage);
+  public void isPageEmpty(Page<Feature> featurePage);
 
   public void deleteFeature(UUID featureId);
 }

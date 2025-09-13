@@ -15,6 +15,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,6 +53,7 @@ public class FeatureControllerImp implements FeatureController {
       summary = "Crea una nueva feature flag",
       description =
           "Crea una nueva feature flag con los datos proporcionados y devuelve la feature creada.")
+  @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
   public ResponseEntity<FeatureResponseDto> createFeature(
       @Valid @RequestBody FeatureRequestDto requestDto) {
     FeatureResponseDto responseDto = featureService.createFeature(requestDto);
@@ -68,6 +70,7 @@ public class FeatureControllerImp implements FeatureController {
   @Operation(
       summary = "Obtiene todas las feature flags",
       description = "Devuelve una lista de todas las feature flags disponibles.")
+  @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
   public ResponseEntity<GetFeatureResponseDto> getFeatures(
       @RequestParam(value = "name", required = false) String name,
       @RequestParam(value = "enabled", required = false) Boolean enabledByDefault,
@@ -95,6 +98,7 @@ public class FeatureControllerImp implements FeatureController {
       summary = "Obtiene una feature flag por su ID",
       description =
           "Devuelve los detalles de una feature flag específica identificada por su UUID.")
+  @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
   public ResponseEntity<FeatureResponseDto> getFeature(
       @PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format")
           String featureId) {
@@ -106,6 +110,7 @@ public class FeatureControllerImp implements FeatureController {
       summary = "Verifica si una feature está activa para un cliente en un entorno específico",
       description = "Devuelve true si la feature está activa, false en caso contrario.")
   @GetMapping("/check")
+  @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
   public ResponseEntity<Boolean> checkFeatureIsActive(
       @RequestParam String nameFeature,
       @RequestParam String clientID,
@@ -117,6 +122,7 @@ public class FeatureControllerImp implements FeatureController {
   }
 
   @DeleteMapping("/{featureId}")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Void> deleteFeature(@PathVariable String featureId) {
     UUID uuid = UUID.fromString(featureId);
     featureService.deleteFeature(uuid);

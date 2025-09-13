@@ -8,8 +8,11 @@ import com.equipo01.featureflag.featureflag.exception.FeatureFlagException;
 import com.equipo01.featureflag.featureflag.exception.enums.MessageError;
 import com.equipo01.featureflag.featureflag.mapper.UserMapper;
 import com.equipo01.featureflag.featureflag.model.User;
+import com.equipo01.featureflag.featureflag.model.enums.Role;
 import com.equipo01.featureflag.featureflag.repository.UserRepository;
 import com.equipo01.featureflag.featureflag.service.UserService;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -50,17 +53,45 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public String registerUser(UserRequestDTO userRequestDTO) {
     checkRegister(userRequestDTO.getEmail(), userRequestDTO.getUsername());
-
+    // By default, it assigns the User role
     UserDTO newUserDTO = userMapper.defaultUserDto(userRequestDTO);
 
     User user = userMapper.userDTOToUser(newUserDTO);
-    user.setPassword(passwordEncoder.encode(newUserDTO.getPassword()));
+    user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
     userRepository.save(user);
 
     logger.info("User registered: {}", user.getEmail());
 
     Authentication authentication =
-        buildAuthentication(newUserDTO.getUsername(), newUserDTO.getPassword());
+        buildAuthentication(newUserDTO.getUsername(), userRequestDTO.getPassword());
+
+    return jwtUtil.generateToken(authentication);
+  }
+
+  /**
+   * Endpoint to register a new admin user.
+   * 
+   * @param userRequestDTO the DTO containing the information of the admin user to register
+   * @return a token JWT if the registration is successful
+   */
+  @Transactional
+  public String registerAdmin(UserRequestDTO userRequestDTO) {
+    checkRegister(userRequestDTO.getEmail(), userRequestDTO.getUsername());
+
+    // By default, it assigns the User role because immediately after we set the role to ADMIN
+    UserDTO newUserDTO = userMapper.defaultUserDto(userRequestDTO);
+    newUserDTO.setRole(Role.ADMIN);
+
+    // Map the UserDTO to User entity, encode the password, and save the user
+    User user = userMapper.userDTOToUser(newUserDTO);
+    user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+    userRepository.save(user);
+
+    logger.info("Admin user registered: {}", user.getEmail());
+
+    // Build authentication and generate JWT token
+    Authentication authentication =
+        buildAuthentication(newUserDTO.getUsername(), userRequestDTO.getPassword());
 
     return jwtUtil.generateToken(authentication);
   }
@@ -90,20 +121,19 @@ public class UserServiceImpl implements UserService {
    */
   @Override
   public void checkRegister(String email, String username) {
-    Optional<User> userByEmail = findByEmail(email);
-    Optional<User> userByUsername = findByUsername(username);
-
-    if (userByEmail.isPresent()) {
-      throw new FeatureFlagException(
-          MessageError.EMAIL_ALREADY_EXISTS.getStatus(),
-          MessageError.EMAIL_ALREADY_EXISTS.getMessage(),
-          MessageError.EMAIL_ALREADY_EXISTS.getDescription());
+    // If user with email exists, throw exception
+    if (userRepository.findByEmail(email).isPresent()) {
+        throw new FeatureFlagException(
+            MessageError.USERNAME_ALREADY_EXISTS.getStatus(),
+            MessageError.USERNAME_ALREADY_EXISTS.getMessage(),
+            MessageError.USERNAME_ALREADY_EXISTS.getDescription());
     }
-    if (userByUsername.isPresent()) {
-      throw new FeatureFlagException(
-          MessageError.USERNAME_ALREADY_EXISTS.getStatus(),
-          MessageError.USERNAME_ALREADY_EXISTS.getMessage(),
-          MessageError.USERNAME_ALREADY_EXISTS.getDescription());
+    // If user with username exists, throw exception
+    if (userRepository.findByUsername(username).isPresent()) {
+        throw new FeatureFlagException(
+            MessageError.USERNAME_ALREADY_EXISTS.getStatus(),
+            MessageError.USERNAME_ALREADY_EXISTS.getMessage(),
+            MessageError.USERNAME_ALREADY_EXISTS.getDescription());
     }
   }
 
@@ -115,15 +145,10 @@ public class UserServiceImpl implements UserService {
    */
   @Override
   public void checkLogin(LoginRequestDto loginRequestDto) {
-    Optional<User> user = findByUsername(loginRequestDto.getUsername());
-    if (user.isEmpty()) {
-      throw new FeatureFlagException(
-          MessageError.INVALID_USERNAME.getStatus(),
-          MessageError.INVALID_USERNAME.getMessage(),
-          MessageError.INVALID_USERNAME.getDescription());
-    }
-
-    if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.get().getPassword())) {
+    // If user with username does not exist, throw exception
+    User user = findByUsername(loginRequestDto.getUsername());
+    // If password does not match, throw exception
+    if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
       throw new FeatureFlagException(
           MessageError.INVALID_PASSWORD.getStatus(),
           MessageError.INVALID_PASSWORD.getMessage(),
@@ -138,8 +163,15 @@ public class UserServiceImpl implements UserService {
    * @return an Optional containing the user if found, empty otherwise
    */
   @Override
-  public Optional<User> findByEmail(String email) {
-    return userRepository.findByEmail(email);
+  public User findByEmail(String email) {
+    Optional<User> user = userRepository.findByEmail(email);
+    if (user.isEmpty()) {
+      throw new FeatureFlagException(
+          MessageError.USER_NOT_FOUND.getStatus(),
+          MessageError.USER_NOT_FOUND.getMessage(),
+          MessageError.USER_NOT_FOUND.getDescription());
+    }
+    return user.get();
   }
 
   /**
@@ -149,8 +181,15 @@ public class UserServiceImpl implements UserService {
    * @return an Optional containing the user if found, empty otherwise
    */
   @Override
-  public Optional<User> findByUsername(String username) {
-    return userRepository.findByUsername(username);
+  public User findByUsername(String username) {
+    Optional<User> user = userRepository.findByUsername(username);
+    if (user.isEmpty()) {
+      throw new FeatureFlagException(
+          MessageError.USER_NOT_FOUND.getStatus(),
+          MessageError.USER_NOT_FOUND.getMessage(),
+          MessageError.USER_NOT_FOUND.getDescription());
+    }
+    return user.get();
   }
 
   /**
@@ -176,15 +215,49 @@ public class UserServiceImpl implements UserService {
     return true;
   }
 
+    /**
+   * Obtain a user by email.
+   * 
+   * @param email the email of the user
+   * @return UserDTO the user DTO
+   */
+  public UserDTO getUserByEmail(String email) {
+      // Find the user entity by email, throws exception if not found
+      User user = this.findByEmail(email);
+      // Map the User entity to UserDTO and return
+      return userMapper.userToUserDTO(user);
+  }
+
+  /**
+   * Retrieve all users in the system.
+   * 
+   * @return List<UserDTO> list of all user DTOs
+   */
+  public List<UserDTO> getAllUsers() {
+      // Find all user entities and map them to a list of UserDTOs
+      return userMapper.userListToUserDTOList(userRepository.findAll());
+  }
+
+  /**
+   * Delete a user by their UUID.
+   * 
+   * {link @Transactional} Ensures that the delete operation is executed within a transaction.
+   * 
+   * @param userId the UUID of the user to delete
+   * @throws FeatureFlagException if the user does not exist
+   */
   @Transactional
   public void deleteUser(UUID userId) {
-    if (userRepository.existsById(userId)) {
-      userRepository.deleteById(userId);
-    } else {
-      throw new FeatureFlagException(
-          MessageError.USER_NOT_FOUND.getStatus(),
-          MessageError.USER_NOT_FOUND.getMessage(),
-          MessageError.USER_NOT_FOUND.getDescription());
-    }
+      // Check if the user exists before attempting to delete
+      if (userRepository.existsById(userId)) {
+          // Delete the user by their ID
+          userRepository.deleteById(userId);
+      } else {
+          // Throw a custom exception if the user is not found
+          throw new FeatureFlagException(
+              MessageError.USER_NOT_FOUND.getStatus(),
+              MessageError.USER_NOT_FOUND.getMessage(),
+              MessageError.USER_NOT_FOUND.getDescription());
+      }
   }
 }

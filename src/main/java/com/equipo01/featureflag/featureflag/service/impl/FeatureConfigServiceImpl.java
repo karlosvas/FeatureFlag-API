@@ -24,7 +24,7 @@ public class FeatureConfigServiceImpl implements FeatureConfigService {
   private final FeatureConfigRepository featureConfigRepository;
   private final FeatureService featureService;
 
-  public ResponseEntity<FeatureConfigResponseDto> createFeatureConfig(
+  public FeatureConfigResponseDto createFeatureConfig(
       FeatureConfigRequestDto requestDto) {
     // FreatureConfigRequestDto -> FeatureConfig
     FeatureConfig featureConfig = featureConfigMapper.toEntity(requestDto);
@@ -40,23 +40,22 @@ public class FeatureConfigServiceImpl implements FeatureConfigService {
     featureConfig = featureConfigRepository.save(featureConfig);
 
     // FeatureConfig -> FeatureResponseDto
-    return ResponseEntity.ok(featureConfigMapper.toDto(featureConfig));
+    return featureConfigMapper.toDto(featureConfig);
   }
-  ;
 
-  public ResponseEntity<List<FeatureConfigResponseDto>> getFeatureByID(UUID id) {
-    return ResponseEntity.ok(
+  public List<FeatureConfigResponseDto> getFeatureByID(UUID id) {
+    return 
         featureConfigRepository
             .findById(id)
             .map(featureConfigMapper::toDto)
             .map(List::of)
-            .orElseGet(List::of));
+            .orElseGet(List::of);
   }
 
-  public ResponseEntity<List<FeatureConfigResponseDto>> getAllFeatures() {
+  public List<FeatureConfigResponseDto> getAllFeatures() {
     List<FeatureConfig> featureConfigs = featureConfigRepository.findAll();
     List<FeatureConfigResponseDto> responseDtos = featureConfigMapper.toDtoList(featureConfigs);
-    return ResponseEntity.ok(responseDtos);
+    return responseDtos;
   }
 
   @Transactional

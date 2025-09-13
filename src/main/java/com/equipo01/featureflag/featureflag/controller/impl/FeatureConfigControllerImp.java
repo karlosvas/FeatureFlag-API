@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,22 +27,23 @@ public class FeatureConfigControllerImp implements FeatureConfigController {
   private final FeatureConfigService featureConfigService;
 
   @PostMapping
+  @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
   public ResponseEntity<FeatureConfigResponseDto> createFeatureConfig(
       @Valid @RequestBody FeatureConfigRequestDto requestDto) {
-    return featureConfigService.createFeatureConfig(requestDto);
+      return ResponseEntity.status(HttpStatus.CREATED).body(featureConfigService.createFeatureConfig(requestDto));
   }
-  ;
 
   @GetMapping("/{id}")
+  @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
   public ResponseEntity<List<FeatureConfigResponseDto>> getFeatureByID(
       @PathVariable("id") String id) {
     UUID uuid = UUID.fromString(id);
-    return featureConfigService.getFeatureByID(uuid);
+    return ResponseEntity.ok(featureConfigService.getFeatureByID(uuid));
   }
 
   @GetMapping
   public ResponseEntity<List<FeatureConfigResponseDto>> getAllFeatures() {
-    return featureConfigService.getAllFeatures();
+    return ResponseEntity.ok(featureConfigService.getAllFeatures());
   }
 
   @GetMapping("/test")
@@ -50,6 +53,7 @@ public class FeatureConfigControllerImp implements FeatureConfigController {
   }
 
   @DeleteMapping("/{featureConfigId}")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Void> deleteFeatureConfig(@PathVariable String featureConfigId) {
     UUID uuid = UUID.fromString(featureConfigId);
     featureConfigService.deleteFeatureConfig(uuid);
