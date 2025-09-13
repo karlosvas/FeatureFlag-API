@@ -187,6 +187,40 @@ El sistema verifica en orden de prioridad:
   2. Configuración por entorno
   3. Valor por defecto (`enabledByDefault`)
 
+## 🔍 SonarQube
+
+SonarQube is a static analysis tool that checks your code and signals if something is wrong with it.
+
+### Steps
+
+1. Open a browser and go to [http://localhost:9000](http://localhost:9000).
+2. Log in with the following credentials:
+   - **Login**: `admin`
+   - **Password**: `admin`
+3. After logging in, you will be asked to change your password.  
+   👉 Set a secure password (example: `Featureflag2025`).
+4. Create a local project:
+   - Click **Create a local project**.
+   - Enter a name in **Project display name** (example: `FeatureflagApi`).
+   - Enter the same name in **Project key**.
+   - Enter `develop` or `main` in **Main branch name**.
+   - Click **Next**.
+5. Choose **Use the global setting** and click **Create project**.
+6. A project will be generated. For **Analysis Method**, choose **Locally**.
+7. In **Token generation**, set it to **Expires** and click **Generate**.  
+   ⚠️ A token will be generated → save it (e.g., in a `.env` file), because it will be needed when running the analysis. Then click **Continue**.
+8. Run analysis on your project:
+   - Select **Maven**.
+   - Copy the commands given by SonarQube.  
+     ⚠️ To run locally using containers, the URL must be the **service name of the container**; in this case: `sonarqube`.
+
+   ```bash
+   mvn clean verify sonar:sonar \
+     -Dsonar.projectKey=FeatureflagApi \
+     -Dsonar.projectName='FeatureflagApi' \
+     -Dsonar.host.url=http://sonarqube:9000 \
+     -Dsonar.token=$MY_SONARQUBE_TOKEN
+
 ## 📖 Documentación
 
 Accede a la documentación interactiva de Swagger en: `http://localhost:8080/swagger-ui.html`
