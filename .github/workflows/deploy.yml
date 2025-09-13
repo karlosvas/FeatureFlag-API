@@ -34,6 +34,21 @@ env:
   ACCESS_TOKEN_EXPIRATION: ${{ secrets.ACCESS_TOKEN_EXPIRATION }}
 
 jobs:
+  format-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+      - name: Apply code formatting with Spotless
+        run: mvn spotless:apply
+      - name: Check code formatting with Spotless
+        run: mvn spotless:check
+
   test-build:
     runs-on: ubuntu-latest
     steps:

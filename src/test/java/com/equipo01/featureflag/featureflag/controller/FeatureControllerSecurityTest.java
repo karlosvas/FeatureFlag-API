@@ -15,33 +15,35 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @AutoConfigureMockMvc
 class FeatureControllerSecurityTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+  @Autowired private MockMvc mockMvc;
 
-    @Value("${api.features}")
-    private String featuresEndpoint;
-    @Value("${api.configurations}")
-    private String featuresConfigEndpoint;
+  @Value("${api.features}")
+  private String featuresEndpoint;
 
+  @Value("${api.configurations}")
+  private String featuresConfigEndpoint;
 
-    @Test
-    void whenNoToken_thenUnauthorized401() throws Exception {
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
-                .get(featuresEndpoint)
-                .param("page", "0")
-                .param("size", "10"))
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
-                .andReturn();
-        String stringResult = result.getResponse().getContentAsString();
-        System.out.println(stringResult);
-    }
+  @Test
+  void whenNoToken_thenUnauthorized401() throws Exception {
+    MvcResult result =
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders.get(featuresEndpoint).param("page", "0").param("size", "10"))
+            .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+            .andReturn();
+    String stringResult = result.getResponse().getContentAsString();
+    System.out.println(stringResult);
+  }
 
-    @WithMockUser(username = "admin", password = "adminPassword123", roles = { "USER" })
-    @Test
-    void whenUserWithoutRole_thenForbidden403() throws Exception {
+  @WithMockUser(
+      username = "admin",
+      password = "adminPassword123",
+      roles = {"USER"})
+  @Test
+  void whenUserWithoutRole_thenForbidden403() throws Exception {
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .get(featuresConfigEndpoint + "/test"))
-                .andExpect(MockMvcResultMatchers.status().isForbidden());
-    }
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(featuresConfigEndpoint + "/test"))
+        .andExpect(MockMvcResultMatchers.status().isForbidden());
+  }
 }
