@@ -11,4 +11,6 @@ public interface FeatureConfigController {
     ResponseEntity<List<FeatureConfigResponseDto>> getFeatureByID(String id);
 
     ResponseEntity<List<FeatureConfigResponseDto>> getAllFeatures();
+
+    ResponseEntity<List<FeatureConfigResponseDto>> setFeatureEnabledOrDisabled(String featureConfigId, boolean enable);
 }

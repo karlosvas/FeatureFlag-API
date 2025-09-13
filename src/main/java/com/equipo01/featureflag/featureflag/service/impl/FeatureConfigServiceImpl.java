@@ -1,6 +1,7 @@
 package com.equipo01.featureflag.featureflag.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import com.equipo01.featureflag.featureflag.dto.request.FeatureConfigRequestDto;
@@ -51,5 +52,17 @@ public class FeatureConfigServiceImpl implements FeatureConfigService {
         List<FeatureConfig> featureConfigs = featureConfigRepository.findAll();
         List<FeatureConfigResponseDto> responseDtos = featureConfigMapper.toDtoList(featureConfigs);
         return ResponseEntity.ok(responseDtos);
+    }
+
+    public ResponseEntity<List<FeatureConfigResponseDto>> enableOrDisableFeature(UUID featureConfigUUID, boolean enable) {
+        Optional<FeatureConfig> featureConfig = featureConfigRepository.findById(featureConfigUUID);
+
+        if (featureConfig.isPresent()) {
+            featureConfig.get().setEnabled(enable);
+            featureConfigRepository.save(featureConfig.get());
+            return ResponseEntity.ok(List.of(featureConfigMapper.toDto(featureConfig.get())));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

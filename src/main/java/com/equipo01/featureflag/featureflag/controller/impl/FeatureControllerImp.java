@@ -42,7 +42,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/features")
+@RequestMapping("${api.features}")
 public class FeatureControllerImp implements FeatureController {
 
     private final FeatureService featureService;
@@ -98,23 +98,6 @@ public class FeatureControllerImp implements FeatureController {
         UUID uuid = UUID.fromString(clientID);
         Boolean isActive = featureService.checkFeatureIsActive(nameFeature, uuid, env);
         return ResponseEntity.ok(isActive);
-    }
-
-    @PostMapping("/enable/{featureId}")
-    @SwaggerApiResponses
-    @Operation(summary = "Habilita una feature flag", description = "Habilita una feature flag específica identificada por su UUID.")
-    public ResponseEntity<?> enableFreature(@PathVariable String featureId, @RequestBody FeatureRequestDto requestDto) {
-        // featureService.enableFeature(featureId, requestDto);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    @PostMapping("/disable/{featureId}")
-    @SwaggerApiResponses
-    @Operation(summary = "Deshabilita una feature flag", description = "Deshabilita una feature flag específica identificada por su UUID.")
-    public ResponseEntity<?> disableFreature(@PathVariable String featureId,
-            @RequestBody FeatureRequestDto requestDto) {
-        // featureService.disableFeature(featureId, requestDto);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PostMapping("/{id}/enable")
