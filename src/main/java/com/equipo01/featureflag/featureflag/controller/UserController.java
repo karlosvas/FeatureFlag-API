@@ -15,14 +15,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 /**
- * Controlador para gestionar las operaciones relacionadas con los usuarios.
- * Utiliza el servicio UserService para realizar las operaciones de negocio.
+ * Controller for managing user-related operations.
+ * Uses the UserService service to perform business operations.
  *
- * Proporciona endpoints para crear, actualizar y eliminar usuarios.
- * {@link RestController} Anotación de Spring que indica que esta clase es un
- * controlador REST.
- * {@link RequestMapping} Anotación de Spring que define la ruta base para
- * todos los endpoints en este controlador.
+ * Provides endpoints to create, update, and delete users.
+ * {@link RestController} Spring annotation indicating that this class is a
+ * REST controller.
+ * {@link RequestMapping} Spring annotation defining the base path for
+ * all endpoints in this controller.
  */
 @RestController
 @RequestMapping("/api/auth")
@@ -34,38 +34,38 @@ public class UserController {
     }
 
     /**
-     * Endpoint para verificar el estado del servicio.
+     * Endpoint to verify service status.
      */    
     @GetMapping("/health")
     @SwaggerApiResponses
-    @Operation(summary = "Verifica el estado del servicio", description = "Devuelve 'OK' si el servicio está funcionando correctamente.")
+    @Operation(summary = "Verify service status", description = "Returns 'OK' if the service is running correctly.")
     public String healthCheck() {
         return "OK";
     }
 
 
     /**
-     * Endpoint para registrar un nuevo usuario.
+     * Endpoint to register a new user.
      *
-     * @param UserRequestDTO objeto que contiene la información del usuario a registrar.
-     * @return el usuario registrado.
+     * @param UserRequestDTO object containing the information of the user to register.
+     * @return the registered user.
      */
     @PostMapping("/register")
     @SwaggerApiResponses
-    @Operation(summary = "Registra un nuevo usuario", description = "Registra un nuevo usuario con los datos proporcionados y devuelve el token JWT del uusuario.")
+    @Operation(summary = "Register a new user", description = "Registers a new user with the provided data and returns the user's JWT token.")
     public String registerUser(@Valid @RequestBody UserRequestDTO userDTO) {
         return userService.registerUser(userDTO);
     }
 
     /**
-     * Endpoint para iniciar sesión de un usuario.
+     * Endpoint to log in a user.
      *
-     * @param loginRequestDto objeto que contiene la información del usuario que intenta iniciar sesión.
-     * @return un mensaje indicando el resultado del intento de inicio de sesión.
+     * @param loginRequestDto object containing the information of the user trying to log in.
+     * @return a message indicating the result of the login attempt.
      */
     @PostMapping("/login")
     @SwaggerApiResponses
-    @Operation(summary = "Inicia sesión de un usuario", description = "Inicia sesión de un usuario con los datos proporcionados y devuelve el token JWT del usuario.")
+    @Operation(summary = "Log in a user", description = "Logs in a user with the provided data and returns the user's JWT token.")
     public String logginUser(@Valid @RequestBody LoginRequestDto loginRequestDto) {
         return userService.loginUser(loginRequestDto);
     }

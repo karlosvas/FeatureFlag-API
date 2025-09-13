@@ -20,29 +20,28 @@ import lombok.Setter;
 import java.util.UUID;
 
 import org.hibernate.annotations.Columns;
-import org.springframework.security.core.userdetails.UserDetails;
 
 /**
- * Representa la configuración de un feature toggle.
- * Esta clase contiene información sobre el estado de un feature toggle en diferentes entornos.
- * Esta clase es parte del modelo de datos de la aplicación y se utiliza para almacenar la configuración de los feature toggles en la base de datos.
- * 
- * Anotaciones utilizadas
- * - {@link Entity} Anotación de JPA que indica que esta clase es una entidad persistente.
- * - {@link Table} Anotación de JPA que especifica el nombre de la tabla
- * - {@link NoArgsConstructor} Genera un constructor sin argumentos.
- * - {@link AllArgsConstructor} Genera un constructor con todos los argumentos.
- * - {@link Getter} Genera los métodos get automáticamente.
- * - {@link Setter} Genera los métodos set automáticamente.
- * - {@link Builder} Genera el patrón builder para la clase
- * - {@link Columns} Se utiliza para especificar detalles sobre las columnas de la base de datos.
+ * Represents the configuration of a feature toggle.
+ * This class contains information about the state of a feature toggle in different environments.
+ * This class is part of the application's data model and is used to store the configuration of feature toggles in the database.
  *
- * Atributos:
- * - id: Identificador único de la configuración del feature toggle.
- * - environment: Entorno en el que se aplica la configuración (DEV, STAGING, PROD).
- * - clientId: Identificador del cliente al que pertenece la configuración.
- * - enabled: Estado del feature toggle (habilitado o deshabilitado).
- * - feature: Referencia a la entidad Feature a la que pertenece esta configuración.
+ * Annotations used
+ * - {@link Entity} JPA annotation indicating that this class is a persistent entity.
+ * - {@link Table} JPA annotation specifying the name of the table.
+ * - {@link NoArgsConstructor} Generates a no-arguments constructor.
+ * - {@link AllArgsConstructor} Generates a constructor with all arguments.
+ * - {@link Getter} Generates getter methods automatically.
+ * - {@link Setter} Generates setter methods automatically.
+ * - {@link Builder} Generates the builder pattern for the class.
+ * - {@link Columns} Used to specify details about the database columns.
+ *
+ * Attributes:
+ * - id: Unique identifier of the feature toggle configuration.
+ * - environment: Environment in which the configuration applies (DEV, STAGING, PROD).
+ * - clientId: Identifier of the client to which the configuration belongs.
+ * - enabled: State of the feature toggle (enabled or disabled).
+ * - feature: Reference to the Feature entity to which this configuration belongs.
  */
 @NoArgsConstructor
 @AllArgsConstructor
@@ -53,8 +52,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(name = "feature_configs")
 public class FeatureConfig {
     /**
-    * {@link Id} Indica el identificador único de la entidad.
-    * {@link GeneratedValue} Especifica la estrategia de generación de valores para el identificador.
+    * {@link Id} Indicates the unique identifier of the entity.
+    * {@link GeneratedValue} Specifies the value generation strategy for the identifier.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -71,7 +70,7 @@ public class FeatureConfig {
     @Column(nullable = false)
     private boolean enabled;
 
-    //  N:1 -> Muchas configuraciones pertenecen a una Feature
+    //  N:1 -> Many configurations can belong to one feature
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feature_id", nullable = false)
     private Feature feature;

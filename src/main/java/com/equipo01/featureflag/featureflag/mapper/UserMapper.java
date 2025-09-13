@@ -9,12 +9,12 @@ import com.equipo01.featureflag.featureflag.dto.UserDTO;
 import com.equipo01.featureflag.featureflag.model.User;
  
 /**
- * Mapper que convierte la entidad User a DTO y la DTO a entidad
- * y viceversa.
- * Utiliza MapStruct para generar el código de mapeo automáticamente.
+ * Mapper that converts the User entity to DTO and the DTO to entity
+ * and vice versa.
+ * Uses MapStruct to automatically generate the mapping code.
  * 
- * {@link Mapper} Anotación de MapStruct que indica que esta interfaz es un mapper.
- * {@link Mapping} Anotación de MapStruct que indica cómo se deben mapear
+ * {@link Mapper} MapStruct annotation indicating that this interface is a mapper.
+ * {@link Mapping} MapStruct annotation indicating how to map
  */
 @Mapper(config = MapperConfiguration.class)
 public interface UserMapper {

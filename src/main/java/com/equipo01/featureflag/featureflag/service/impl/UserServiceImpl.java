@@ -22,17 +22,17 @@ import com.equipo01.featureflag.featureflag.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Servicio para gestionar las operaciones relacionadas con los usuarios.
- * Utiliza el repositorio UserRepository para interactuar con la base de datos.
- * Utiliza UserMapper para convertir entre entidades y DTOs.
- * Utiliza JwtUtil para generar tokens JWT.
- * Utiliza SecurityConfig para el cifrado de contraseñas.
- * Utiliza AuthenticationManager para gestionar la autenticación de usuarios.
- * Utiliza Logger para registrar información y errores en el servicio.
+ * Service for managing user-related operations.
+ * Uses the UserRepository repository to interact with the database.
+ * Uses UserMapper to convert between entities and DTOs.
+ * Uses JwtUtil to generate JWT tokens.
+ * Uses SecurityConfig for password encryption.
+ * Uses AuthenticationManager to manage user authentication.
+ * Uses Logger to log information and errors in the service.
  * 
- * Anotaciones utilizadas:
- * - {@link Service} Anotación de Spring que indica que esta clase es un
- * servicio.
+ * Annotations used:
+ * - {@link Service} Spring annotation indicating that this class is a
+ * service.
  */
 @Service
 @RequiredArgsConstructor
@@ -45,11 +45,11 @@ public class UserServiceImpl implements UserService {
     private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     /**
-     * Registra un nuevo usuario en el sistema.
+     * Registers a new user in the system.
      *
-     * @param userRequestDTO el DTO del usuario que contiene la información
-     *                       necesaria para el registro y login
-     * @return un token JWT si el registro es exitoso
+     * @param userRequestDTO user's DTO containing the necessary information for
+     *                       registration
+     * @return a JWT token if registration is successful
      */
     public String registerUser(UserRequestDTO userDTO) {
             Optional<User> userByEmail = userRepository.findByEmail(userDTO.getEmail());
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
             if (userByUsername.isPresent())
                 throw new UserAlreadyExistsException("The username " + userDTO.getUsername() + " is already in use.");
 
-            // Crea el user por defecto basandonos en la request
+            // Create the default user based on the request
             UserDTO newUserDTO = UserDTO.builder()
                     .username(userDTO.getUsername())
                     .email(userDTO.getEmail())
@@ -85,14 +85,14 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Inicia sesión de un usuario con las credenciales proporcionadas.
-     * Este método autentica al usuario usando sus credenciales (nombre y
-     * contraseña) y,
-     * si la autenticación es exitosa, genera y devuelve un token JWT.
+     * Logs in a user with the provided credentials.
+     * This method authenticates the user using their credentials (username and
+     * password) and,
+     * if authentication is successful, generates and returns a JWT token.
      *
-     * @param loginRequestDto el DTO del usuario que contiene la información
-     *                       necesaria para el registro y login
-     * @return un token JWT si la autenticación es exitosa
+     * @param loginRequestDto the user's DTO containing the information
+     *                       required for registration and login
+     * @return a JWT token if authentication is successful
      */
     public String loginUser(LoginRequestDto loginRequestDto) {
         Optional<User> user = userRepository.findByUsername(loginRequestDto.getUsername());

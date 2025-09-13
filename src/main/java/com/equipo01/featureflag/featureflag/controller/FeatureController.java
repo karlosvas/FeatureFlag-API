@@ -37,7 +37,7 @@ public class FeatureController {
      */
     @PostMapping
     @SwaggerApiResponses
-    @Operation(summary = "Crea una nueva feature flag", description = "Crea una nueva feature flag con los datos proporcionados y devuelve la feature creada.")
+    @Operation(summary = "Creates new feature flag", description = "Creates a new feature flag with the provided data and returns the created feature.")
     public ResponseEntity<FeatureResponseDto> createFeature(@Valid @RequestBody FeatureRequestDto requestDto) {
         FeatureResponseDto responseDto = featureService.createFeature(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
@@ -50,7 +50,7 @@ public class FeatureController {
      */
     @GetMapping
     @SwaggerApiResponses
-    @Operation(summary = "Obtiene todas las feature flags", description = "Devuelve una lista de todas las feature flags disponibles.")
+    @Operation(summary = "Retrieves all feature flags", description = "Returns a list of all available feature flags.")
     public ResponseEntity<List<FeatureResponseDto>> getFeatures() {
         return ResponseEntity.ok(featureService.getAllFeatures());
     }
@@ -63,7 +63,7 @@ public class FeatureController {
      */
     @GetMapping("/{featureId}")
     @SwaggerApiResponses
-    @Operation(summary = "Obtiene una feature flag por su ID", description = "Devuelve los detalles de una feature flag específica identificada por su UUID.")
+    @Operation(summary = "Retrieves a feature flag by its ID", description = "Returns the details of a specific feature flag identified by its UUID.")
     public ResponseEntity<FeatureResponseDto> getFeature(@PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String featureId) {
             UUID uuid = UUID.fromString(featureId);
         return ResponseEntity.ok(featureService.getFeatureById(uuid));

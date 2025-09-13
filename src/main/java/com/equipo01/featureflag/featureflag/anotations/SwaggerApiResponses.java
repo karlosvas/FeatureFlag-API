@@ -11,27 +11,27 @@ import java.lang.annotation.Target;
 import com.equipo01.featureflag.featureflag.dto.ErrorResponse;
 
 /**
- * Anotación para definir las respuestas de los endpoints de la API. Manejado por Swagger.
- * {@link Target} para indicar que la anotación puede ser aplicada a un método o tipo.
- * {@link Retention} para indicar que la anotación estará disponible en tiempo de ejecución.
- * {@link interface} para definir una anotación, se crea la anotación SwaggerApiResponses.
+ * Annotation to define API endpoint responses. Handled by Swagger.
+ * {@link Target} to indicate that the annotation can be applied to a method or type.
+ * {@link Retention} to indicate that the annotation will be available at runtime.
+ * {@link interface} to define an annotation, the SwaggerApiResponses annotation is created.
  */
 @Target({ ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Solicitud exitosa", content = @Content(mediaType = "application/json")),
-        @ApiResponse(responseCode = "201", description = "Recurso creado exitosamente", content = @Content(mediaType = "application/json")),
-        @ApiResponse(responseCode = "204", description = "No hay contenido", content = @Content(mediaType = "application/json")),
-        @ApiResponse(responseCode = "400", description = "Solicitud incorrecta", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "401", description = "No autorizado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "403", description = "Prohibido", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "404", description = "Recurso no encontrado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "405", description = "Método no permitido", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "408", description = "Tiempo de espera agotado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "409", description = "Conflicto", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "422", description = "Entidad no procesable", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "503", description = "Servicio no disponible", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+        @ApiResponse(responseCode = "200", description = "Successful request", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "201", description = "Resource created successfully", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "204", description = "No content", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "404", description = "Resource not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "405", description = "MMethod not allowed", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "408", description = "Request timeout", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "409", description = "Conflict", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "422", description = "Unprocessable entity", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "503", description = "Service unavailable", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
 })
 public @interface SwaggerApiResponses {
 }

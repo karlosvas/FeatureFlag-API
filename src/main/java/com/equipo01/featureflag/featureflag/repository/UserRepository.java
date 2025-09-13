@@ -7,12 +7,12 @@ import com.equipo01.featureflag.featureflag.model.User;
 import java.util.Optional;
 
 /**
- * Repositorio para la entidad User.
- * Extiende JpaRepository para proporcionar operaciones CRUD y de paginación.
- * Utiliza UUID como tipo de identificador.
+ * Repository for the User entity.
+ * Extends JpaRepository to provide CRUD and pagination operations.
+ * Uses UUID as the identifier type.
  * 
- * Anotaciones utilizadas:
- * - {@link Repository} Anotación de Spring que indica que esta interfaz es un repositorio.
+ * Annotations used:
+ * - {@link Repository} Spring annotation indicating that this interface is a repository.
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {

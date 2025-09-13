@@ -9,36 +9,36 @@ import lombok.NoArgsConstructor;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * DTO para la solicitud de creación de una nueva feature flag.
- * Incluye los datos necesarios para crear una feature flag en el sistema.
+ * DTO for requesting the creation of a new feature flag.
+ * Includes the data needed to create a feature flag in the system.
  * 
- * Anotaciones utilizadas:
- * - {@link Data} Genera los métodos get, set, toString, equals y hashCode automáticamente.
- * - {@link Builder} Genera el patrón builder para la clase.
- * - {@link NoArgsConstructor} Genera un constructor sin argumentos.
- * - {@link AllArgsConstructor} Genera un constructor con todos los argumentos.
+ * Annotations used:
+ * - {@link Data} Automatically generates the get, set, toString, equals, and hashCode methods.
+ * - {@link Builder} Generates the builder pattern for the class.
+ * - {@link NoArgsConstructor} Generates a no-arguments constructor.
+ * - {@link AllArgsConstructor} Generates a constructor with all arguments.
  * 
- * Atributos
- * - name: Nombre de la feature flag.
- * - description: Descripción de la feature flag.
- * - enabledByDefault: Indica si la feature está habilitada por defecto.
+ * Attributes
+ * - name: Name of the feature flag.
+ * - description: Description of the feature flag.
+ * - enabledByDefault: Indicates whether the feature is enabled by default.
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "DTO para la solicitud de creación de una nueva feature flag.")
+@Schema(description = "DTO for requesting the creation of a new feature flag.")
 public class FeatureRequestDto {
     
-    @Schema(description = "Nombre de la feature flag", example = "dark_mode")
+    @Schema(description = "Name of th feature flag", example = "dark_mode")
     @NotBlank(message = "Feature name is required")
     private String name;
 
-    @Schema(description = "Descripción de la feature flag", example = "Activa el modo oscuro en la aplicación")
+    @Schema(description = "Description of the feature flag", example = "Enables dark mode in the application")
     @NotBlank(message = "Feature description is required")
     private String description;
 
-    @Schema(description = "Indica si la feature está habilitada por defecto", example = "true")
+    @Schema(description = "Indicates whether the feature is enabled by default", example = "true")
     @NotNull(message = "Feature enabledByDefault status is required")
     @Builder.Default
     private boolean enabledByDefault = true;

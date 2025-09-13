@@ -11,40 +11,40 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * ExceptionDTO es una clase que se utiliza para transportar datos de excepciones
- * entre diferentes capas de una aplicación.
- * Su objetivo principal es encapsular y transferir información sobre errores de manera estructurada,
- * sin exponer la lógica interna ni las entidades del modelo de datos.
- * 
- * {@link Data} Anotación de Lombok que genera automáticamente los métodos getter, setter, toString, equals y hashCode.}
- * {@link AllArgsConstructor} Anotación de Lombok que genera un constructor con todos los campos como parámetros.
- * {@link NoArgsConstructor} Anotación de Lombok que genera un constructor sin parámetros
- * {@link Builder} Anotación de Lombok que permite crear instancias de la clase utilizando el patrón Builder.
- * {@link Schema} Anotación de Swagger que proporciona información sobre la API.
- * 
- * Atributos
- * - title: Título de la excepción.
- * - detail: Detalle de la excepción.
- * - status: Código de estado HTTP asociado a la excepción.
- * - reasons: Razones específicas de la excepción.
- * - timestamp: Marca de tiempo de cuando ocurrió la excepción.
+ * ExceptionDTO is a Data Transfer Object (DTO) designed to encapsulate information about exceptions
+ * between different layers of an application.
+ * Its main objective is to encapsulate and transfer information about errors in a structured way,
+ * without exposing internal logic or data model entities.
+ *
+ * {@link Data} Lombok annotation that automatically generates getter, setter, toString, equals, and hashCode methods.
+ * {@link AllArgsConstructor} Lombok annotation that generates a constructor with all fields as parameters.
+ * {@link NoArgsConstructor} Lombok annotation that generates a no-arguments constructor.
+ * {@link Builder} Lombok annotation that allows creating instances of the class using the Builder pattern.
+ * {@link Schema} Swagger annotation that provides information about the API.
+ *
+ * Attributes:
+ * - title: Title of the exception.
+ * - detail: Details of the exception.
+ * - status: HTTP status code associated with the exception.
+ * - reasons: Specific reasons for the exception.
+ * - timestamp: Timestamp of when the exception occurred.
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Schema(description = "DTO para transportar información de excepciones en la API.")
+@Schema(description = "Data Transfer Object for error responses")
 public class ErrorResponse {
-    @Schema(description = "Título de la excepción", example = "Unauthorized")
+    @Schema(description = "Title of the exception", example = "Unauthorized")
     private String message;
-    
-    @Schema(description = "Detalle de la excepción", example = "No tienes permisos para acceder a este recurso.")
+
+    @Schema(description = "Details of the exception", example = "You do not have permission to access this resource.")
     private String description;
 
-    @Schema(description = "Código de estado HTTP asociado a la excepción", example = "401")
+    @Schema(description = "HTTP status code associated with the exception", example = "401")
     private int code;
 
-    @Schema(description = "Marca de tiempo de cuando ocurrió la excepción", example = "2025-09-08T12:34:56")
+    @Schema(description = "Timestamp of when the exception occurred", example = "2025-09-08T12:34:56")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
 }

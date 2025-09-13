@@ -4,15 +4,15 @@ import java.util.UUID;
 import lombok.Getter;
 
 /**
- * Excepción lanzada cuando no se encuentra una feature.
+ * Exception thrown when a feature is not found.
  * 
- * Atributos:
- * - featureId: ID de la feature no encontrada.
+ * Attributes:
+ * - featureId: ID of the feature not found.
  *
- * Anotaciones:
- * - {@link Getter}: Genera automáticamente el método getter para el atributo featureId.
- * - {@link UUID}: Representa un identificador único para la feature.
- * - {@link RuntimeException}: Clase base para excepciones que pueden ser lanzadas durante la ejecución del programa.
+ * Annotations:
+ * - {@link Getter}: Automatically generates the getter method for the featureId attribute.
+ * - {@link UUID}: Represents a unique identifier for the feature.
+ * - {@link RuntimeException}: Base class for exceptions that can be thrown during program execution.
  */
 @Getter
 public class FeatureNotFoundException extends RuntimeException {

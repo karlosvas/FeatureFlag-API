@@ -18,12 +18,12 @@ import com.equipo01.featureflag.featureflag.exception.CustomAccessDeniedHandler;
 import com.equipo01.featureflag.featureflag.exception.CustomAuthenticationEntryPoint;
 
 /**
- * Configuración de seguridad para la aplicación.
- * -Define los beans necesarios para la seguridad (PasswordEncoder,
+ * Security configuration for the application.
+ * -Defines the beans required for security (PasswordEncoder,
  * SecurityFilterChain, AuthenticationManager).
- * -Configura las reglas de seguridad HTTP (rutas públicas y protegidas, gestión
- * de sesiones, CSRF).
- * -Agrega filtros personalizados para autenticación y autorización basados en
+ * -Configures HTTP security rules (public and protected routes, session management,
+ * CSRF).
+ * -Adds custom filters for authentication and authorization based on
  * JWT.
  * 
  * @author alex

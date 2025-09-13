@@ -6,12 +6,12 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 /**
- * Repositorio para gestionar la configuración de características (feature configurations) en la base de datos.
- * Extiende JpaRepository para proporcionar métodos CRUD y consultas personalizadas.
- * Las configuraciones de características se identifican de forma única mediante un UUID.
+ * Repository for managing feature configurations in the database.
+ * Extends JpaRepository to provide CRUD methods and custom queries.
+ * Feature configurations are uniquely identified by a UUID.
  *
- * Anotaciones utilizadas:
- * - {@link Repository} Anotación de Spring que indica que esta interfaz es un repositorio.
+ * Annotations used:
+ * - {@link Repository} Spring annotation indicating that this interface is a repository.
  */
 @Repository
 public interface FeatureConfigRepository extends JpaRepository<FeatureConfig, UUID> {

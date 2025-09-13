@@ -18,32 +18,29 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 import com.equipo01.featureflag.featureflag.dto.ErrorResponse;
 
 /**
- * GlobalExceptionHandler gestiona de forma centralizada las excepciones
- * lanzadas por los controladores REST.
+ * GlobalExceptionHandler centrally manages exceptions
+ * thrown by REST controllers.
  *
- * Utiliza {@link RestControllerAdvice} para interceptar y personalizar las
- * respuestas de error en toda la API.
- * Cada método maneja un tipo específico de excepción y construye una respuesta
- * estructurada usando {@link ErrorResponse}.
+ * Use {@link RestControllerAdvice} to intercept and customize
+ * error responses across the API.
+ * Each method handles a specific type of exception and constructs a structured response
+ * using {@link ErrorResponse}.
  *
- * Validaciones: Devuelve una lista de errores detallados si los datos de
- * entrada no cumplen las restricciones.
- * Recursos: Informa si una feature ya existe o no se encuentra.
- * Errores genéricos: Captura cualquier excepción no gestionada y devuelve un
- * error 500.
+ * Validations: Returns a list of detailed errors if the input data does not meet the constraints.
+ * Resources: Reports whether a feature already exists or is not found.
+ * Generic errors: Catches any unhandled exceptions and returns a 500 error.
  *
- * Esto mejora la experiencia del cliente y facilita el debugging en desarrollo
- * y producción.
+ * This improves the customer experience and facilitates debugging in development and production.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     /**
-     * Maneja cualquier excepción no gestionada específicamente por otros métodos.
+     * Handles any exception not specifically managed by other methods.
      *
-     * @param ex excepción genérica lanzada en cualquier parte de la aplicación.
-     * @return Error informando que ocurrió un problema inesperado. Devuelve un
-     *         {@link ErrorResponse} con código 500 (INTERNAL SERVER ERROR).
+     * @param ex Generic exception thrown anywhere in the application.
+     * @return Error reporting that an unexpected problem occurred. Returns an
+     *         {@link ErrorResponse} with code 500 (INTERNAL SERVER ERROR).
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
@@ -57,11 +54,11 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Maneja excepciones de acceso a datos a la base de datos.
+     * Handles exceptions related to database access.
      *
-     * @param ex excepción lanzada cuando se interactua con la base de datos.
-     * @return Error informando que ocurrió un problema en base de datos. Devuelve
-     *         un {@link ErrorResponse} con código 500 (INTERNAL SERVER ERROR).
+     * @param ex Exception thrown when interacting with the database.
+     * @return Error informing that a problem occurred in the database. Returns
+     *         a {@link ErrorResponse} with code 500 (INTERNAL SERVER ERROR).
      */
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<ErrorResponse> handleDataAccessException(DataAccessException ex) {
@@ -75,15 +72,15 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Maneja excepciones de validación de argumentos en los endpoints REST.
+     * Handles validation exceptions for arguments in REST endpoints.
      *
-     * Cuando un DTO no cumple las restricciones de validación (por
-     * ejemplo, @NotNull, @Size),
-     * este método recopila todos los errores.
+     * When a DTO does not meet validation constraints (e.g.,
+     * @NotNull, @Size),
+     * this method collects all errors.
      *
-     * @param ex excepción lanzada por Spring al fallar la validación.
-     * @return Lista de errores con detalles y mensajes específicos, devueltos en
-     *         una lista de {@link ErrorResponse} con código 400 (BAD REQUEST).
+     * @param ex Exception thrown by Spring when validation fails.
+     * @return List of errors with specific details and messages, returned in
+     *         a list of {@link ErrorResponse} with code 400 (BAD REQUEST).
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<List<ErrorResponse>> handleValidationException(MethodArgumentNotValidException ex) {
@@ -101,11 +98,11 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Maneja la excepción cuando se recibe un JSON malformado en la solicitud.
+     * Handles the exception when a malformed JSON is received in the request.
      *
-     * @param ex excepción lanzada por Spring cuando el JSON no se puede leer.
-     * @return Error informando que el cuerpo de la solicitud no es un JSON válido.
-     *         Devuelve un {@link ErrorResponse} con código 400 (BAD REQUEST).
+     * @param ex Exception thrown by Spring when the JSON cannot be read.
+     * @return Error informing that the request body is not valid JSON.
+     *         Returns an {@link ErrorResponse} with code 400 (BAD REQUEST).
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleJsonParseError(HttpMessageNotReadableException ex) {
@@ -119,11 +116,11 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Maneja la excepción cuando una validación de parámetro de método falla.
+     * Handles the exception when a method parameter validation fails.
      *
-     * @param ex excepción lanzada por el sistema de validación de Java.
-     * @return Error informando que una restricción de validación fue violada.
-     *         Devuelve un {@link ErrorResponse} con código 400 (BAD REQUEST).
+     * @param ex Exception thrown by the Java validation system.
+     * @return Error reporting that a validation constraint was violated.
+     *         Returns an {@link ErrorResponse} with code 400 (BAD REQUEST).
      */
     @ExceptionHandler(HandlerMethodValidationException.class)
     public ResponseEntity<List<ErrorResponse>> handleMethodValidation(HandlerMethodValidationException ex) {
@@ -141,11 +138,11 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Maneja la excepción cuando se usa un método HTTP no permitido en el endpoint.
+     * Handles the exception when an unsupported HTTP method is used on the endpoint.
      *
-     * @param ex excepción lanzada por Spring cuando el método HTTP no es soportado.
-     * @return Error informando que el método HTTP no está permitido. Devuelve un
-     *         {@link ErrorResponse} con código 405 (METHOD NOT ALLOWED).
+     * @param ex Exception thrown by Spring when the HTTP method is not supported.
+     * @return Error informing that the HTTP method is not allowed. Returns an
+     *         {@link ErrorResponse} with code 405 (METHOD NOT ALLOWED).
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ErrorResponse> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
@@ -159,11 +156,11 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Maneja la excepción cuando las credenciales de autenticación son inválidas.
+     * Handles the exception when authentication credentials are invalid.
      *
-     * @param ex excepción lanzada.
-     * @return Error informando que las credenciales son incorrectas. Devuelve un
-     *         {@link ErrorResponse} con código 400 (BAD_REQUEST).
+     * @param ex exception thrown.
+     * @return Error informing that the credentials are incorrect. Returns a
+     *         {@link ErrorResponse} with code 400 (BAD_REQUEST).
      */
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex) {
@@ -176,14 +173,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
-    /////////////////////////// FEATURES /////////////////////////////////////////
-
     /**
-     * Maneja la excepción cuando se intenta crear una feature que ya existe.
+     * Handles the exception when attempting to create a feature that already exists.
      *
-     * @param ex excepción personalizada lanzada por la lógica de negocio.
-     * @return Error informando que la feature ya existe. Devuelve un
-     *         {@link ErrorResponse} con código 409 (CONFLICT) y detalles del error.
+     * @param ex Custom exception thrown by the business logic.
+     * @return Error informing that the feature already exists. Returns a
+     *         {@link ErrorResponse} with code 409 (CONFLICT) and details of the error.
      */
     @ExceptionHandler(FeatureAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleFeatureAlreadyExists(FeatureAlreadyExistsException ex) {
@@ -197,11 +192,11 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Maneja la excepción cuando no se encuentra una feature solicitada.
+     * Handles the exception when a requested feature is not found.
      *
-     * @param ex excepción personalizada lanzada por la lógica de negocio.
-     * @return Error informando que la feature no existe. Devuelve un
-     *         {@link ErrorResponse} con código 404 (NOT FOUND) y detalles del
+     * @param ex Custom exception thrown by the business logic.
+     * @return Error informing that the feature does not exist. Returns a
+     *         {@link ErrorResponse} with code 404 (NOT FOUND) and details of the
      *         error.
      */
     @ExceptionHandler(FeatureNotFoundException.class)
@@ -215,14 +210,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
-    /////////////////////////// USER ///////////////////////////
-
     /**
-     * Maneja la excepción cuando un usuario ya existe.
+     * Handles the exception when a user already exists.
      *
-     * @param ex excepción personalizada lanzada por la lógica de negocio.
-     * @return Error informando que el usuario ya existe. Devuelve un
-     *         {@link ErrorResponse} con código 409 (CONFLICT).
+     * @param ex Custom exception thrown by the business logic.
+     * @return Error informing that the user already exists. Returns a
+     *         {@link ErrorResponse} with code 409 (CONFLICT).
      */
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleUserAlreadyExists(UserAlreadyExistsException ex) {
