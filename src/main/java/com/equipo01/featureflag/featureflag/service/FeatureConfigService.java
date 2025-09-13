@@ -10,4 +10,5 @@ public interface FeatureConfigService {
     public ResponseEntity<FeatureConfigResponseDto> createFeatureConfig(FeatureConfigRequestDto requestDto);
     public ResponseEntity<List<FeatureConfigResponseDto>> getFeatureByID(UUID id);
     public ResponseEntity<List<FeatureConfigResponseDto>> getAllFeatures();
+    public void deleteFeatureConfig(UUID id);
 }

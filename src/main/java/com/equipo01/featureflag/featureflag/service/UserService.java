@@ -48,4 +48,6 @@ public interface UserService {
     public String loginUser(LoginRequestDto loginRequestDto);
 
     public Boolean existsByClientID(UUID clientID);
+
+    public void deleteUser(UUID userId);
 }

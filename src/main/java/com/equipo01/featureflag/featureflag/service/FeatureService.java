@@ -74,4 +74,6 @@ public interface FeatureService {
      * @throws FeatureFlagException if the page is empty
      */
     void isPageEmpty(Page<Feature> featurePage);
+
+    public void deleteFeature(UUID featureId);
 }

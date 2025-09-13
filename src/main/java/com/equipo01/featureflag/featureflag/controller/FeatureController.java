@@ -54,4 +54,6 @@ public interface FeatureController {
     public ResponseEntity<FeatureResponseDto> getFeature(@PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String featureId);
 
     public ResponseEntity<Boolean> checkFeatureIsActive(@RequestParam String nameFeature, @RequestParam String clientID, @RequestParam String environment);
+
+    public ResponseEntity<Void> deleteFeature(@PathVariable String id);
 }

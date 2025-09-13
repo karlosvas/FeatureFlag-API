@@ -22,6 +22,9 @@ public enum MessageError {
     FEATURE_ALREADY_EXISTS(HttpStatus.CONFLICT, "FEATURE_ALREADY_EXISTS", "The feature name already exists."),
     FEATURES_NOT_FOUND(HttpStatus.NO_CONTENT, "", ""),
 
+    // FEATURE CONFIG ERRORS
+    FEATURE_CONFIG_NOT_FOUND(HttpStatus.NOT_FOUND, "FEATURE_CONFIG_NOT_FOUND", "The feature config was not found."),
+
     //SPRING SECURITY ERRORS
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", "JWT token is missing or invalid."),
     FORBIDDEN(HttpStatus.FORBIDDEN, "FORBIDDEN", "You don't have permission to access this resource."),

@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import com.equipo01.featureflag.featureflag.dto.request.FeatureConfigRequestDto;
 import com.equipo01.featureflag.featureflag.dto.response.FeatureConfigResponseDto;
 import com.equipo01.featureflag.featureflag.dto.response.FeatureResponseDto;
+import com.equipo01.featureflag.featureflag.exception.FeatureFlagException;
+import com.equipo01.featureflag.featureflag.exception.enums.MessageError;
 import com.equipo01.featureflag.featureflag.mapper.FeatureConfigMapper;
 import com.equipo01.featureflag.featureflag.model.Feature;
 import com.equipo01.featureflag.featureflag.model.FeatureConfig;
@@ -13,6 +15,7 @@ import com.equipo01.featureflag.featureflag.repository.FeatureConfigRepository;
 import com.equipo01.featureflag.featureflag.service.FeatureConfigService;
 import com.equipo01.featureflag.featureflag.service.FeatureService;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -51,5 +54,17 @@ public class FeatureConfigServiceImpl implements FeatureConfigService {
         List<FeatureConfig> featureConfigs = featureConfigRepository.findAll();
         List<FeatureConfigResponseDto> responseDtos = featureConfigMapper.toDtoList(featureConfigs);
         return ResponseEntity.ok(responseDtos);
+    }
+
+    @Transactional
+    public void deleteFeatureConfig(UUID id) {
+        if (featureConfigRepository.existsById(id)) {
+            featureConfigRepository.deleteById(id);
+         } else {
+            throw new FeatureFlagException(
+                    MessageError.FEATURE_CONFIG_NOT_FOUND.getStatus(),
+                    MessageError.FEATURE_CONFIG_NOT_FOUND.getMessage(),
+                    MessageError.FEATURE_CONFIG_NOT_FOUND.getDescription());
+        }
     }
 }

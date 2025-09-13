@@ -187,4 +187,16 @@ public class UserServiceImpl implements UserService {
         }
         return true;
     }
+
+    @Transactional
+    public void deleteUser(UUID userId) {
+        if (userRepository.existsById(userId)) {
+            userRepository.deleteById(userId);
+        } else {
+            throw new FeatureFlagException(
+                    MessageError.USER_NOT_FOUND.getStatus(),
+                    MessageError.USER_NOT_FOUND.getMessage(),
+                    MessageError.USER_NOT_FOUND.getDescription());
+        }
+    }
 }

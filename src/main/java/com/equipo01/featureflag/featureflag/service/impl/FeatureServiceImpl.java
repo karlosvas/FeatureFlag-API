@@ -244,4 +244,16 @@ public class FeatureServiceImpl implements FeatureService {
         // If the environment was not found or was found but not enabled, return false
         return false;
     }
+
+    @Transactional
+    public void deleteFeature(UUID featureId) {
+        if (featureRepository.existsById(featureId)) {
+            featureRepository.deleteById(featureId);
+        } else {
+            throw new FeatureFlagException(
+                    MessageError.FEATURE_NOT_FOUND.getStatus(),
+                    MessageError.FEATURE_NOT_FOUND.getMessage(),
+                    MessageError.FEATURE_NOT_FOUND.getDescription());
+        }
+    }
 }
