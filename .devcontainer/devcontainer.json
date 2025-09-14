@@ -27,7 +27,8 @@
         "ckolkman.vscode-postgres",
         "vmware.vscode-boot-dev-pack",
         "42crunch.vscode-openapi",
-        "postman.postman-for-vscode"
+        "postman.postman-for-vscode",
+        "sonarsource.sonarlint-vscode"
       ]
     }
   }
