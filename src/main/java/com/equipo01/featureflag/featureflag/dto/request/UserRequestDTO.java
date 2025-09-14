@@ -1,5 +1,7 @@
 package com.equipo01.featureflag.featureflag.dto.request;
 
+import com.equipo01.featureflag.featureflag.anotations.NotCompromised;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -32,8 +34,9 @@ public class UserRequestDTO {
   @NotBlank(message = "Email is required")
   private String email;
 
-  @Schema(description = "User password", example = "passwordSeguro123")
-  @NotBlank(message = "Password is required")
-  @Size(min = 6, max = 100, message = "Password must be between 6 and 100 characters")
-  private String password;
+    @Schema(description = "User password", example = "passwordSeguro123")
+    @NotBlank(message = "Password is required")
+    @Size(min = 6, max = 100, message = "Password must be between 6 and 100 characters")
+    @NotCompromised
+    private String password;
 }
