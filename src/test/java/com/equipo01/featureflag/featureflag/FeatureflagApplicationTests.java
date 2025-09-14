@@ -1,6 +1,7 @@
 package com.equipo01.featureflag.featureflag;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -16,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
  * beans y propiedades específicas de pruebas.
  */
 @SpringBootTest
+@AutoConfigureMockMvc
 @ActiveProfiles("staging")
 class FeatureflagApplicationTests {
 
