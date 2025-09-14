@@ -1,9 +1,7 @@
 package com.equipo01.featureflag.featureflag.dto;
 
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,20 +13,20 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LinksDto implements Serializable{
-    
-    @JsonProperty("count")
-    private String count;
+public class LinksDto implements Serializable {
 
-    @JsonProperty("first")
-    private LinkDto first;
+  @JsonProperty("count")
+  private String count;
 
-    @JsonProperty("last")
-    private LinkDto last;
+  @JsonProperty("first")
+  private LinkDto first;
 
-    @JsonProperty("next")
-    private LinkDto next;
+  @JsonProperty("last")
+  private LinkDto last;
 
-    @JsonProperty("prev")
-    private LinkDto prev;
+  @JsonProperty("next")
+  private LinkDto next;
+
+  @JsonProperty("prev")
+  private LinkDto prev;
 }
