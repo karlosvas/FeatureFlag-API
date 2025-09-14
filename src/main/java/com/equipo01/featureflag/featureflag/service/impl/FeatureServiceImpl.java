@@ -1,6 +1,7 @@
 package com.equipo01.featureflag.featureflag.service.impl;
 
 import com.equipo01.featureflag.featureflag.dto.request.FeatureRequestDto;
+import com.equipo01.featureflag.featureflag.dto.request.FeatureToggleRequestDto;
 import com.equipo01.featureflag.featureflag.dto.response.FeatureResponseDto;
 import com.equipo01.featureflag.featureflag.dto.response.GetFeatureResponseDto;
 import com.equipo01.featureflag.featureflag.exception.FeatureFlagException;
@@ -24,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -185,14 +187,16 @@ public class FeatureServiceImpl implements FeatureService {
    */
   @Override
   public Feature findById(UUID featureId) {
-    return featureRepository
-        .findById(featureId)
-        .orElseThrow(
-            () ->
-                new FeatureFlagException(
-                    MessageError.FEATURE_NOT_FOUND.getStatus(),
-                    MessageError.FEATURE_NOT_FOUND.getMessage(),
-                    MessageError.FEATURE_NOT_FOUND.getDescription()));
+    Optional<Feature> feature = featureRepository.findById(featureId);
+
+    if (feature.isEmpty()) {
+      throw new FeatureFlagException(
+          MessageError.FEATURE_NOT_FOUND.getStatus(),
+          MessageError.FEATURE_NOT_FOUND.getMessage(),
+          MessageError.FEATURE_NOT_FOUND.getDescription());
+    }
+
+    return feature.get();
   }
 
   public Feature findByName(String featureName) {
@@ -228,6 +232,14 @@ public class FeatureServiceImpl implements FeatureService {
     return false;
   }
 
+  /**
+   * Deletes a feature flag by its UUID. If the feature with the given ID does not exist, throws a
+   * {@link FeatureFlagException}.
+   *
+   * @param featureId the UUID of the feature to be deleted.
+   * @throws FeatureFlagException if the feature does not exist. {@link Transactional} annotation
+   *     ensures that the delete operation is executed within a transaction.
+   */
   @Transactional
   public void deleteFeature(UUID featureId) {
     if (featureRepository.existsById(featureId)) {
@@ -237,6 +249,78 @@ public class FeatureServiceImpl implements FeatureService {
           MessageError.FEATURE_NOT_FOUND.getStatus(),
           MessageError.FEATURE_NOT_FOUND.getMessage(),
           MessageError.FEATURE_NOT_FOUND.getDescription());
+    }
+  }
+
+  /**
+   * Enables or disable a feature for specifici client or environment. This method will check if the
+   * feature identified by {@code featureId} exists, then it will either create a new configuration
+   * or update an existing one inf{@link FeatureConfig} with {@code enabled = true} based on the
+   * provided {@code requestDto} containing {@code clientId} and/or {@code environment}.
+   *
+   * @param featureId the UUID of the feature to be enabled.
+   * @param requestDto a DTO containing the clientID and/or environment where the feature sholud be
+   *     enabled.
+   * @param enabled a boolean indicating wether to enable (true) or disable (false) the feature
+   * @throws FeatureFlagException if the feature does not exist or if the requestDto is invalid.
+   */
+  @Override
+  public void updateFeatureForClientOrEnvironment(
+      UUID featureId, FeatureToggleRequestDto toggleRequestDto, boolean enable) {
+    // 1. Retrives the feature by its ID, if not found, throws an exception
+    Feature feature = this.findById(featureId);
+    // 2. Validates the request DTO (must contain at least clientId or environment)
+    validateFeatureToggleRequest(toggleRequestDto);
+    // 3. Get the list of configurations associates with this feature
+    List<FeatureConfig> featureConfigList = feature.getConfigs();
+    // 4. Filter configurations that match the request conditions:
+    // - If clientId is null, ignore it, otherwise compare with FeatureConfig
+    // clientId
+    // - If environment is null, ignore it, otherwise compare with FeatureConfig
+    // environment
+    List<FeatureConfig> targetConfig =
+        featureConfigList.stream()
+            .filter(
+                fc -> {
+                  boolean clientIdMatch =
+                      toggleRequestDto.getClientId() == null
+                          || toggleRequestDto.getClientId().equals(fc.getClientId());
+                  boolean environmentMatch =
+                      toggleRequestDto.getEnvironment() == null
+                          || toggleRequestDto.getEnvironment() == fc.getEnvironment();
+                  return clientIdMatch && environmentMatch;
+                })
+            .toList();
+
+    if (!targetConfig.isEmpty()) {
+      targetConfig.forEach(fc -> fc.setEnabled(enable));
+      featureRepository.save(feature);
+    } else {
+      throw new FeatureFlagException(
+          HttpStatus.NOT_FOUND,
+          MessageError.FEATURE_NOT_FOUND.getMessage(),
+          MessageError.FEATURES_NOT_FOUND.getDescription());
+    }
+  }
+
+  /**
+   * Validates the given DTO. The DTO must contain at least one of the following fields: {@code
+   * clientId} or {@code environment} -if both are null, an exception will be thrown. -If {@code
+   * clienId} is an empty String and {@code environment} is null, an exception will also be thrown.
+   *
+   * @param toggleRequestDto
+   * @throws FeatureFlagException personalizada indicando el error
+   */
+  private void validateFeatureToggleRequest(FeatureToggleRequestDto toggleRequestDto) {
+    boolean clientIdEmpty =
+        toggleRequestDto.getClientId() == null || toggleRequestDto.getClientId().isBlank();
+    boolean environmentEmpty = toggleRequestDto.getEnvironment() == null;
+
+    if (clientIdEmpty && environmentEmpty) {
+      throw new FeatureFlagException(
+          MessageError.FEATURE_TOGGLE_REQUEST_INVALID.getStatus(),
+          MessageError.FEATURE_TOGGLE_REQUEST_INVALID.getMessage(),
+          MessageError.FEATURE_TOGGLE_REQUEST_INVALID.getDescription());
     }
   }
 }

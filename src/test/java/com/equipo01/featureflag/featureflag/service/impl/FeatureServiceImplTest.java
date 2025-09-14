@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.equipo01.featureflag.featureflag.dto.request.FeatureRequestDto;
+import com.equipo01.featureflag.featureflag.dto.request.FeatureToggleRequestDto;
 import com.equipo01.featureflag.featureflag.exception.FeatureFlagException;
 import com.equipo01.featureflag.featureflag.exception.enums.MessageError;
 import com.equipo01.featureflag.featureflag.mapper.FeatureMapper;
@@ -17,9 +18,11 @@ import com.equipo01.featureflag.featureflag.util.BaseLinkBuilder;
 import com.equipo01.featureflag.featureflag.util.LinksDtoBuilder;
 import com.equipo01.featureflag.featureflag.util.PageRequestFactory;
 import com.equipo01.featureflag.featureflag.util.QueryParamBuilder;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -40,6 +43,161 @@ public class FeatureServiceImplTest {
   @Mock private QueryParamBuilder queryParamBuilder;
   @Mock private FeatureSpecification featureSpecification;
   @InjectMocks private FeatureServiceImpl featureServiceImpl;
+
+  private Feature feature;
+  private FeatureConfig configDev;
+  private FeatureConfig configProd;
+
+  @BeforeEach
+  void setUp() {
+    // No es necesario llamar a openMocks cuando usamos
+    // @ExtendWith(MockitoExtension.class)
+    configDev =
+        FeatureConfig.builder()
+            .id(UUID.randomUUID())
+            .environment(Environment.DEV)
+            .clientId("clienteA")
+            .enabled(false)
+            .build();
+
+    configProd =
+        FeatureConfig.builder()
+            .id(UUID.randomUUID())
+            .environment(Environment.PROD)
+            .clientId("clienteB")
+            .enabled(false)
+            .build();
+
+    feature =
+        Feature.builder()
+            .id(UUID.randomUUID())
+            .name("featureX")
+            .description("Test Feature")
+            .enabledByDefault(false)
+            .configs(Arrays.asList(configDev, configProd))
+            .build();
+
+    configDev.setFeature(feature);
+    configProd.setFeature(feature);
+  }
+
+  @Test
+  void testEnabledFeatureForClientOrEnvironment_success() {
+    when(featureRepository.findById(feature.getId())).thenReturn(Optional.of(feature));
+
+    FeatureToggleRequestDto requestDto =
+        FeatureToggleRequestDto.builder().clientId("clienteA").environment(null).build();
+
+    featureServiceImpl.updateFeatureForClientOrEnvironment(feature.getId(), requestDto, true);
+
+    assertTrue(configDev.getEnabled());
+    assertFalse(configProd.getEnabled());
+
+    verify(featureRepository, times(1)).save(feature);
+  }
+
+  @Test
+  void testEnableFeatureForClientOrEnvironment_featureNotFound() {
+    UUID randomId = UUID.randomUUID();
+    when(featureRepository.findById(randomId)).thenReturn(Optional.empty());
+
+    FeatureToggleRequestDto dto = FeatureToggleRequestDto.builder().clientId("clientA").build();
+
+    assertThrows(
+        FeatureFlagException.class,
+        () -> featureServiceImpl.updateFeatureForClientOrEnvironment(randomId, dto, true));
+  }
+
+  @Test
+  void testDisableFeatureForClientOrEnvironment_success() {
+    // Mock repository to return the feature
+    when(featureRepository.findById(feature.getId())).thenReturn(Optional.of(feature));
+
+    // Crear DTO para deshabilitar configDev
+    FeatureToggleRequestDto requestDto =
+        FeatureToggleRequestDto.builder().clientId("clienteA").environment(null).build();
+
+    // Primero habilitamos la feature para simular que estaba activa
+    configDev.setEnabled(true);
+    configProd.setEnabled(true);
+
+    // Llamada al método de servicio
+    featureServiceImpl.updateFeatureForClientOrEnvironment(feature.getId(), requestDto, false);
+
+    // Verificaciones
+    assertFalse(configDev.getEnabled()); // La configuración objetivo debe estar deshabilitada
+    assertTrue(configProd.getEnabled()); // La otra configuración no debe cambiar
+
+    // Verificar que se haya guardado la entidad Feature
+    verify(featureRepository, times(1)).save(feature);
+  }
+
+  @Test
+  void testDisableFeatureForClientOrEnvironment_featureNotFound() {
+    UUID randomId = UUID.randomUUID();
+    when(featureRepository.findById(randomId)).thenReturn(Optional.empty());
+
+    FeatureToggleRequestDto dto = FeatureToggleRequestDto.builder().clientId("clientA").build();
+
+    assertThrows(
+        FeatureFlagException.class,
+        () -> featureServiceImpl.updateFeatureForClientOrEnvironment(randomId, dto, false));
+  }
+
+  @Test
+  void testDisableFeatureForClientOrEnvironment_invalidRequest() {
+    // Mock repository
+    when(featureRepository.findById(feature.getId())).thenReturn(Optional.of(feature));
+
+    // DTO inválido (ambos clientId y environment null)
+    FeatureToggleRequestDto invalidDto =
+        FeatureToggleRequestDto.builder().clientId(null).environment(null).build();
+
+    assertThrows(
+        FeatureFlagException.class,
+        () ->
+            featureServiceImpl.updateFeatureForClientOrEnvironment(
+                feature.getId(), invalidDto, false));
+  }
+
+  @Test
+  void validateFeatureToggleRequest_throwsException_whenClientIdAndEnvironmentAreNull() {
+    when(featureRepository.findById(feature.getId())).thenReturn(Optional.of(feature));
+    // Crear DTO con clientId y environment nulos
+    FeatureToggleRequestDto invalidDto =
+        FeatureToggleRequestDto.builder().clientId(null).environment(null).build();
+
+    FeatureFlagException ex =
+        assertThrows(
+            FeatureFlagException.class,
+            () -> {
+              featureServiceImpl.updateFeatureForClientOrEnvironment(
+                  feature.getId(), invalidDto, true);
+            });
+
+    assertEquals(MessageError.FEATURE_TOGGLE_REQUEST_INVALID.getMessage(), ex.getMessage());
+    assertEquals(MessageError.FEATURE_TOGGLE_REQUEST_INVALID.getDescription(), ex.getDescription());
+    assertEquals(MessageError.FEATURE_TOGGLE_REQUEST_INVALID.getStatus(), ex.getStatus());
+  }
+
+  @Test
+  void validateFeatureToggleRequest_throwsException_whenClientIdAndEnvironmentAreEmpty() {
+    when(featureRepository.findById(feature.getId())).thenReturn(Optional.of(feature));
+    FeatureToggleRequestDto invalidDto =
+        FeatureToggleRequestDto.builder().clientId(" ").environment(null).build();
+
+    FeatureFlagException ex =
+        assertThrows(
+            FeatureFlagException.class,
+            () -> {
+              featureServiceImpl.updateFeatureForClientOrEnvironment(
+                  feature.getId(), invalidDto, false);
+            });
+
+    assertEquals(MessageError.FEATURE_TOGGLE_REQUEST_INVALID.getMessage(), ex.getMessage());
+    assertEquals(MessageError.FEATURE_TOGGLE_REQUEST_INVALID.getDescription(), ex.getDescription());
+    assertEquals(MessageError.FEATURE_TOGGLE_REQUEST_INVALID.getStatus(), ex.getStatus());
+  }
 
   @Test
   public void testCreateFeature() {

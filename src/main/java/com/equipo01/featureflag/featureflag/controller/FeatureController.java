@@ -1,6 +1,7 @@
 package com.equipo01.featureflag.featureflag.controller;
 
 import com.equipo01.featureflag.featureflag.dto.request.FeatureRequestDto;
+import com.equipo01.featureflag.featureflag.dto.request.FeatureToggleRequestDto;
 import com.equipo01.featureflag.featureflag.dto.response.FeatureResponseDto;
 import com.equipo01.featureflag.featureflag.dto.response.GetFeatureResponseDto;
 import jakarta.validation.Valid;
@@ -11,14 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-/**
- * Interfaz del controlador para gestionar las operaciones relacionadas con las feature flags.
- * Define los endpoints para crear, obtener todas y obtener una feature flag por su ID.
- *
- * <p>Anotaciones de validación: - {@link Valid} para validar el cuerpo de la solicitud al crear una
- * feature flag. - {@link Pattern} para validar el formato del UUID al obtener una feature flag por
- * su
- */
 public interface FeatureController {
   /**
    * Crea una nueva feature flag.
@@ -63,6 +56,12 @@ public interface FeatureController {
       @RequestParam String nameFeature,
       @RequestParam String clientID,
       @RequestParam String environment);
+
+  public ResponseEntity<?> updateFeatureForClientOrEnvironment(
+      @PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format")
+          String id,
+      @PathVariable String action,
+      @RequestBody FeatureToggleRequestDto toggleRequestDto);
 
   public ResponseEntity<Void> deleteFeature(@PathVariable String id);
 }

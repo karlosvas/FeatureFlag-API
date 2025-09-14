@@ -24,10 +24,6 @@ public enum MessageError {
       HttpStatus.CONFLICT, "FEATURE_ALREADY_EXISTS", "The feature name already exists."),
   FEATURES_NOT_FOUND(HttpStatus.NO_CONTENT, "", ""),
 
-  // FEATURE CONFIG ERRORS
-  FEATURE_CONFIG_NOT_FOUND(
-      HttpStatus.NOT_FOUND, "FEATURE_CONFIG_NOT_FOUND", "The feature config was not found."),
-
   // SPRING SECURITY ERRORS
   UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", "JWT token is missing or invalid."),
   FORBIDDEN(
@@ -43,7 +39,18 @@ public enum MessageError {
   MAP_QUERY_PARAMS_NOT_VALID(
       HttpStatus.BAD_REQUEST,
       "MAP_QUERY_PARAMS_NOT_VALID",
-      "The map of query parameters is not valid.");
+      "The map of query parameters is not valid."),
+
+  // FEATURE CONFIG ERRORS
+  FEATURE_CONFIG_NOT_FOUND(
+      HttpStatus.NOT_FOUND,
+      "FEATURE CONFIG NOT FOUND",
+      "No matching configuration found for the given clientId or environment."),
+  FEATURE_TOGGLE_REQUEST_INVALID(
+      HttpStatus.BAD_REQUEST,
+      "FEATURE_TOGGLE_REQUEST_INVALID",
+      "Either clientId or environment must be provided.");
+
   private final HttpStatus status;
   private final String message;
   private final String description;

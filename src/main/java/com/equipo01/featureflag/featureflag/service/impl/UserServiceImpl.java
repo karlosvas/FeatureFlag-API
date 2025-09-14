@@ -11,7 +11,6 @@ import com.equipo01.featureflag.featureflag.model.User;
 import com.equipo01.featureflag.featureflag.model.enums.Role;
 import com.equipo01.featureflag.featureflag.repository.UserRepository;
 import com.equipo01.featureflag.featureflag.service.UserService;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -70,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
   /**
    * Endpoint to register a new admin user.
-   * 
+   *
    * @param userRequestDTO the DTO containing the information of the admin user to register
    * @return a token JWT if the registration is successful
    */
@@ -123,17 +122,17 @@ public class UserServiceImpl implements UserService {
   public void checkRegister(String email, String username) {
     // If user with email exists, throw exception
     if (userRepository.findByEmail(email).isPresent()) {
-        throw new FeatureFlagException(
-            MessageError.EMAIL_ALREADY_EXISTS.getStatus(),
-            MessageError.EMAIL_ALREADY_EXISTS.getMessage(),
-            MessageError.EMAIL_ALREADY_EXISTS.getDescription());
+      throw new FeatureFlagException(
+          MessageError.EMAIL_ALREADY_EXISTS.getStatus(),
+          MessageError.EMAIL_ALREADY_EXISTS.getMessage(),
+          MessageError.EMAIL_ALREADY_EXISTS.getDescription());
     }
     // If user with username exists, throw exception
     if (userRepository.findByUsername(username).isPresent()) {
-        throw new FeatureFlagException(
-            MessageError.USERNAME_ALREADY_EXISTS.getStatus(),
-            MessageError.USERNAME_ALREADY_EXISTS.getMessage(),
-            MessageError.USERNAME_ALREADY_EXISTS.getDescription());
+      throw new FeatureFlagException(
+          MessageError.USERNAME_ALREADY_EXISTS.getStatus(),
+          MessageError.USERNAME_ALREADY_EXISTS.getMessage(),
+          MessageError.USERNAME_ALREADY_EXISTS.getDescription());
     }
   }
 
@@ -215,49 +214,49 @@ public class UserServiceImpl implements UserService {
     return true;
   }
 
-    /**
+  /**
    * Obtain a user by email.
-   * 
+   *
    * @param email the email of the user
    * @return UserDTO the user DTO
    */
   public UserDTO getUserByEmail(String email) {
-      // Find the user entity by email, throws exception if not found
-      User user = this.findByEmail(email);
-      // Map the User entity to UserDTO and return
-      return userMapper.userToUserDTO(user);
+    // Find the user entity by email, throws exception if not found
+    User user = this.findByEmail(email);
+    // Map the User entity to UserDTO and return
+    return userMapper.userToUserDTO(user);
   }
 
   /**
    * Retrieve all users in the system.
-   * 
+   *
    * @return List<UserDTO> list of all user DTOs
    */
   public List<UserDTO> getAllUsers() {
-      // Find all user entities and map them to a list of UserDTOs
-      return userMapper.userListToUserDTOList(userRepository.findAll());
+    // Find all user entities and map them to a list of UserDTOs
+    return userMapper.userListToUserDTOList(userRepository.findAll());
   }
 
   /**
    * Delete a user by their UUID.
-   * 
-   * {link @Transactional} Ensures that the delete operation is executed within a transaction.
-   * 
+   *
+   * <p>{link @Transactional} Ensures that the delete operation is executed within a transaction.
+   *
    * @param userId the UUID of the user to delete
    * @throws FeatureFlagException if the user does not exist
    */
   @Transactional
   public void deleteUser(UUID userId) {
-      // Check if the user exists before attempting to delete
-      if (userRepository.existsById(userId)) {
-          // Delete the user by their ID
-          userRepository.deleteById(userId);
-      } else {
-          // Throw a custom exception if the user is not found
-          throw new FeatureFlagException(
-              MessageError.USER_NOT_FOUND.getStatus(),
-              MessageError.USER_NOT_FOUND.getMessage(),
-              MessageError.USER_NOT_FOUND.getDescription());
-      }
+    // Check if the user exists before attempting to delete
+    if (userRepository.existsById(userId)) {
+      // Delete the user by their ID
+      userRepository.deleteById(userId);
+    } else {
+      // Throw a custom exception if the user is not found
+      throw new FeatureFlagException(
+          MessageError.USER_NOT_FOUND.getStatus(),
+          MessageError.USER_NOT_FOUND.getMessage(),
+          MessageError.USER_NOT_FOUND.getDescription());
+    }
   }
 }

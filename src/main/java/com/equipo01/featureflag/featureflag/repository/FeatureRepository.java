@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FeatureRepository
     extends JpaRepository<Feature, UUID>, JpaSpecificationExecutor<Feature> {
+
   boolean existsByName(String name);
 
   Optional<Feature> findByName(String name);

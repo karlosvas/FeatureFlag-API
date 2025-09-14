@@ -12,6 +12,7 @@ import com.equipo01.featureflag.featureflag.service.FeatureConfigService;
 import com.equipo01.featureflag.featureflag.service.FeatureService;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +25,20 @@ public class FeatureConfigServiceImpl implements FeatureConfigService {
   private final FeatureConfigRepository featureConfigRepository;
   private final FeatureService featureService;
 
-  public FeatureConfigResponseDto createFeatureConfig(
-      FeatureConfigRequestDto requestDto) {
+  public ResponseEntity<List<FeatureConfigResponseDto>> enableOrDisableFeature(
+      UUID featureConfigUUID, boolean enable) {
+    Optional<FeatureConfig> featureConfig = featureConfigRepository.findById(featureConfigUUID);
+
+    if (featureConfig.isPresent()) {
+      featureConfig.get().setEnabled(enable);
+      featureConfigRepository.save(featureConfig.get());
+      return ResponseEntity.ok(List.of(featureConfigMapper.toDto(featureConfig.get())));
+    } else {
+      return ResponseEntity.notFound().build();
+    }
+  }
+
+  public FeatureConfigResponseDto createFeatureConfig(FeatureConfigRequestDto requestDto) {
     // FreatureConfigRequestDto -> FeatureConfig
     FeatureConfig featureConfig = featureConfigMapper.toEntity(requestDto);
 
@@ -44,12 +57,11 @@ public class FeatureConfigServiceImpl implements FeatureConfigService {
   }
 
   public List<FeatureConfigResponseDto> getFeatureByID(UUID id) {
-    return 
-        featureConfigRepository
-            .findById(id)
-            .map(featureConfigMapper::toDto)
-            .map(List::of)
-            .orElseGet(List::of);
+    return featureConfigRepository
+        .findById(id)
+        .map(featureConfigMapper::toDto)
+        .map(List::of)
+        .orElseGet(List::of);
   }
 
   public List<FeatureConfigResponseDto> getAllFeatures() {

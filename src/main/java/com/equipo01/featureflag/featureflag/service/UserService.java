@@ -46,7 +46,7 @@ public interface UserService {
 
   public Boolean existsByClientID(UUID clientID);
 
-   /**
+  /**
    * Retrieve all users in the system.
    *
    * @return List<UserDTO> list of all user DTOs
@@ -70,7 +70,7 @@ public interface UserService {
 
   /**
    * Register a new admin user.
-   * 
+   *
    * @param userDTO the DTO containing the information of the admin user to register
    * @return a message indicating the result of the registration
    */

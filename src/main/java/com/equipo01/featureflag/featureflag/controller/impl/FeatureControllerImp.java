@@ -3,6 +3,7 @@ package com.equipo01.featureflag.featureflag.controller.impl;
 import com.equipo01.featureflag.featureflag.anotations.SwaggerApiResponses;
 import com.equipo01.featureflag.featureflag.controller.FeatureController;
 import com.equipo01.featureflag.featureflag.dto.request.FeatureRequestDto;
+import com.equipo01.featureflag.featureflag.dto.request.FeatureToggleRequestDto;
 import com.equipo01.featureflag.featureflag.dto.response.FeatureResponseDto;
 import com.equipo01.featureflag.featureflag.dto.response.GetFeatureResponseDto;
 import com.equipo01.featureflag.featureflag.model.enums.Environment;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,6 +42,26 @@ import org.springframework.web.bind.annotation.RestController;
 public class FeatureControllerImp implements FeatureController {
 
   private final FeatureService featureService;
+
+  @Override
+  @PutMapping("/{id}/{action:(?:enable|disable)}")
+  @SwaggerApiResponses
+  @Operation(
+      summary =
+          "Habilita o deshabilita la configuración de una feature para un cliente o entorno específico",
+      description =
+          "Habilita o deshabilita la configuración de una feature para un cliente o entorno específico según el parámetro 'enable'.")
+  public ResponseEntity<?> updateFeatureForClientOrEnvironment(
+      @PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format")
+          String id,
+      @PathVariable String action,
+      @RequestBody FeatureToggleRequestDto toggleRequestDto) {
+
+    UUID featureId = UUID.fromString(id);
+    boolean enable = action.equalsIgnoreCase("enable");
+    featureService.updateFeatureForClientOrEnvironment(featureId, toggleRequestDto, enable);
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  }
 
   /**
    * Crea una nueva feature flag.

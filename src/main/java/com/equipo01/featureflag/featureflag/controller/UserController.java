@@ -34,7 +34,7 @@ public interface UserController {
    */
   public ResponseEntity<String> logginUser(@Valid @RequestBody LoginRequestDto loginRequestDto);
 
-   /**
+  /**
    * Endpoint to retrieve all users in the system.
    *
    * @return ResponseEntity containing a list of all user DTOs.
@@ -56,7 +56,7 @@ public interface UserController {
    */
   public ResponseEntity<Void> deleteUser(@PathVariable String id);
 
-   /**
+  /**
    * Endpoint to register a new admin user.
    *
    * @param userDTO the DTO containing the information of the admin user to register
