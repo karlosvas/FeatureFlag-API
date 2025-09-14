@@ -35,11 +35,14 @@ public class FeatureServiceImplTest {
         private FeatureConfig configDev;
         private FeatureConfig configProd;
 
+        /**
+         * 
+         */
         @BeforeEach
         public void setUp() {
                 MockitoAnnotations.openMocks(this);
 
-                // Crear Feature y FeautureConfigs
+                
                 configDev = FeatureConfig.builder()
                                 .id(UUID.randomUUID())
                                 .environment(Environment.DEV)
@@ -76,10 +79,10 @@ public class FeatureServiceImplTest {
                                 .environment(null)
                                 .build();
 
-                featureService.enableFeatureForClientOrEnvironment(feature.getId(), requestDto);
+                featureService.updateFeatureForClientOrEnvironment(feature.getId(), requestDto, true);
 
                 assertTrue(configDev.getEnabled());
-                assertFalse(configProd.getEnabled()); // La otra configuración no debe cambiar
+                assertFalse(configProd.getEnabled()); 
 
                 verify(featureRepository, times(1)).save(feature);
         }
@@ -94,7 +97,7 @@ public class FeatureServiceImplTest {
                                 .build();
 
                 assertThrows(FeatureFlagException.class,
-                                () -> featureService.enableFeatureForClientOrEnvironment(randomId, dto));
+                                () -> featureService.updateFeatureForClientOrEnvironment(randomId, dto, true));
         }
 
         @Test
@@ -113,7 +116,7 @@ public class FeatureServiceImplTest {
                 configProd.setEnabled(true);
 
                 // Llamada al método de servicio
-                featureService.disableFeatureForClientOrEnvironment(feature.getId(), requestDto);
+                featureService.updateFeatureForClientOrEnvironment(feature.getId(), requestDto, false);
 
                 // Verificaciones
                 assertFalse(configDev.getEnabled()); // La configuración objetivo debe estar deshabilitada
@@ -133,7 +136,7 @@ public class FeatureServiceImplTest {
                                 .build();
 
                 assertThrows(FeatureFlagException.class,
-                                () -> featureService.disableFeatureForClientOrEnvironment(randomId, dto));
+                                () -> featureService.updateFeatureForClientOrEnvironment(randomId, dto, false));
         }
 
         @Test
@@ -148,7 +151,7 @@ public class FeatureServiceImplTest {
                                 .build();
 
                 assertThrows(FeatureFlagException.class,
-                                () -> featureService.disableFeatureForClientOrEnvironment(feature.getId(), invalidDto));
+                                () -> featureService.updateFeatureForClientOrEnvironment(feature.getId(), invalidDto,false));
         }
 
         @Test
@@ -161,7 +164,7 @@ public class FeatureServiceImplTest {
                                 .build();
 
                 FeatureFlagException ex = assertThrows(FeatureFlagException.class, () -> {
-                        featureService.disableFeatureForClientOrEnvironment(feature.getId(), invalidDto);
+                        featureService.updateFeatureForClientOrEnvironment(feature.getId(), invalidDto,true);
                 });
 
                 assertEquals(MessageError.FEATURE_TOGGLE_REQUEST_INVALID.getMessage(), ex.getMessage());
@@ -178,7 +181,7 @@ public class FeatureServiceImplTest {
                                 .build();
 
                 FeatureFlagException ex = assertThrows(FeatureFlagException.class, () -> {
-                        featureService.disableFeatureForClientOrEnvironment(feature.getId(), invalidDto);
+                        featureService.updateFeatureForClientOrEnvironment(feature.getId(), invalidDto,false);
                 });
 
                 assertEquals(MessageError.FEATURE_TOGGLE_REQUEST_INVALID.getMessage(), ex.getMessage());

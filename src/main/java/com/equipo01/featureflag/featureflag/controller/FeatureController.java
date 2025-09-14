@@ -56,8 +56,9 @@ public interface FeatureController {
 
     public ResponseEntity<Boolean> checkFeatureIsActive(@RequestParam String nameFeature, @RequestParam String clientID, @RequestParam String environment);
 
-    public ResponseEntity<?> enableFeatureForClientOrEnvironment(@PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String id, @RequestBody FeatureToggleRequestDto toggleRequestDto);
-
-    public ResponseEntity<?> disableFeatureForClientOrEnvironment(@PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String id, @RequestBody FeatureToggleRequestDto toggleRequestDto);
+    public ResponseEntity<?> updateFeatureForClientOrEnvironment(
+        @PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String id,
+        @PathVariable String action, 
+        @RequestBody FeatureToggleRequestDto toggleRequestDto);
 
 }

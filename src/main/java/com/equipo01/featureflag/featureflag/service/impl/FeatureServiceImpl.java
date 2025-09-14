@@ -246,30 +246,31 @@ public class FeatureServiceImpl implements FeatureService {
     }
 
     /**
-     * Enables a feature flag identified by its UUID.
-     * This method validates the feature and the request,
-     * then updates de relevan configurations to set them as enabled.
+     * Enables or disable a feature for specifici client or environment.
+     * This method will check if the feature identified by {@code featureId} exists,
+     * then it will either create a new configuration or update an existing one
+     * inf{@link FeatureConfig} with {@code enabled = true} based on the provided
+     * {@code requestDto} containing {@code clientId} and/or {@code environment}.
      * 
-     * @override
-     * @param featureId        the UUID of the feature to be enabled
-     * @param toggleRequestDto a DTO containing the clientID and/or environment
-     *                         where the feature should be enabled
-     * @throws FeatureFlagException if the feature does not exist, if the requestDto
-     *                              is invalid, or if no matching configuration is
-     *                              found
+     * 
+     * @param featureId  the UUID of the feature to be enabled.
+     * @param requestDto a DTO containing the clientID and/or environment where the
+     *                   feature sholud be enabled.
+     * @param enabled    a boolean indicating wether to enable (true) or disable
+     *                   (false) the feature
+     * @throws FeatureFlagException if the feature does not exist or if the
+     *                              requestDto is invalid.
+     * 
      */
-
     @Override
-    public void enableFeatureForClientOrEnvironment(UUID featureId, FeatureToggleRequestDto toggleRequestDto) {
+    public void updateFeatureForClientOrEnvironment(UUID featureId, FeatureToggleRequestDto toggleRequestDto,
+            boolean enable) {
         // 1. Retrives the feature by its ID, if not found, throws an exception
         Feature feature = findById(featureId);
-
         // 2. Validates the request DTO (must contain at least clientId or environment)
         validateFeatureToggleRequest(toggleRequestDto);
-
         // 3. Get the list of configurations associates with this feature
         List<FeatureConfig> featureConfigList = feature.getConfigs();
-
         // 4. Filter configurations that match the request conditions:
         // - If clientId is null, ignore it, otherwise compare with FeatureConfig
         // clientId
@@ -284,17 +285,12 @@ public class FeatureServiceImpl implements FeatureService {
                     return clientIdMatch && environmentMatch;
                 })
                 .toList();
-        // 5. If matching configurations exists:
-        // -Set enabled to true for each configuration
-        // -Save the parent feature (cascade will persist the child configs)
+
         if (!targetConfig.isEmpty()) {
-            // Enable all matching configurations
-            targetConfig.forEach(fc -> fc.setEnabled(true));
+            targetConfig.forEach(fc -> fc.setEnabled(enable));
             featureRepository.save(feature);
         } else {
-            // No configuration matches the clientId/environment criteria
-
-           throw new FeatureFlagException(
+            throw new FeatureFlagException(
                     HttpStatus.NOT_FOUND,
                     MessageError.FEATURE_NOT_FOUND.getMessage(),
                     MessageError.FEATURES_NOT_FOUND.getDescription());
@@ -302,60 +298,14 @@ public class FeatureServiceImpl implements FeatureService {
     }
 
     /**
-     * Disables a feature flag identified by its UUID.
-     * This method validates the feature and the request,
-     * then updates de relevan configurations to set them as disabled.
-     * 
-     * @override
-     * @param featureId        the UUID of the feature to be disabled
-     * @param toggleRequestDto a DTO containing the clientID and/or environment
-     *                         where the feature
-     *                         should be disabled
-     * @throws FeatureFlagException if the feature does not exist, if the requestDto
-     *                              is
+     * Validates the given DTO.
+     * The DTO must contain at least one of the following fields: {@code clientId} or {@code environment}
+     *  -if both are null, an exception will be thrown.
+     *  -If {@code clienId} is an empty String and {@code environment} is null, an exception will also be thrown.
+     *
+     * @param toggleRequestDto
+     * @throws FeatureFlagException personalizada indicando el error
      */
-
-    @Override
-    public void disableFeatureForClientOrEnvironment(UUID featureId, FeatureToggleRequestDto toggleRequestDto) {
-
-        // 1. Retrives the feature by its ID, if not found, throws an exception
-        Feature feature = findById(featureId);
-
-        // 2. Validates the request DTO (must contain at least clientId or environment)
-        validateFeatureToggleRequest(toggleRequestDto);
-
-        // 3. Get the list of configurations associates with this feature
-        List<FeatureConfig> featureConfigList = feature.getConfigs();
-
-        // 4. Filter configurations that match the request conditions:
-        // - If clientId is null, ignore it, otherwise compare with FeatureConfig
-        // clientId
-        // - If environment is null, ignore it, otherwise compare with FeatureConfig
-        // environment
-
-        List<FeatureConfig> targetConfig = featureConfigList.stream()
-                .filter(fc -> {
-                    boolean clientIdMatch = toggleRequestDto.getClientId() == null
-                            || toggleRequestDto.getClientId().equals(fc.getClientId());
-                    boolean environmentMatch = toggleRequestDto.getEnvironment() == null
-                            || toggleRequestDto.getEnvironment() == fc.getEnvironment();
-                    return clientIdMatch && environmentMatch;
-                })
-                .toList();
-
-        if (!targetConfig.isEmpty()) {
-            targetConfig.forEach(fc -> fc.setEnabled(false));
-            featureRepository.save(feature);
-        } else {
-            throw new FeatureFlagException(
-                    HttpStatus.NOT_FOUND,
-                    MessageError.FEATURE_NOT_FOUND.getMessage(),
-                    MessageError.FEATURES_NOT_FOUND.getDescription());
-
-        }
-
-    }
-
     private void validateFeatureToggleRequest(FeatureToggleRequestDto toggleRequestDto) {
         boolean clientIdEmpty = toggleRequestDto.getClientId() == null || toggleRequestDto.getClientId().isBlank();
         boolean environmentEmpty = toggleRequestDto.getEnvironment() == null;

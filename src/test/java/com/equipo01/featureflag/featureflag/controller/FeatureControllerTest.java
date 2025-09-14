@@ -16,13 +16,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
 import java.util.UUID;
-
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class FeatureControllerTest {
@@ -60,30 +59,30 @@ class FeatureControllerTest {
 
     @Test
     void enableFeatureForClientOrEnvironment_success() throws Exception {
-        mockMvc.perform(post("/api/features/" + featureId + "/enable")
+        mockMvc.perform(put("/api/features/" + featureId + "/enable")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(toggleRequestDto)))
                 .andExpect(status().isNoContent());
 
-        verify(featureService, times(1)).enableFeatureForClientOrEnvironment(featureId, toggleRequestDto);
+        verify(featureService, times(1)).updateFeatureForClientOrEnvironment(featureId, toggleRequestDto, true);
     }
 
     @Test
     void disableFeatureForClientOrEnvironment_success() throws Exception {
-        mockMvc.perform(post("/api/features/" + featureId + "/disable")
+        mockMvc.perform(put("/api/features/" + featureId + "/disable")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(toggleRequestDto)))
                 .andExpect(status().isNoContent());
 
-        verify(featureService, times(1)).disableFeatureForClientOrEnvironment(featureId, toggleRequestDto);
+        verify(featureService, times(1)).updateFeatureForClientOrEnvironment(featureId, toggleRequestDto, false);
     }
 
     @Test
     void enableFeature_featureConfigNotFound() throws Exception {
         doThrow(new FeatureFlagException(HttpStatus.NOT_FOUND, MessageError.FEATURE_CONFIG_NOT_FOUND.getMessage(), MessageError.FEATURE_CONFIG_NOT_FOUND.getDescription()))
-                .when(featureService).enableFeatureForClientOrEnvironment(featureId, toggleRequestDto);
+                .when(featureService).updateFeatureForClientOrEnvironment(featureId, toggleRequestDto, true);
 
-        mockMvc.perform(post("/api/features/" + featureId + "/enable")
+        mockMvc.perform(put("/api/features/" + featureId + "/enable")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(toggleRequestDto)))
                 .andExpect(status().isNotFound())
@@ -94,9 +93,9 @@ class FeatureControllerTest {
     @Test
     void disableFeature_featureConfigNotFound() throws Exception {
         doThrow(new FeatureFlagException(HttpStatus.NOT_FOUND, MessageError.FEATURE_CONFIG_NOT_FOUND.getMessage(), MessageError.FEATURE_CONFIG_NOT_FOUND.getDescription()))
-                .when(featureService).disableFeatureForClientOrEnvironment(featureId, toggleRequestDto);
+                .when(featureService).updateFeatureForClientOrEnvironment(featureId, toggleRequestDto, false);
 
-        mockMvc.perform(post("/api/features/" + featureId + "/disable")
+        mockMvc.perform(put("/api/features/" + featureId + "/disable")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(toggleRequestDto)))
                 .andExpect(status().isNotFound())

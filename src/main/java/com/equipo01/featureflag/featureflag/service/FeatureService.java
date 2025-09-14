@@ -30,6 +30,7 @@ public interface FeatureService {
     boolean existsByName(String name);
 
     boolean existsById(UUID id);
+
     /**
      * Retrieves a feature flag by its UUID.
      *
@@ -79,31 +80,21 @@ public interface FeatureService {
     void isPageEmpty(Page<Feature> featurePage);
 
         /**
-         * Enables a feature for specifici client or environment.
+         * Enables or disable a  feature for specifici client or environment.
          * This method will check if the feature identified by {@code featureId} exists,
          * then it will either create a new configuration or update an existing one
-         * inf{@link FeatureConfig} with {@code enabled = true} based on the provided 
+         * inf{@link FeatureConfig} with {@code enabled = true} based on the provided
          * {@code requestDto} containing {@code clientId} and/or {@code environment}.
          * 
          * 
-         * @param featureId the UUID of the feature to be enabled.
-         * @param requestDto a DTO containing the clientID and/or environment where the feature sholud be enabled.
-         * @throws FeatureFlagException if the feature does not exist or if the requestDto is invalid.
+         * @param featureId  the UUID of the feature to be enabled.
+         * @param requestDto a DTO containing the clientID and/or environment where the
+         *                   feature sholud be enabled.
+         * @param  enabled a boolean indicating wether to enable (true) or disable (false) the feature
+         * @throws FeatureFlagException if the feature does not exist or if the
+         *                              requestDto is invalid.
          * 
          */
-        void enableFeatureForClientOrEnvironment(UUID featureId, FeatureToggleRequestDto toggleRequestDto);
+    void updateFeatureForClientOrEnvironment(UUID featureId, FeatureToggleRequestDto toggleRequestDto, boolean enabled);
 
-        /**
-         * Disables a feature for specifici client or environment.
-         * This method will check if the feature identified by {@code featureId} exists,    
-         * then it will either create a new configuration or update an existing one
-         * inf{@link FeatureConfig} with {@code enabled = false} based on the provided
-         * {@code requestDto} containing {@code clientId} and/or {@code environment}.
-         * 
-         * @param featureId the UUID of the feature to be disabled.
-         * @param requestDto a DTO containing the clientID and/or environment where the feature sholud be disabled.
-         * @throws FeatureFlagException if the feature does not exist or if the requestDto is invalid.
-         */
-        void disableFeatureForClientOrEnvironment(UUID featureId, FeatureToggleRequestDto toggleRequestDto);
-
-    }
+}

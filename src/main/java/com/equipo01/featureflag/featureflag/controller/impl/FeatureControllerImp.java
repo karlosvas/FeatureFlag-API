@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -99,25 +100,19 @@ public class FeatureControllerImp implements FeatureController {
         Boolean isActive = featureService.checkFeatureIsActive(nameFeature, uuid, env);
         return ResponseEntity.ok(isActive);
     }
-
-    @PostMapping("/{id}/enable")
+    @Override
+    @PutMapping("/{id}/{action:(?:enable|disable)}")
     @SwaggerApiResponses
-    @Operation(summary = "Habilita una feature flag para un cliente o entorno específico", description = "Habilita una feature flag específica identificada por su UUID y aplica las configuraciones proporcionadas.")
-    public ResponseEntity<?> enableFeatureForClientOrEnvironment(
-            @PathVariable("id") @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String id,
-            @RequestBody FeatureToggleRequestDto toggleRequestDto) {
-
-        featureService.enableFeatureForClientOrEnvironment(UUID.fromString(id), toggleRequestDto);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    @PostMapping("/{id}/disable")
-    @SwaggerApiResponses
-    @Operation(summary = "Deshabilita una feature flag para un cliente o entorno específico", description = "Deshabilita una feature flag específica identificada por su UUID y deshabilita la configuracion para el cliente o el entorno especificado")
-    public ResponseEntity<?> disableFeatureForClientOrEnvironment(
+    @Operation(summary = "Habilita o deshabilita la configuración de una feature para un cliente o entorno específico", description = "Habilita o deshabilita la configuración de una feature para un cliente o entorno específico según el parámetro 'enable'.")
+    public ResponseEntity<?> updateFeatureForClientOrEnvironment(
             @PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String id,
+            @PathVariable String action,
             @RequestBody FeatureToggleRequestDto toggleRequestDto) {
-        featureService.disableFeatureForClientOrEnvironment(UUID.fromString(id), toggleRequestDto);
+        UUID featureId = UUID.fromString(id);
+        boolean enable = action.equalsIgnoreCase("enable");
+        featureService.updateFeatureForClientOrEnvironment(featureId, toggleRequestDto, enable);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+
 }
