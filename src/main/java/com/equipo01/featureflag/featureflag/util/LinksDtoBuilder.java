@@ -25,7 +25,7 @@ public class LinksDtoBuilder {
      * @param size     the size of the page
      * @return a LinkDto object with the constructed href
      */
-    private static LinkDto createLink(String baseLink, int page, int size) {
+    private LinkDto createLink(String baseLink, int page, int size) {
         String href = baseLink + "&page=" + page + "&size=" + size;
         return new LinkDto(href);
     }

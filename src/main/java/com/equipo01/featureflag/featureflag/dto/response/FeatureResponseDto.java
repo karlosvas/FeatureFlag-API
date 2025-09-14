@@ -1,12 +1,15 @@
 package com.equipo01.featureflag.featureflag.dto.response;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -25,13 +28,14 @@ import lombok.ToString;
  * - description: Descripción de la feature flag.
  * - enabledByDefault: Indica si la feature está habilitada por defecto.
  */
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @Schema(description = "DTO para la respuesta de una feature flag.")
-public class FeatureResponseDto {
+public class FeatureResponseDto implements Serializable{
     
     @Schema(description = "Identificador único de la feature flag", example = "123e4567-e89b-12d3-a456-426614174000")
     private UUID id;

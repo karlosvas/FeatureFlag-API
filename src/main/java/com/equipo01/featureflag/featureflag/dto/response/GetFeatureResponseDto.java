@@ -1,5 +1,6 @@
 package com.equipo01.featureflag.featureflag.dto.response;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.equipo01.featureflag.featureflag.dto.LinksDto;
@@ -15,7 +16,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetFeatureResponseDto {
+public class GetFeatureResponseDto implements Serializable{
     
     private List<FeatureResponseDto> features;
     private LinksDto links;

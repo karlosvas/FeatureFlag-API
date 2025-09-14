@@ -17,3 +17,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
+
+api:
+  auth: /api/auth
+  features: /api/features
+  configurations: /api/configurations

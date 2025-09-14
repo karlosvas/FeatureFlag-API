@@ -1,3 +1,4 @@
+
 package com.equipo01.featureflag.featureflag.controller;
 
 import java.util.List;
@@ -13,4 +14,8 @@ public interface FeatureConfigController {
     ResponseEntity<List<FeatureConfigResponseDto>> getAllFeatures();
 
     ResponseEntity<List<FeatureConfigResponseDto>> setFeatureEnabledOrDisabled(String featureConfigId, boolean enable);
+  
+    ResponseEntity<String> checkPermissionTest();
+
 }
+

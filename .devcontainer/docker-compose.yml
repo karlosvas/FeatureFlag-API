@@ -22,5 +22,37 @@ services:
       - 5432
     command: -p 5432
 
+  sonarqube:
+      image: sonarqube:25.7.0.110598-community
+      depends_on:
+        - sonar_db
+      env_file:
+      - sonarqube.env
+      ports:
+        - "9000:9000"
+      expose:
+      - 9000
+      volumes:
+        - sonarqube_conf:/opt/sonarqube/conf
+        - sonarqube_data:/opt/sonarqube/data
+        - sonarqube_extensions:/opt/sonarqube/extensions
+        - sonarqube_logs:/opt/sonarqube/logs
+        - sonarqube_temp:/opt/sonarqube/temp
+
+  sonar_db:
+    image: postgres:15
+    env_file:
+      - sonarqube.env
+    volumes:
+      - sonar_db:/var/lib/postgresql
+      - sonar_db_data:/var/lib/postgresql/data
+
 volumes:
   featureflag-data:
+  sonarqube_conf:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+  sonarqube_temp:
+  sonar_db:
+  sonar_db_data:

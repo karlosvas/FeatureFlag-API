@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.equipo01.featureflag.featureflag.config.JwtUtil;
-import com.equipo01.featureflag.featureflag.config.SecurityConfig;
 import com.equipo01.featureflag.featureflag.dto.UserDTO;
 import com.equipo01.featureflag.featureflag.dto.request.LoginRequestDto;
 import com.equipo01.featureflag.featureflag.dto.request.UserRequestDTO;
@@ -44,7 +43,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final JwtUtil jwtUtil;
-    private final SecurityConfig securityConfig;
     private final PasswordEncoder passwordEncoder;
     private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -56,18 +54,18 @@ public class UserServiceImpl implements UserService {
      * @return un token JWT si el registro es exitoso
      */
     @Transactional
-    public String registerUser(UserRequestDTO userDTO) {
-        checkRegister(userDTO.getEmail(), userDTO.getUsername());
+    public String registerUser(UserRequestDTO userRequestDTO) {
+        checkRegister(userRequestDTO.getEmail(), userRequestDTO.getUsername());
 
-        UserDTO newUserDTO = UserDTO.buildUserDtoDefault(userDTO);
+        UserDTO newUserDTO = userMapper.defaultUserDto(userRequestDTO);
 
         User user = userMapper.userDTOToUser(newUserDTO);
-        user.setPassword(securityConfig.passwordEncoder().encode(userDTO.getPassword()));
+        user.setPassword(passwordEncoder.encode(newUserDTO.getPassword()));
         userRepository.save(user);
 
         logger.info("User registered: {}", user.getEmail());
 
-        Authentication authentication = buildAuthentication(userDTO.getUsername(), userDTO.getPassword());
+        Authentication authentication = buildAuthentication(newUserDTO.getUsername(), newUserDTO.getPassword());
 
         return jwtUtil.generateToken(authentication);
 
