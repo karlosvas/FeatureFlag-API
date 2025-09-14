@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FeatureToggleRequestDto {
-    private String clientId;       // Nullable
-    private Environment environment; // Nullable
+  private String clientId; // Nullable
+  private Environment environment; // Nullable
 }
