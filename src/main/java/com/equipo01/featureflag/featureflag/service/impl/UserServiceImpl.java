@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
   private final UserMapper userMapper;
   private final JwtUtil jwtUtil;
   private final PasswordEncoder passwordEncoder;
-  private final Logger logger = LoggerFactory.getLogger(UserService.class);
+  private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
   /**
    * Registra un nuevo usuario en el sistema.
@@ -124,9 +124,9 @@ public class UserServiceImpl implements UserService {
     // If user with email exists, throw exception
     if (userRepository.findByEmail(email).isPresent()) {
         throw new FeatureFlagException(
-            MessageError.USERNAME_ALREADY_EXISTS.getStatus(),
-            MessageError.USERNAME_ALREADY_EXISTS.getMessage(),
-            MessageError.USERNAME_ALREADY_EXISTS.getDescription());
+            MessageError.EMAIL_ALREADY_EXISTS.getStatus(),
+            MessageError.EMAIL_ALREADY_EXISTS.getMessage(),
+            MessageError.EMAIL_ALREADY_EXISTS.getDescription());
     }
     // If user with username exists, throw exception
     if (userRepository.findByUsername(username).isPresent()) {
