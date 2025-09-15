@@ -61,53 +61,53 @@ public class User implements UserDetails {
     @GeneratedValue
     private UUID id;
 
-    @Column(nullable = false, unique = true)
-    private String username;
+  @Column(nullable = false, unique = true)
+  private String username;
 
-    @Column(nullable = false)
-    private String email;
+  @Column(nullable = false)
+  private String email;
 
-    @Column(nullable = false)
-    private String password;
+  @Column(nullable = false)
+  private String password;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+  @Enumerated(EnumType.STRING)
+  private Role role;
 
-    @Column(nullable = false)
-    private Boolean active;
+  @Column(nullable = false)
+  private Boolean active;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
-    }
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return List.of(new SimpleGrantedAuthority(role.name()));
+  }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return active;
-    }
+  @Override
+  public boolean isAccountNonExpired() {
+    return active;
+  }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return active;
-    }
+  @Override
+  public boolean isAccountNonLocked() {
+    return active;
+  }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return active;
-    }
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return active;
+  }
 
-    @Override
-    public boolean isEnabled() {
-        return active;
-    }
+  @Override
+  public boolean isEnabled() {
+    return active;
+  }
 
-    @Override
-    public String getUsername() {
-        return this.username;
-    }
+  @Override
+  public String getUsername() {
+    return this.username;
+  }
 
-    @Override
-    public String getPassword() {
-        return this.password;
-    }
+  @Override
+  public String getPassword() {
+    return this.password;
+  }
 }

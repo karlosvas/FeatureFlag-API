@@ -1,12 +1,11 @@
 package com.equipo01.featureflag.featureflag.config;
 
+import com.equipo01.featureflag.featureflag.model.User;
+import com.equipo01.featureflag.featureflag.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import com.equipo01.featureflag.featureflag.model.User;
-import com.equipo01.featureflag.featureflag.repository.UserRepository;
 
 /**
  * Custom service for loading user details.
@@ -47,12 +46,11 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(
                         "User with username " + username + " not found"));
 
-        return org.springframework.security.core.userdetails.User.builder()
-            .username(userEntity.getUsername())
-            .password(userEntity.getPassword())
-            .roles(userEntity.getRole().toString())
-            .disabled(!userEntity.isEnabled())
-            .build();
-    }
-
+    return org.springframework.security.core.userdetails.User.builder()
+        .username(userEntity.getUsername())
+        .password(userEntity.getPassword())
+        .roles(userEntity.getRole().toString())
+        .disabled(!userEntity.isEnabled())
+        .build();
+  }
 }

@@ -12,13 +12,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.UUID;
-
 import org.hibernate.annotations.Columns;
 
 /**
@@ -45,8 +45,7 @@ import org.hibernate.annotations.Columns;
  */
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Builder
 @Entity
 @Table(name = "feature_configs")
@@ -57,22 +56,25 @@ public class FeatureConfig {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(columnDefinition = "uuid", updatable = false, nullable = false, name = "feature_config_id")
+    @Column(
+      columnDefinition = "uuid", 
+      updatable = false, 
+      nullable = false, 
+      name = "feature_config_id")
     private UUID id;
 
-    @Enumerated(EnumType.STRING) //DEV, STAGING, PROD
-    @Column(nullable = false)
-    private Environment environment;
+  @Enumerated(EnumType.STRING) // DEV, STAGING, PROD
+  @Column(nullable = false)
+  private Environment environment;
 
-    @Column(name = "client_id")
-    private String clientId;
+  @Column(name = "client_id")
+  private String clientId;
 
-    @Column(nullable = false)
-    private boolean enabled;
+  @Column(nullable = false)
+  private Boolean enabled;
 
     //  N:1 -> Many configurations can belong to one feature
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "feature_id", nullable = false)
+    @JoinColumn(name = "feature_id", referencedColumnName = "feature_id", nullable = false)
     private Feature feature;
 }
-

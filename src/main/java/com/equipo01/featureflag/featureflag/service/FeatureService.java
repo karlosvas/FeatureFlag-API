@@ -1,63 +1,92 @@
 package com.equipo01.featureflag.featureflag.service;
 
-import java.util.List;
+import com.equipo01.featureflag.featureflag.dto.request.FeatureRequestDto;
+import com.equipo01.featureflag.featureflag.dto.request.FeatureToggleRequestDto;
+import com.equipo01.featureflag.featureflag.dto.response.FeatureResponseDto;
+import com.equipo01.featureflag.featureflag.dto.response.GetFeatureResponseDto;
+import com.equipo01.featureflag.featureflag.exception.FeatureFlagException;
+import com.equipo01.featureflag.featureflag.model.Feature;
+import com.equipo01.featureflag.featureflag.model.FeatureConfig;
+import com.equipo01.featureflag.featureflag.model.enums.Environment;
 import java.util.UUID;
-import com.equipo01.featureflag.featureflag.dto.FeatureRequestDto;
-import com.equipo01.featureflag.featureflag.dto.FeatureResponseDto;
+import org.springframework.data.domain.Page;
 
 /**
- * Service for feature flags management.
- * 
- * This interface defines the main operations to create, query and manage
- * feature flags in the system. Feature flags allow enabling or disabling
- * application functionalities dynamically without the need to redeploy code.
- * 
+ * Service interface for managing feature flags. Provides methods for checking existence,
+ * retrieving, creating, and listing features.
  */
 public interface FeatureService {
 
-    /**
-     * Creates a new feature flag in the system.
-     * 
-     * This method validates that the feature flag name is unique before creating
-     * the new functionality. If a feature flag with the same name already exists,
-     * an exception is thrown.
-     * 
-     * @param requestDto The feature flag data to create, including name,
-     *                   description and initial state
-     * @return FeatureResponseDto with the created feature flag data,
-     *         including the auto-generated ID
-     * @throws FeatureAlreadyExistsException if a feature flag with the same name
-     *                                       already exists
-     * @throws IllegalArgumentException      if the input data is invalid
-     */
-    FeatureResponseDto createFeature(FeatureRequestDto requestDto);
+  /**
+   * Checks if a feature flag exists by its name.
+   *
+   * @param name the name of the feature flag
+   * @return true if a feature flag with the given name exists, false otherwise
+   */
+  public boolean existsByName(String name);
 
-    /**
-     * Retrieves all feature flags registered in the system.
-     * 
-     * This method recovers the complete list of available feature flags,
-     * including both active and inactive ones. Results are returned as
-     * response DTOs to avoid exposing internal entities.
-     * 
-     * @return List of FeatureResponseDto with all feature flags in the system.
-     *         If no feature flags are registered, returns an empty list.
-     */
-    List<FeatureResponseDto> getAllFeatures();
+  public boolean existsById(UUID id);
 
-    /**
-     * Searches and retrieves a specific feature flag by its unique identifier.
-     * 
-     * This method searches for a feature flag using its UUID. If the feature flag
-     * exists, it returns its complete data in a response DTO. If not found,
-     * it throws a specific exception.
-     * 
-     * @param featureId The unique identifier (UUID) of the feature flag to search.
-     *                  Cannot be null.
-     * @return FeatureResponseDto with the complete data of the found feature flag
-     * @throws FeatureNotFoundException if no feature flag exists with the provided
-     *                                  ID
-     * @throws IllegalArgumentException if featureId is null
-     */
-    FeatureResponseDto getFeatureById(UUID featureId);
+  /**
+   * Retrieves a feature flag by its UUID.
+   *
+   * @param featureId the UUID of the feature flag
+   * @return the Feature entity if found
+   */
+  public Feature findById(UUID featureId);
 
+  /**
+   * Creates a new feature flag.
+   *
+   * @param requestDto the data for the new feature flag
+   * @return the created feature flag as a response DTO
+   */
+  public FeatureResponseDto createFeature(FeatureRequestDto requestDto);
+
+  /**
+   * Retrieves a feature flag by its ID as a string.
+   *
+   * @param featureId the ID of the feature flag as a string
+   * @return the feature flag as a response DTO
+   */
+  public FeatureResponseDto getFeatureById(String featureId);
+
+  public Boolean checkFeatureIsActive(String nameFeature, UUID clientID, Environment environment);
+
+  /**
+   * Retrieves a paginated list of feature flags, optionally filtered by name and enabled status.
+   *
+   * @param name optional name filter (partial match)
+   * @param enabledByDefault optional enabled status filter
+   * @param page the page number to retrieve (0-based)
+   * @param size the number of items per page
+   * @return a paginated response DTO containing the list of feature flags
+   */
+  public GetFeatureResponseDto getFeatures(
+      String name, Boolean enabledByDefault, Integer page, Integer size);
+
+  /**
+   * Validates if the given page of features is empty. If empty, throws a FeatureFlagException.
+   *
+   * @param featurePage the page of features to check
+   * @throws FeatureFlagException if the page is empty
+   */
+  public void isPageEmpty(Page<Feature> featurePage);
+
+  /**
+   * Enables or disable a feature for specifici client or environment. This method will check if the
+   * feature identified by {@code featureId} exists, then it will either create a new configuration
+   * or update an existing one inf{@link FeatureConfig} with {@code enabled = true} based on the
+   * provided {@code requestDto} containing {@code clientId} and/or {@code environment}.
+   *
+   * @param featureId the UUID of the feature to be enabled.
+   * @param requestDto a DTO containing the clientID and/or environment where the feature sholud be
+   *     enabled.
+   * @param enabled a boolean indicating wether to enable (true) or disable (false) the feature
+   * @throws FeatureFlagException if the feature does not exist or if the requestDto is invalid.
+   */
+  void updateFeatureForClientOrEnvironment(
+      UUID featureId, FeatureToggleRequestDto toggleRequestDto, boolean enabled);
+
+  public void deleteFeature(UUID featureId);
 }

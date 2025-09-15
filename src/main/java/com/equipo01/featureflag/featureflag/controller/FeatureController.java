@@ -1,72 +1,67 @@
 package com.equipo01.featureflag.featureflag.controller;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.equipo01.featureflag.featureflag.anotations.SwaggerApiResponses;
-import com.equipo01.featureflag.featureflag.dto.FeatureRequestDto;
-import com.equipo01.featureflag.featureflag.dto.FeatureResponseDto;
-import com.equipo01.featureflag.featureflag.service.FeatureService;
-
-import io.swagger.v3.oas.annotations.Operation;
+import com.equipo01.featureflag.featureflag.dto.request.FeatureRequestDto;
+import com.equipo01.featureflag.featureflag.dto.request.FeatureToggleRequestDto;
+import com.equipo01.featureflag.featureflag.dto.response.FeatureResponseDto;
+import com.equipo01.featureflag.featureflag.dto.response.GetFeatureResponseDto;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
-import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
-@RestController
-@RequestMapping("${api.features}")
-@RequiredArgsConstructor
-public class FeatureController {
+public interface FeatureController {
+  /**
+   * Crea una nueva feature flag.
+   *
+   * @param requestDto datos de la feature flag a crear
+   * @return la feature flag creada con estado HTTP 201
+   */
+  public ResponseEntity<FeatureResponseDto> createFeature(
+      @Valid @RequestBody FeatureRequestDto requestDto);
 
-    private final FeatureService featureService;
+  /**
+   * Obtiene una lista paginada de todas las feature flags, con filtros opcionales por nombre y
+   * estado habilitado.
+   *
+   * @param name filtro opcional por nombre (coincidencia parcial)
+   * @param enabledByDefault filtro opcional por estado habilitado
+   * @param page número de página para la paginación (predeterminado: 0)
+   * @param size tamaño de página para la paginación (predeterminado: 10)
+   * @return una lista paginada de feature flags que coinciden con los filtros aplicados
+   */
+  public ResponseEntity<GetFeatureResponseDto> getFeatures(
+      @RequestParam(value = "name", required = false) String name,
+      @RequestParam(value = "enabled", required = false) Boolean enabledByDefault,
+      @RequestParam(value = "page", defaultValue = "0", required = false)
+          @Min(value = 0, message = "Page must be at least 0")
+          Integer page,
+      @RequestParam(value = "size", defaultValue = "10", required = false)
+          @Min(value = 1, message = "Size must be at least 1")
+          Integer size);
 
-    /**
-     * Creates a new feature flag.
-     *
-     * @param requestDto the feature flag data to create
-     * @return the created feature flag with HTTP 201 status
-     */
-    @PostMapping
-    @SwaggerApiResponses
-    @Operation(summary = "Creates new feature flag", description = "Creates a new feature flag with the provided data and returns the created feature.")
-    public ResponseEntity<FeatureResponseDto> createFeature(@Valid @RequestBody FeatureRequestDto requestDto) {
-        FeatureResponseDto responseDto = featureService.createFeature(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
-    }
+  /**
+   * Retrieves details of a specific feature flag by its UUID.
+   *
+   * @param featureId the UUID of the feature flag
+   * @return the feature flag details
+   */
+  public ResponseEntity<FeatureResponseDto> getFeature(
+      @PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format")
+          String featureId);
 
-    /**
-     * Retrieves a list of all feature flags.
-     *
-     * @return a list of feature flags
-     */
-    @GetMapping
-    @SwaggerApiResponses
-    @Operation(summary = "Retrieves all feature flags", description = "Returns a list of all available feature flags.")
-    public ResponseEntity<List<FeatureResponseDto>> getFeatures() {
-        return ResponseEntity.ok(featureService.getAllFeatures());
-    }
+  public ResponseEntity<Boolean> checkFeatureIsActive(
+      @RequestParam String nameFeature,
+      @RequestParam String clientID,
+      @RequestParam String environment);
 
-    /**
-     * Retrieves details of a specific feature flag by its UUID.
-     *
-     * @param featureId the UUID of the feature flag
-     * @return the feature flag details
-     */
-    @GetMapping("/{featureId}")
-    @SwaggerApiResponses
-    @Operation(summary = "Retrieves a feature flag by its ID", description = "Returns the details of a specific feature flag identified by its UUID.")
-    public ResponseEntity<FeatureResponseDto> getFeature(@PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String featureId) {
-            UUID uuid = UUID.fromString(featureId);
-        return ResponseEntity.ok(featureService.getFeatureById(uuid));
-    }
+  public ResponseEntity<?> updateFeatureForClientOrEnvironment(
+      @PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format")
+          String id,
+      @PathVariable String action,
+      @RequestBody FeatureToggleRequestDto toggleRequestDto);
 
+  public ResponseEntity<Void> deleteFeature(@PathVariable String id);
 }

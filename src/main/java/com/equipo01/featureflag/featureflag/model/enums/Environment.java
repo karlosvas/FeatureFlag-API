@@ -1,4 +1,5 @@
 package com.equipo01.featureflag.featureflag.model.enums;
+
 /*
  * Represents the different environments where a feature may be active.
  *
@@ -7,7 +8,7 @@ package com.equipo01.featureflag.featureflag.model.enums;
  * PROD: Production environment, where the feature is available to end users.
  */
 public enum Environment {
-    DEV,
-    STAGING,
-    PROD
+  DEV,
+  STAGING,
+  PROD
 }

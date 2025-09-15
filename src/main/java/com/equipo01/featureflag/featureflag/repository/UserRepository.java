@@ -1,10 +1,10 @@
 package com.equipo01.featureflag.featureflag.repository;
 
+import com.equipo01.featureflag.featureflag.model.User;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import com.equipo01.featureflag.featureflag.model.User;
-import java.util.Optional;
 
 /**
  * Repository for the User entity.
@@ -16,6 +16,7 @@ import java.util.Optional;
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-    Optional<User> findByUsername(String username);
-    Optional<User> findByEmail(String email);
+  Optional<User> findByUsername(String username);
+
+  Optional<User> findByEmail(String email);
 }

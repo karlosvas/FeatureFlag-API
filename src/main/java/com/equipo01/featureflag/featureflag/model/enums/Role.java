@@ -8,7 +8,7 @@ package com.equipo01.featureflag.featureflag.model.enums;
  * GUEST: Guest user with very restricted access.
  */
 public enum Role {
-    ADMIN,
-    USER,
-    GUEST
+  ADMIN,
+  USER,
+  GUEST
 }

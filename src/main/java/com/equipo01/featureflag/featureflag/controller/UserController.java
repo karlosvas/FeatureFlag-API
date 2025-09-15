@@ -1,72 +1,66 @@
 package com.equipo01.featureflag.featureflag.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.equipo01.featureflag.featureflag.anotations.SwaggerApiResponses;
-import com.equipo01.featureflag.featureflag.dto.LoginRequestDto;
-import com.equipo01.featureflag.featureflag.dto.UserRequestDTO;
-import com.equipo01.featureflag.featureflag.service.UserService;
-
-import io.swagger.v3.oas.annotations.Operation;
+import com.equipo01.featureflag.featureflag.dto.UserDTO;
+import com.equipo01.featureflag.featureflag.dto.request.LoginRequestDto;
+import com.equipo01.featureflag.featureflag.dto.request.UserRequestDTO;
 import jakarta.validation.Valid;
+import java.util.List;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
-/**
- * Controller for managing user-related operations.
- * Uses the UserService service to perform business operations.
- *
- * Provides endpoints to create, update, and delete users.
- * {@link RestController} Spring annotation indicating that this class is a
- * REST controller.
- * {@link RequestMapping} Spring annotation defining the base path for
- * all endpoints in this controller.
- */
-@RestController
-@RequestMapping("/api/auth")
-public class UserController {
-    private final UserService userService;
+public interface UserController {
+  /**
+   * Endpoint para verificar el estado del servicio.
+   *
+   * @return "OK" si el servicio está funcionando correctamente.
+   */
+  public ResponseEntity<String> healthCheck();
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+  /**
+   * Endpoint para registrar un nuevo usuario.
+   *
+   * @param userDTO objeto que contiene la información del usuario a registrar.
+   * @return el usuario registrado.
+   */
+  public ResponseEntity<String> registerUser(@Valid @RequestBody UserRequestDTO userDTO);
 
-    /**
-     * Endpoint to verify service status.
-     */    
-    @GetMapping("/health")
-    @SwaggerApiResponses
-    @Operation(summary = "Verify service status", description = "Returns 'OK' if the service is running correctly.")
-    public String healthCheck() {
-        return "OK";
-    }
+  /**
+   * Endpoint para iniciar sesión de un usuario.
+   *
+   * @param loginRequestDto objeto que contiene la información del usuario que intenta iniciar
+   *     sesión.
+   * @return un mensaje indicando el resultado del intento de inicio de sesión.
+   */
+  public ResponseEntity<String> logginUser(@Valid @RequestBody LoginRequestDto loginRequestDto);
 
+  /**
+   * Endpoint to retrieve all users in the system.
+   *
+   * @return ResponseEntity containing a list of all user DTOs.
+   */
+  public ResponseEntity<List<UserDTO>> getAllUsers();
 
-    /**
-     * Endpoint to register a new user.
-     *
-     * @param UserRequestDTO object containing the information of the user to register.
-     * @return the registered user.
-     */
-    @PostMapping("/register")
-    @SwaggerApiResponses
-    @Operation(summary = "Register a new user", description = "Registers a new user with the provided data and returns the user's JWT token.")
-    public String registerUser(@Valid @RequestBody UserRequestDTO userDTO) {
-        return userService.registerUser(userDTO);
-    }
+  /**
+   * Endpoint to obtain a user by email.
+   *
+   * @return ResponseEntity containing the user DTO.
+   */
+  public ResponseEntity<UserDTO> getUserByEmail();
 
-    /**
-     * Endpoint to log in a user.
-     *
-     * @param loginRequestDto object containing the information of the user trying to log in.
-     * @return a message indicating the result of the login attempt.
-     */
-    @PostMapping("/login")
-    @SwaggerApiResponses
-    @Operation(summary = "Log in a user", description = "Logs in a user with the provided data and returns the user's JWT token.")
-    public String logginUser(@Valid @RequestBody LoginRequestDto loginRequestDto) {
-        return userService.loginUser(loginRequestDto);
-    }
+  /**
+   * Endpoint to delete a user by their UUID.
+   *
+   * @param id the UUID of the user to delete
+   * @return ResponseEntity with no content if deletion is successful.
+   */
+  public ResponseEntity<Void> deleteUser(@PathVariable String id);
+
+  /**
+   * Endpoint to register a new admin user.
+   *
+   * @param userDTO the DTO containing the information of the admin user to register
+   * @return ResponseEntity with a message indicating the result of the registration
+   */
+  public ResponseEntity<String> registerAdmin(@Valid @RequestBody UserRequestDTO userDTO);
 }

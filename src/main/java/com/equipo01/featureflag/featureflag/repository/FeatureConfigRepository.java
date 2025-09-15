@@ -1,9 +1,9 @@
 package com.equipo01.featureflag.featureflag.repository;
 
 import com.equipo01.featureflag.featureflag.model.FeatureConfig;
+import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import java.util.UUID;
 
 /**
  * Repository for managing feature configurations in the database.
@@ -14,5 +14,4 @@ import java.util.UUID;
  * - {@link Repository} Spring annotation indicating that this interface is a repository.
  */
 @Repository
-public interface FeatureConfigRepository extends JpaRepository<FeatureConfig, UUID> {
-}
+public interface FeatureConfigRepository extends JpaRepository<FeatureConfig, UUID> {}

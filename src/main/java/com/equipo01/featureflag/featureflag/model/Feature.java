@@ -1,8 +1,5 @@
 package com.equipo01.featureflag.featureflag.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,6 +9,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +21,8 @@ import lombok.ToString;
 /**
  * Represents a system feature.
  * This entity is used to manage features that can be enabled or disabled in the system.
+ * Representa una característica del sistema. Esta entidad se utiliza para gestionar las
+ * características que pueden ser habilitadas o deshabilitadas en el sistema.
  *
  * Annotations used
  * - {@link Entity}: Indicates that this class is a JPA entity.
@@ -59,17 +60,20 @@ public class Feature {
     @Column(columnDefinition = "uuid", updatable = false, nullable = false, name = "feature_id")
     private UUID id;
 
-    @Column(nullable = false, unique = true)
-    private String name;
+  @Column(nullable = false, unique = true)
+  private String name;
 
-    @Column(nullable = true)
-    private String description;
+  @Column(nullable = true)
+  private String description;
 
-    @Column(nullable = false, name = "enabled_by_default")
-    private boolean enabledByDefault;
+  @Column(nullable = false, name = "enabled_by_default")
+  private Boolean enabledByDefault;
 
     // 1:N -> A feature can have multiple configurations
-    @OneToMany(mappedBy = "feature", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<FeatureConfig> configs = new ArrayList<>();
+  @OneToMany(
+      mappedBy = "feature",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.LAZY)
+  private List<FeatureConfig> configs;
 }

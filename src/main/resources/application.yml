@@ -13,3 +13,4 @@ application:
 api:
   auth: /api/auth
   features: /api/features
+  configurations: /api/configurations

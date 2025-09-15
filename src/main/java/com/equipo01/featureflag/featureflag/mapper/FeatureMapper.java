@@ -1,13 +1,11 @@
 package com.equipo01.featureflag.featureflag.mapper;
 
+import com.equipo01.featureflag.featureflag.dto.request.FeatureRequestDto;
+import com.equipo01.featureflag.featureflag.dto.response.FeatureResponseDto;
+import com.equipo01.featureflag.featureflag.model.Feature;
 import java.util.List;
-
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import com.equipo01.featureflag.featureflag.dto.FeatureRequestDto;
-import com.equipo01.featureflag.featureflag.dto.FeatureResponseDto;
-import com.equipo01.featureflag.featureflag.model.Feature;
 
 /**
  * MapStruct mapper interface for converting between Feature entities and DTOs.
