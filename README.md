@@ -66,10 +66,12 @@ The example `.env` file (based on development configuration) is located at `.dev
 
 ```bash
 # Create configuration file
-cp .devcontainer/devcontainer.env.example .devcontainer/devcontainer.env
+cp .devcontainer/devcontainer.env.demo .devcontainer/devcontainer.env
+cp .devcontainer/sonarqube.env.demo .devcontainer/sonarqube.env
 
 # Edit environment variables
 nano .devcontainer/devcontainer.env
+nano .devcontainer/sonarqube.env
 ```
 
 ### Running with DevContainers
@@ -136,7 +138,7 @@ docker-compose logs -f app
     "id": "uuid",
     "username": "string",
     "email": "string",
-    "roles": ["USER", "ADMIN", "GUEST"],
+    "role": ["USER", "ADMIN", "GUEST"],
     "active": "boolean"
 }
 ```
