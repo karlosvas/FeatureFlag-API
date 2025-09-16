@@ -79,7 +79,7 @@ public interface FeatureController {
    * @apiNote This endpoint supports both immediate and scheduled feature updates depending on the
    *     configuration provided in the request DTO
    */
-  ResponseEntity<?> updateFeatureForClientOrEnvironment(
+  ResponseEntity<Void> updateFeatureForClientOrEnvironment(
       @PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format")
           String id,
       @PathVariable String action,

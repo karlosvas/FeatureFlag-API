@@ -82,7 +82,7 @@ public class FeatureControllerImp implements FeatureController {
       summary = "Enable or disable a feature configuration for a specific client or environment",
       description =
           "Enables or disables a feature configuration for a specific client or environment based on the 'action' parameter. Supports gradual rollouts and A/B testing scenarios.")
-  public ResponseEntity<?> updateFeatureForClientOrEnvironment(
+  public ResponseEntity<Void> updateFeatureForClientOrEnvironment(
       @PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format")
           String id,
       @PathVariable String action,
