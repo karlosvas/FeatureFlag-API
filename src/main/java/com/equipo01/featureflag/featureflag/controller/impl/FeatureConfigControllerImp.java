@@ -44,8 +44,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${api.configurations}")
-@SwaggerApiResponses
-@Operation(summary = "Endpoints for managing feature configurations with role-based access control", description = "Provides CRUD operations and enable/disable functionality for feature configurations.")
 public class FeatureConfigControllerImp implements FeatureConfigController {
   /**
    * Service layer dependency for handling feature configuration business logic.
