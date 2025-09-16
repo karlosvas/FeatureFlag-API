@@ -70,9 +70,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successful request", content = @Content(mediaType = "application/json")),
-        @ApiResponse(responseCode = "201", description = "Resource created successfully", content = @Content(mediaType = "application/json")),
-        @ApiResponse(responseCode = "204", description = "No content", content = @Content(mediaType = "application/json")),
         @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class))),
         @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class))),
         @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class))),

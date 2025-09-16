@@ -5,10 +5,18 @@ import com.equipo01.featureflag.featureflag.dto.UserDTO;
 import com.equipo01.featureflag.featureflag.dto.request.LoginRequestDto;
 import com.equipo01.featureflag.featureflag.dto.request.UserRequestDTO;
 import com.equipo01.featureflag.featureflag.service.UserService;
+
+import io.micrometer.core.annotation.Timed;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
+
+import javax.security.auth.login.AccountLockedException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -66,6 +74,17 @@ import org.springframework.web.bind.annotation.RestController;
  * - JWT utilities for token management
  * - Validation framework for input sanitization
  * 
+ * Swagger documentation:
+ * - Each endpoint is annotated with @Operation and @ApiResponse for clear API documentation
+ * - Example responses provided for clarity
+ * - Grouped under the authentication base path for organization
+ * - Custom annotations for common response patterns
+ * - Accessible via Swagger UI for easy exploration and testing
+ * {@link SwaggerApiResponses} for standard responses, error handling, and documentation
+ * {@link ApiResponse} for individual endpoint responses, success messages, and error details
+ * {@link Operation} for endpoint summaries and detailed descriptions
+ * {@link Timed} for performance monitoring and metrics collection
+ * 
  */
 @RestController
 @RequestMapping("${api.auth}")
@@ -84,9 +103,11 @@ public class UserControllerImp {
    */
   @GetMapping("/health")
   @SwaggerApiResponses
+  @ApiResponse(responseCode = "200", description = "Service is healthy", content = @Content(mediaType = "application/json"))
   @Operation(
       summary = "Verifies the health status of the service",
       description = "Returns 'OK' if the service is functioning correctly.")
+  @Timed(value = "health_check", description = "Time taken to perform health check")
   public String healthCheck() {
     return "OK";
   }
@@ -103,6 +124,9 @@ public class UserControllerImp {
    */
   @PostMapping("/register")
   @SwaggerApiResponses
+  @ApiResponse(responseCode = "201", description = "User registered successfully", 
+    content = @Content(mediaType = "text/plain", 
+    schema = @Schema(type = "string", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")))
   @Operation(
       summary = "Registers a new user",
       description =
@@ -123,6 +147,9 @@ public class UserControllerImp {
    */
   @PostMapping("/login")
   @SwaggerApiResponses
+  @ApiResponse(responseCode = "200", description = "Authentication successful", 
+    content = @Content(mediaType = "text/plain", 
+    schema = @Schema(type = "string", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")))
   @Operation(
       summary = "Logs in a user",
       description =
@@ -144,6 +171,9 @@ public class UserControllerImp {
    */
   @PostMapping("/register/admin")
   @SwaggerApiResponses
+  @ApiResponse(responseCode = "201", description = "Admin user registered successfully", 
+    content = @Content(mediaType = "text/plain", 
+    schema = @Schema(type = "string", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")))
   @Operation(
       summary = "Registers a new admin user",
       description =
@@ -166,6 +196,9 @@ public class UserControllerImp {
   @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
   @GetMapping("/users")
   @SwaggerApiResponses
+  @ApiResponse(responseCode = "200", description = "List of all users retrieved successfully", 
+    content = @Content(mediaType = "application/json", 
+    schema = @Schema(implementation = UserDTO.class, type = "array")))
   @Operation(
       summary = "Retrieves all users",
       description = "Retrieves a comprehensive list of all users in the system.")
@@ -189,6 +222,9 @@ public class UserControllerImp {
   @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
   @GetMapping("/user/{email}")
   @SwaggerApiResponses
+  @ApiResponse(responseCode = "200", description = "User retrieved successfully", 
+    content = @Content(mediaType = "application/json", 
+    schema = @Schema(implementation = UserDTO.class)))
   @Operation(
       summary = "Retrieves a user by email",
       description = "Retrieves the user profile associated with the specified email address.")
@@ -213,6 +249,7 @@ public class UserControllerImp {
   @DeleteMapping("/{userId}")
   @PreAuthorize("hasRole('ADMIN')")
   @SwaggerApiResponses
+  @ApiResponse(responseCode = "204", description = "User deleted successfully", content = @Content)
   @Operation(
       summary = "Deletes a user by UUID",
       description = "Permanently deletes the user account associated with the specified UUID.")

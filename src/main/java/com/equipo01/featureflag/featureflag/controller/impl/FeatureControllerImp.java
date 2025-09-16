@@ -9,6 +9,9 @@ import com.equipo01.featureflag.featureflag.dto.response.GetFeatureResponseDto;
 import com.equipo01.featureflag.featureflag.model.enums.Environment;
 import com.equipo01.featureflag.featureflag.service.FeatureService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
@@ -76,6 +79,7 @@ public class FeatureControllerImp implements FeatureController {
   @Override
   @PutMapping("/{id}/{action:(?:enable|disable)}")
   @SwaggerApiResponses
+  @ApiResponse(responseCode = "204", description = "Feature configuration updated successfully")
   @Operation(
       summary = "Enable or disable a feature configuration for a specific client or environment",
       description = "Enables or disables a feature configuration for a specific client or environment based on the 'action' parameter. Supports gradual rollouts and A/B testing scenarios.")
@@ -102,6 +106,9 @@ public class FeatureControllerImp implements FeatureController {
    */
   @PostMapping
   @SwaggerApiResponses
+@ApiResponse(responseCode = "201", description = "Feature flag created successfully", 
+    content = @Content(mediaType = "application/json", 
+    schema = @Schema(implementation = FeatureResponseDto.class)))
   @Operation(
       summary = "Create a new feature flag",
       description = "Creates a new feature flag with the provided data and returns the created feature details. The feature will be available for environment-specific and client-specific configurations.")
@@ -125,6 +132,9 @@ public class FeatureControllerImp implements FeatureController {
    */
   @GetMapping
   @SwaggerApiResponses
+    @ApiResponse(responseCode = "200", description = "Feature flags retrieved successfully with pagination", 
+      content = @Content(mediaType = "application/json", 
+      schema = @Schema(implementation = GetFeatureResponseDto.class)))
   @Operation(
       summary = "Retrieve all feature flags with pagination and filtering",
       description = "Returns a paginated list of all available feature flags with optional filtering by name and enabled status. Supports pagination for efficient data retrieval.")
@@ -155,6 +165,9 @@ public class FeatureControllerImp implements FeatureController {
    */
   @GetMapping("/{featureId}")
   @SwaggerApiResponses
+  @ApiResponse(responseCode = "200", description = "Feature flag found and retrieved successfully", 
+      content = @Content(mediaType = "application/json", 
+      schema = @Schema(implementation = FeatureResponseDto.class)))
   @Operation(
       summary = "Retrieve a feature flag by its ID",
       description = "Returns the detailed information of a specific feature flag identified by its UUID, including configuration and status details.")
@@ -177,6 +190,9 @@ public class FeatureControllerImp implements FeatureController {
    * 
    */
   @SwaggerApiResponses
+    @ApiResponse(responseCode = "200", description = "Feature activation status retrieved successfully", 
+      content = @Content(mediaType = "application/json", 
+      schema = @Schema(type = "boolean", example = "true")))
   @Operation(
       summary = "Check if a feature is active for a client in a specific environment",
       description = "Returns true if the feature is active for the specified client in the given environment, false otherwise. Essential for runtime feature flag evaluation.")
@@ -204,6 +220,7 @@ public class FeatureControllerImp implements FeatureController {
    */
   @DeleteMapping("/{featureId}")
   @SwaggerApiResponses
+   @ApiResponse(responseCode = "204", description = "Feature flag deleted successfully")
   @Operation(
       summary = "Delete a feature flag permanently",
       description = "Permanently removes a feature flag and all its associated configurations from the system. This operation is irreversible and requires administrative privileges.")

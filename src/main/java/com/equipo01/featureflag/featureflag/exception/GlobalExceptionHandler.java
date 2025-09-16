@@ -2,6 +2,9 @@ package com.equipo01.featureflag.featureflag.exception;
 
 import com.equipo01.featureflag.featureflag.dto.ErrorDto;
 import com.equipo01.featureflag.featureflag.exception.enums.MessageError;
+
+import io.swagger.v3.oas.annotations.Hidden;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,6 +29,7 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
  * error responses across the API.
  * Each method handles a specific type of exception and constructs a structured response
  * using {@link ErrorDto}.
+ * {@link Hidden} prevents this class from appearing in the generated API documentation.
  *
  * Validations: Returns a list of detailed errors if the input data does not meet the constraints.
  * Resources: Reports whether a feature already exists or is not found.
@@ -33,6 +38,7 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
  * This improves the customer experience and facilitates debugging in development and production.
  */
 @RestControllerAdvice
+@Hidden 
 public class GlobalExceptionHandler {
 
     /**

@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -61,6 +64,9 @@ public class FeatureConfigControllerImp implements FeatureConfigController {
    */
   @PutMapping("/enable-disable")
   @SwaggerApiResponses
+   @ApiResponse(responseCode = "200", description = "Feature configuration enabled/disabled successfully", 
+      content = @Content(mediaType = "application/json", 
+      schema = @Schema(implementation = FeatureConfigResponseDto.class, type = "array")))
   @Operation(summary = "Enable or disable a specific feature configuration", description = "Toggles the enabled state of a feature configuration based on the provided parameters.")
   public ResponseEntity<List<FeatureConfigResponseDto>> setFeatureEnabledOrDisabled(
       @RequestParam(name = "featureConfigId", required = true) String featureConfigId,
@@ -80,6 +86,9 @@ public class FeatureConfigControllerImp implements FeatureConfigController {
   @PostMapping
   @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
   @SwaggerApiResponses
+  @ApiResponse(responseCode = "201", description = "Feature configuration created successfully", 
+      content = @Content(mediaType = "application/json", 
+      schema = @Schema(implementation = FeatureConfigResponseDto.class)))
   @Operation(summary = "Create a new feature configuration", description = "Creates a new feature configuration with the provided details and returns the created configuration.")
   public ResponseEntity<FeatureConfigResponseDto> createFeatureConfig(
       @Valid @RequestBody FeatureConfigRequestDto requestDto) {
@@ -99,6 +108,9 @@ public class FeatureConfigControllerImp implements FeatureConfigController {
   @GetMapping("/{id}")
   @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
   @SwaggerApiResponses
+    @ApiResponse(responseCode = "200", description = "Feature configurations retrieved successfully by ID", 
+      content = @Content(mediaType = "application/json", 
+      schema = @Schema(implementation = FeatureConfigResponseDto.class, type = "array")))
   @Operation(summary = "Retrieve feature configurations by ID", description = "Fetches feature configurations matching the provided unique identifier.")
   public ResponseEntity<List<FeatureConfigResponseDto>> getFeatureByID(
       @PathVariable("id") String id) {
@@ -114,7 +126,11 @@ public class FeatureConfigControllerImp implements FeatureConfigController {
    */
   @GetMapping
   @SwaggerApiResponses
+    @ApiResponse(responseCode = "200", description = "All feature configurations retrieved successfully", 
+      content = @Content(mediaType = "application/json", 
+      schema = @Schema(implementation = FeatureConfigResponseDto.class, type = "array")))
   @Operation(summary = "Retrieve all feature configurations", description = "Fetches a list of all available feature configurations.")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
   public ResponseEntity<List<FeatureConfigResponseDto>> getAllFeatures() {
     return ResponseEntity.ok(featureConfigService.getAllFeatures());
   }
@@ -129,6 +145,9 @@ public class FeatureConfigControllerImp implements FeatureConfigController {
   @GetMapping("/test")
   @PreAuthorize("hasRole('ADMIN')")
   @SwaggerApiResponses
+  @ApiResponse(responseCode = "200", description = "Admin permission test successful", 
+      content = @Content(mediaType = "text/plain", 
+      schema = @Schema(type = "string", example = "Test permission ok")))
   @Operation(summary = "Test endpoint for verifying ADMIN permissions", description = "Accessible only by users with ADMIN role to confirm permission settings.")
   public ResponseEntity<String> checkPermissionTest() {
     return ResponseEntity.ok("Test permission ok");
@@ -147,6 +166,7 @@ public class FeatureConfigControllerImp implements FeatureConfigController {
   @DeleteMapping("/{featureConfigId}")
   @PreAuthorize("hasRole('ADMIN')")
   @SwaggerApiResponses
+    @ApiResponse(responseCode = "204", description = "Feature configuration deleted successfully")
   @Operation(summary = "Delete a specific feature configuration", description = "Removes the feature configuration identified by the provided UUID.")
   public ResponseEntity<Void> deleteFeatureConfig(@PathVariable String featureConfigId) {
     UUID uuid = UUID.fromString(featureConfigId);

@@ -1,4 +1,3 @@
-
 # FeatureFlag API
 
 A robust REST API for dynamic feature flag management in production environments, developed with Spring Boot and PostgreSQL.
@@ -14,7 +13,7 @@ FeatureFlag API allows creating, enabling and disabling functionalities dynamica
 @alexDAW-IOC  
 @angelAntezana  
 @JosCarRub  
-@nescaruncho  
+@nescaruncho
 
 ## Creators of Bytes Colaborativos
 
@@ -31,6 +30,8 @@ Discord Channel: <https://discord.com/invite/YGGcPMzSQk>
 - **Documentation:** Swagger UI
 - **Testing:** Postman + JUnit/Mockito
 - **Containers:** Docker + DevContainers
+- **CI/CD:** GitHub Actions
+- **Static Code Analysis:** SonarQube
 - **Version Control:** Git + GitHub
 
 ## 🚀 Main Features
@@ -42,6 +43,8 @@ Discord Channel: <https://discord.com/invite/YGGcPMzSQk>
 - 📚 Automatic documentation with Swagger
 - 🧪 Testing coverage with JUnit
 - 🐳 Development with Docker and DevContainers
+- 🔄 CI/CD with GitHub Actions
+- 🔍 SonarQube quality gate validation
 
 ## 🔧 Installation and Setup
 
@@ -102,22 +105,22 @@ docker-compose logs -f app
 
 ### Authentication
 
-| Method | Route | Description |
-|--------|-------|-------------|
-| GET  | `/api/auth/health` | Check service status |
-| POST | `/api/auth/register` | User registration |
-| POST | `/api/auth/login` | Login and JWT retrieval |
+| Method | Route                | Description             |
+| ------ | -------------------- | ----------------------- |
+| GET    | `/api/auth/health`   | Check service status    |
+| POST   | `/api/auth/register` | User registration       |
+| POST   | `/api/auth/login`    | Login and JWT retrieval |
 
 ### Feature Management
 
-| Method | Route | Description |
-|--------|-------|-------------|
-| POST | `/api/features` | Create new feature |
-| GET | `/api/features` | List all features |
-| GET | `/api/features/{id}` | Get feature detail |
-| POST | `/api/features/{id}/enable` | Enable feature |
-| POST | `/api/features/{id}/disable` | Disable feature |
-| GET | `/api/features/check` | Check feature status |
+| Method | Route                        | Description          |
+| ------ | ---------------------------- | -------------------- |
+| POST   | `/api/features`              | Create new feature   |
+| GET    | `/api/features`              | List all features    |
+| GET    | `/api/features/{id}`         | Get feature detail   |
+| POST   | `/api/features/{id}/enable`  | Enable feature       |
+| POST   | `/api/features/{id}/disable` | Disable feature      |
+| GET    | `/api/features/check`        | Check feature status |
 
 ## 💾 Data Model
 
@@ -188,9 +191,9 @@ GET /api/features/check?feature=dark_mode&clientId=acme123&env=staging
 
 The system checks in order of priority:
 
-  1. Client-specific configuration
-  2. Environment configuration
-  3. Default value (`enabledByDefault`)
+1. Client-specific configuration
+2. Environment configuration
+3. Default value (`enabledByDefault`)
 
 ## 🔍 SonarQube
 
@@ -215,6 +218,7 @@ SonarQube is a static analysis tool that checks your code and signals if somethi
 7. In **Token generation**, set it to **Expires** and click **Generate**.  
    ⚠️ A token will be generated → save it (e.g., in a `.env` file), because it will be needed when running the analysis. Then click **Continue**.
 8. Run analysis on your project:
+
    - Select **Maven**.
    - Copy the commands given by SonarQube.  
      ⚠️ To run locally using containers, the URL must be the **service name of the container**; in this case: `sonarqube`.
@@ -225,6 +229,7 @@ SonarQube is a static analysis tool that checks your code and signals if somethi
      -Dsonar.projectName='FeatureflagApi' \
      -Dsonar.host.url=http://sonarqube:9000 \
      -Dsonar.token=$MY_SONARQUBE_TOKEN
+   ```
 
 ## 📖 Documentation
 

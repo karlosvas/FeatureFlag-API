@@ -4,6 +4,23 @@ spring:
   application:
     name: featureflag
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus,info
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    enable:
+      http: true
+      jvm: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
 application:
   security:
     jwt:
@@ -14,3 +31,10 @@ api:
   auth: /api/auth
   features: /api/features
   configurations: /api/configurations
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    url: /v3/api-docs
