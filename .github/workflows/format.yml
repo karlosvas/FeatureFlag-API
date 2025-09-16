@@ -2,11 +2,9 @@ name: Check Java Format
 
 on:
   push:
-    branches:
-      - main
-      - develop
 
 jobs:
+  # Verifica el formato del código con Spotless:
   format-check:
     runs-on: ubuntu-latest
     steps:

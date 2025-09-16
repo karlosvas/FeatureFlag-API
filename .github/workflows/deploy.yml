@@ -76,22 +76,6 @@ jobs:
         with:
           name: javadoc
           path: target/site/apidocs
-  # Verifica el formato del código con Spotless:
-  format-check:
-    name: Check Code Formatting
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: "21"
-          distribution: "temurin"
-      - name: Apply code formatting with Spotless
-        run: mvn spotless:apply
-      - name: Check code formatting with Spotless
-        run: mvn spotless:check
   # Ejecuta el análisis de SonarQube:
   sonar:
     name: SonarQube Scan
