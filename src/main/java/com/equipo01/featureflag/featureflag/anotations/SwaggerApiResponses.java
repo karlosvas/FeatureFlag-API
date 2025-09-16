@@ -11,10 +11,61 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation to define API endpoint responses. Handled by Swagger.
- * {@link Target} to indicate that the annotation can be applied to a method or type.
- * {@link Retention} to indicate that the annotation will be available at runtime.
- * {@link interface} to define an annotation, the SwaggerApiResponses annotation is created.
+ * Meta-annotation that provides a standardized set of common HTTP response definitions for OpenAPI/Swagger documentation.
+ * 
+ * <p>This annotation can be applied to REST controller classes or individual endpoint methods to automatically
+ * include standard HTTP response codes and their descriptions in the generated API documentation.</p>
+ * 
+ * <p>The annotation includes the following HTTP response definitions:</p>
+ * <ul>
+ *   <li><strong>2xx Success responses:</strong>
+ *     <ul>
+ *       <li>200 - Successful request</li>
+ *       <li>201 - Resource created successfully</li>
+ *       <li>204 - No content</li>
+ *     </ul>
+ *   </li>
+ *   <li><strong>4xx Client error responses:</strong>
+ *     <ul>
+ *       <li>400 - Bad request</li>
+ *       <li>401 - Unauthorized</li>
+ *       <li>403 - Forbidden</li>
+ *       <li>404 - Resource not found</li>
+ *       <li>405 - Method not allowed</li>
+ *       <li>408 - Request timeout</li>
+ *       <li>409 - Conflict</li>
+ *       <li>422 - Unprocessable entity</li>
+ *     </ul>
+ *   </li>
+ *   <li><strong>5xx Server error responses:</strong>
+ *     <ul>
+ *       <li>500 - Internal server error</li>
+ *       <li>503 - Service unavailable</li>
+ *     </ul>
+ *   </li>
+ * </ul>
+ * 
+ * <p>Error responses (4xx and 5xx) automatically include the {@link ErrorDto} schema
+ * for consistent error response structure across the API.</p>
+ * 
+ * <h3>Usage Examples:</h3>
+ * <pre>
+ * Apply to entire controller
+ * {@code @SwaggerApiResponses}
+ * {@code @RestController}
+ * {@code @RequestMapping("/api/features")}
+ * public class FeatureController {
+ *     All methods inherit the standard response definitions
+ * }
+ * 
+ * Apply to specific endpoint
+ * {@code @SwaggerApiResponses}
+ * {@code @GetMapping("/{id}")}
+ * public ResponseEntity&lt;FeatureDto&gt; getFeature(@PathVariable Long id) {
+ *     Method-specific response definitions
+ * }
+ * </pre>
+ * 
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
