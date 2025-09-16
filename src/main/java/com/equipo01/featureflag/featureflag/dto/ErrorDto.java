@@ -9,42 +9,83 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * ExceptionDTO es una clase que se utiliza para transportar datos de excepciones entre diferentes
- * capas de una aplicación. Su objetivo principal es encapsular y transferir información sobre
- * errores de manera estructurada, sin exponer la lógica interna ni las entidades del modelo de
- * datos.
- *
- * <p>{@link Data} Anotación de Lombok que genera automáticamente los métodos getter, setter,
- * toString, equals y hashCode.} {@link AllArgsConstructor} Anotación de Lombok que genera un
- * constructor con todos los campos como parámetros. {@link NoArgsConstructor} Anotación de Lombok
- * que genera un constructor sin parámetros {@link Builder} Anotación de Lombok que permite crear
- * instancias de la clase utilizando el patrón Builder. {@link Schema} Anotación de Swagger que
- * proporciona información sobre la API.
- *
- * <p>Atributos - title: Título de la excepción. - detail: Detalle de la excepción. - status: Código
- * de estado HTTP asociado a la excepción. - reasons: Razones específicas de la excepción. -
- * timestamp: Marca de tiempo de cuando ocurrió la excepción.
+ * Data Transfer Object for transporting error information in API responses.
+ * 
+ * This DTO is designed to provide structured error information to API clients,
+ * encapsulating exception details in a standardized format that maintains
+ * consistency across the application. It serves as the primary mechanism for
+ * error communication between different layers of the application without
+ * exposing internal implementation details or sensitive system information.
+ * 
+ * The ErrorDto follows RFC 7807 (Problem Details for HTTP APIs) principles
+ * by providing structured error information that includes both human-readable
+ * descriptions and machine-readable status codes. This enables clients to
+ * handle errors appropriately and provide meaningful feedback to end users.
+ * 
+ * Key features:
+ * - Structured error information with multiple detail levels
+ * - HTTP status code integration for REST API compatibility
+ * - Timestamp tracking for error occurrence and debugging
+ * - Swagger/OpenAPI documentation support for API documentation
+ * - Builder pattern support for flexible object construction
+ * 
+ * Common usage scenarios:
+ * - Validation errors with detailed field-specific messages
+ * - Business logic violations with contextual information
+ * - Authentication and authorization failures
+ * - Resource not found errors with helpful suggestions
+ * - Internal server errors with correlation IDs for debugging
+ * 
+ * JSON structure example:
+ * <pre>
+ * {
+ *   "message": "Validation Failed",
+ *   "description": "The request contains invalid data in multiple fields",
+ *   "code": 400,
+ *   "timestamp": "2025-09-16 14:30:45"
+ * }
+ * </pre>
+ * 
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Schema(description = "DTO para transportar información de excepciones en la API.")
+@Schema(description = "DTO for transporting error information in API responses.")
 public class ErrorDto {
-  @Schema(description = "Título de la excepción", example = "Unauthorized")
+  
+  /**
+   * Brief error message providing a summary of what went wrong.
+   * 
+   * The message should follow consistent naming conventions and avoid
+   * exposing sensitive system information or internal implementation details.
+   */
+  @Schema(description = "Brief error message summarizing what went wrong", example = "Unauthorized")
   private String message;
 
+  /**
+   * Detailed error description providing additional context and guidance.
+   * 
+   * The description should be helpful without revealing sensitive system
+   * details or security-related information that could be exploited.
+   */
   @Schema(
-      description = "Detalle de la excepción",
-      example = "No tienes permisos para acceder a este recurso.")
+      description = "Detailed error description with additional context and guidance",
+      example = "You do not have the required permissions to access this resource. Please contact your administrator or ensure you are properly authenticated.")
   private String description;
 
-  @Schema(description = "Código de estado HTTP asociado a la excepción", example = "401")
+  /**
+   * HTTP status code associated with the error.
+   */
+  @Schema(description = "HTTP status code associated with the error", example = "401")
   private int code;
 
+  /**
+   * Timestamp indicating when the error occurred.
+   */
   @Schema(
-      description = "Marca de tiempo de cuando ocurrió la excepción",
-      example = "2025-09-08T12:34:56")
+      description = "Timestamp indicating when the error occurred",
+      example = "2025-09-16 14:30:45")
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime timestamp;
 }

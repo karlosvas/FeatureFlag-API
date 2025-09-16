@@ -5,24 +5,46 @@ import java.io.Serializable;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 /**
- * DTO para la respuesta de una feature flag. Incluye los datos que se devuelven al consultar una
- * feature flag en el sistema.
- *
- * <p>Anotaciones utilizadas: - {@link Data} Genera los métodos get, set, toString, equals y
- * hashCode automáticamente. - {@link Builder} Genera el patrón builder para la clase. - {@link
- * NoArgsConstructor} Genera un constructor sin argumentos. - {@link AllArgsConstructor} Genera un
- * constructor con todos los argumentos.
- *
- * <p>Atributos - id: Identificador único de la feature flag. - name: Nombre de la feature flag. -
- * description: Descripción de la feature flag. - enabledByDefault: Indica si la feature está
- * habilitada por defecto.
+ * Data Transfer Object for feature flag response data.
+ * 
+ * This DTO represents the complete information about a feature flag that is
+ * returned to API clients when querying feature flag data. It encapsulates
+ * the core properties of a feature flag including its identification, metadata,
+ * and default behavior configuration.
+ * 
+ * The DTO serves multiple purposes:
+ * - Provides a clean API response structure without exposing internal entities
+ * - Maintains data consistency across different API endpoints
+ * - Supports feature flag discovery and management operations
+ * - Enables client-side feature flag decision making
+ * 
+ * Feature flags represented by this DTO can be used for:
+ * - Gradual feature rollouts and A/B testing
+ * - Environment-specific feature control
+ * - Emergency feature toggles
+ * - Beta feature management
+ * - Legacy feature deprecation
+ * 
+ * The DTO includes Swagger/OpenAPI annotations for automatic API documentation
+ * generation, ensuring that clients have comprehensive information about the
+ * response structure and expected data types.
+ * 
+ * JSON structure example:
+ * <pre>
+ * {
+ *   "id": "123e4567-e89b-12d3-a456-426614174000",
+ *   "name": "dark_mode",
+ *   "description": "Enables dark mode theme in the application",
+ *   "enabledByDefault": true
+ * }
+ * </pre>
+ * 
  */
 @Getter
 @Setter
@@ -30,22 +52,39 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Schema(description = "DTO para la respuesta de una feature flag.")
+@Schema(description = "DTO for feature flag response data.")
 public class FeatureResponseDto implements Serializable {
 
+  /**
+   * Unique identifier of the feature flag.
+   * 
+   * This UUID serves as the primary key for the feature flag and enables
+   * clients to reference this specific feature for configuration operations,
+   * status checks, or management actions. The ID is automatically generated
+   * when the feature is created and remains constant throughout its lifecycle.
+   */
   @Schema(
-      description = "Identificador único de la feature flag",
+      description = "Unique identifier of the feature flag",
       example = "123e4567-e89b-12d3-a456-426614174000")
   private UUID id;
 
-  @Schema(description = "Nombre de la feature flag", example = "dark_mode")
+  /**
+   * Name of the feature flag.
+   */
+  @Schema(description = "Name of the feature flag", example = "dark_mode")
   private String name;
 
+  /**
+   * Description of the feature flag.
+   */
   @Schema(
-      description = "Descripción de la feature flag",
-      example = "Activa el modo oscuro en la aplicación")
+      description = "Description of the feature flag",
+      example = "Enables dark mode theme in the application")
   private String description;
 
-  @Schema(description = "Indica si la feature está habilitada por defecto", example = "true")
+  /**
+   * Indicates whether the feature is enabled by default.
+   */
+  @Schema(description = "Indicates whether the feature is enabled by default", example = "true")
   private Boolean enabledByDefault;
 }
