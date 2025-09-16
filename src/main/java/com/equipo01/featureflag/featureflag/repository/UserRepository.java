@@ -7,11 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Repositorio para la entidad User. Extiende JpaRepository para proporcionar operaciones CRUD y de
- * paginación. Utiliza UUID como tipo de identificador.
- *
- * <p>Anotaciones utilizadas: - {@link Repository} Anotación de Spring que indica que esta interfaz
- * es un repositorio.
+ * Repository for the User entity.
+ * Extends JpaRepository to provide CRUD and pagination operations.
+ * Uses UUID as the identifier type.
+ * 
+ * Annotations used:
+ * - {@link Repository} Spring annotation indicating that this interface is a repository.
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {

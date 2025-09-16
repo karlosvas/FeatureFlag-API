@@ -9,8 +9,8 @@ import java.util.UUID;
 import org.springframework.security.core.Authentication;
 
 /**
- * Interfaz para los servicios de usuario. Define las operaciones disponibles para la gestión de
- * usuarios.
+ * Interface for user services.
+ * Defines the operations available for user management.
  */
 public interface UserService {
 
@@ -24,23 +24,22 @@ public interface UserService {
 
   public Authentication buildAuthentication(String username, String password);
 
-  /**
-   * Registra un nuevo usuario en el sistema.
-   *
-   * @param userRequestDTO el DTO del usuario que contiene la información necesaria para el registro
-   *     y login
-   * @return un token JWT si el registro es exitoso
-   */
+    /**
+     * Registers a new user in the system.
+     *
+     * @param userRequestDTO the user's DTO containing the information
+     *                       required for registration and login
+     * @return a JWT token if registration is successful
+     */
   public String registerUser(UserRequestDTO userDTO);
 
   /**
-   * Inicia sesión de un usuario con las credenciales proporcionadas. Este método autentica al
-   * usuario usando sus credenciales (nombre y contraseña) y, si la autenticación es exitosa, genera
-   * y devuelve un token JWT.
+   * Logs in a user with the provided credentials. This method authenticates the user using their
+   * credentials (username and password) and, if authentication is successful, generates
+   * and returns a JWT token.
    *
-   * @param loginRequestDto el DTO del usuario que contiene la información necesaria para el
-   *     registro y login
-   * @return un token JWT si la autenticación es exitosa
+   * @param loginRequestDto the user's DTO containing the information required for login
+   * @return a JWT token if authentication is successful
    */
   public String loginUser(LoginRequestDto loginRequestDto);
 

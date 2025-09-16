@@ -12,80 +12,89 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
- * Filtro de autorización basado en JWT. -Extiende {@link OncePerRequestFilter} para asegurar que se
- * ejecuta una vez por petición. -Interpreta y valida el token JWT en la cabecera Authorization de
- * las peticiones. -Si el token es válido, extrae el nombre de usuario y establece la autenticación
- * en el contexto de seguridad. -Si el token no es válido o no está presente, la petición continúa
- * sin autorización. -Este filtro se aplica a todas las peticiones protegidas por Spring Security
- * excepto las especificadas.
- *
+ * JWT-based authorization filter.
+ * -Extends {@link OncePerRequestFilter} to ensure it runs once
+ * per request.
+ * -Interprets and validates the JWT token in the Authorization header of
+ * requests.
+ * -If the token is valid, extracts the username and sets the
+ * authentication in the security context.
+ * -If the token is invalid or not present, the request continues without
+ * authorization.
+ * -This filter applies to all requests protected by Spring Security
+ * except those specified.
+ * 
  * @author alex
  */
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
-  // Dependencia para trabajar con tokens JWT (generar , validar , extraer datos )
-  private final JwtUtil jwtUtil;
+    // Dependency for working with JWT tokens (generate, validate, extract data)
+    private final JwtUtil jwtUtil;
 
-  // Dependencia para trabajar con los detalles del usuario
-  private final CustomUserDetailsService uds;
+    // Dependency for working with user details
+    private final CustomUserDetailsService uds;
 
-  /**
-   * Constructor para incializar las dependencias del filtro
-   *
-   * @param jwtUtil
-   */
-  public JwtAuthorizationFilter(JwtUtil jwtUtil, CustomUserDetailsService uds) {
-    this.jwtUtil = jwtUtil;
-    this.uds = uds;
-  }
-
-  /**
-   * Mètodo que se ejecuta para cada petición HTTP. -1.Obtiene el token JWT de la cabecera
-   * Authorization. -2.Valida el token usando {@link JwtUtil}. -3.Si el token es válido, extrae el
-   * nombre de usuario y crea un objeto de autenticación. -4.Estalece la autenticación en el
-   * contexto de seguridad -5.Continúa con la cadena de filtros.
-   *
-   * @param request petición HTTP
-   * @param response respuesta HTTP
-   * @param filterChain cadena de filtros
-   * @throws ServletException si ocurre un error en el servlet
-   * @throws IOException si ocurre un error de entrada/salida
-   */
-  @Override
-  protected void doFilterInternal(
-      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-      throws ServletException, IOException {
-
-    // 1.Obtenemos el token de la petición
-    String token = getJwtFromRequest(request);
-    // 2.Verificamos que el token existe y sea válido
-    if (token != null && jwtUtil.validateToken(token)) {
-      String username = jwtUtil.getUsernameFromJWT(token);
-      UserDetails userDetails = uds.loadUserByUsername(username);
-
-      UsernamePasswordAuthenticationToken authentication =
-          new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-      authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-      SecurityContextHolder.getContext().setAuthentication(authentication);
+    /**
+     * Constructor to initialize filter dependencies
+     * 
+     * @param jwtUtil
+     */
+    public JwtAuthorizationFilter(JwtUtil jwtUtil, CustomUserDetailsService uds) {
+        this.jwtUtil = jwtUtil;
+        this.uds = uds;
     }
-    // 5.Continúa con la cadena de filtros
-    filterChain.doFilter(request, response);
-  }
 
-  /**
-   * Método que obtiene el token JWT de la cabecera Authorization de la petición HTTP. -1. Obtenemos
-   * el contenido de la cabecera Authorization. -2. Verificamos que la cabecera no sea nula y
-   * comience con Bearer . -3. Extraemos el token quitando el prefijo Bearer . -4. Si la cabecera no
-   * es válida, retornamos null.
-   *
-   * @param request petición HTTP
-   * @return el token JWT sin el prefijo Bearer, o null si no está presente
-   */
-  private String getJwtFromRequest(HttpServletRequest request) {
-    String bearerToken = request.getHeader("Authorization");
-    if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-      return bearerToken.substring(7);
+    /**
+     * MMethod that is executed for each HTTP request.
+     * -1. Obtains the JWT token from the Authorization header.
+     * -2. Validates the token using {@link JwtUtil}.
+     * -3. If the token is valid, extracts the username and creates an authentication object.
+     * -4. Establishes the authentication in the security context.
+     * -5. Continues with the filter chain.
+     * 
+     * @param request     HTTP request
+     * @param response    HTTP response
+     * @param filterChain filter chain
+     * @throws ServletException if a servlet error occurs
+     * @throws IOException      if an input/output error occurs
+     */
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain)
+            throws ServletException, IOException {
+
+        // 1. Obtains the token from the request
+        String token = getJwtFromRequest(request);
+        // 2. Validates the token
+        if (token != null && jwtUtil.validateToken(token)) {
+            String username = jwtUtil.getUsernameFromJWT(token);
+            UserDetails userDetails = uds.loadUserByUsername(username);
+
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
+                    null, userDetails.getAuthorities());
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+        // 3. Continues with the filter chain
+        filterChain.doFilter(request, response);
     }
-    return null;
-  }
+
+    /**
+     * Method that obtains the JWT token from the Authorization header of the HTTP request.
+     * -1. Obtains the content of the Authorization header.
+     * -2. Verifies that the header is not null and starts with Bearer .
+     * -3. Extracts the token by removing the Bearer prefix.
+     * -4. If the header is not valid, returns null.
+     *
+     * @param request HTTP request
+     * @return the JWT token without the Bearer prefix, or null if not present
+     */
+    private String getJwtFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
 }

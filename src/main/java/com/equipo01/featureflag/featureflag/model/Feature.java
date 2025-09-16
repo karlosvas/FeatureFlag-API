@@ -19,22 +19,28 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
+ * Represents a system feature.
+ * This entity is used to manage features that can be enabled or disabled in the system.
  * Representa una característica del sistema. Esta entidad se utiliza para gestionar las
  * características que pueden ser habilitadas o deshabilitadas en el sistema.
  *
- * <p>Anotaciones utilizadas - {@link Entity}: Indica que esta clase es una entidad JPA. - {@link
- * Table}: Especifica la tabla de la base de datos a la que está mapeada la entidad. - {@link
- * Getter}: Genera automáticamente los métodos getter para todos los campos de la clase. - {@link
- * Setter}: Genera automáticamente los métodos setter para todos los campos de la clase. - {@link
- * NoArgsConstructor}: Genera un constructor sin argumentos. - {@link AllArgsConstructor}: Genera un
- * constructor con todos los argumentos. - {@link Builder}: Permite la construcción de objetos de
- * esta clase utilizando el patrón Builder. - {@link Column}: Se utiliza para especificar detalles
- * sobre la columna de la base de datos. - {@link OneToMany}: Define una relación de uno a muchos
- * con otra entidad.
- *
- * <p>Atributos - id: Identificador único de la característica. - name: Nombre de la característica.
- * - description: Descripción de la característica. - enableByDefault: Indica si la característica
- * está habilitada por defecto. - configs: Lista de configuraciones asociadas a la característica.
+ * Annotations used
+ * - {@link Entity}: Indicates that this class is a JPA entity.
+ * - {@link Table}: Specifies the database table to which the entity is mapped.
+ * - {@link Getter}: Automatically generates getter methods for all fields in the class.
+ * - {@link Setter}: Automatically generates setter methods for all fields in the class.
+ * - {@link NoArgsConstructor}: Generates a constructor without arguments.
+ * - {@link AllArgsConstructor}: Generates a constructor with all arguments.
+ * - {@link Builder}: Allows the construction of objects of this class using the Builder pattern.
+ * - {@link Column}: Used to specify details about the database column.
+ * - {@link OneToMany}: Defines a one-to-many relationship with another entity.
+ * 
+ * Attributes
+ * - id: Unique identifier of the feature.
+ * - name: Name of the feature.
+ * - description: Description of the feature.
+ * - enableByDefault: Indicates whether the feature is enabled by default.
+ * - configs: List of configurations associated with the feature.
  */
 @Entity
 @Table(name = "features")
@@ -45,14 +51,14 @@ import lombok.ToString;
 @Builder
 @ToString
 public class Feature {
-  /**
-   * {@link Id} Indica el identificador único de la entidad. {@link GeneratedValue} Especifica la
-   * estrategia de generación de valores para el identificador.
-   */
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(columnDefinition = "uuid", updatable = false, nullable = false, name = "feature_id")
-  private UUID id;
+    /**
+    * {@link Id} Indicates the unique identifier of the entity.
+    * {@link GeneratedValue} Specifies the value generation strategy for the identifier.
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(columnDefinition = "uuid", updatable = false, nullable = false, name = "feature_id")
+    private UUID id;
 
   @Column(nullable = false, unique = true)
   private String name;
@@ -63,7 +69,7 @@ public class Feature {
   @Column(nullable = false, name = "enabled_by_default")
   private Boolean enabledByDefault;
 
-  // 1:N -> Una Feature tiene muchas configuraciones
+    // 1:N -> A feature can have multiple configurations
   @OneToMany(
       mappedBy = "feature",
       cascade = CascadeType.ALL,

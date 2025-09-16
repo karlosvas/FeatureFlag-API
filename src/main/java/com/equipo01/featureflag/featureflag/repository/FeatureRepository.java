@@ -8,12 +8,12 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 /**
- * Repositorio para gestionar las características (features) en la base de datos. Extiende
- * JpaRepository para proporcionar métodos CRUD y consultas personalizadas. Las características se
- * identifican de forma única mediante un UUID.
+ * Repository for managing features in the database.
+ * Extends JpaRepository to provide CRUD methods and custom queries.
+ * Features are uniquely identified by a UUID.
  *
- * <p>Anotaciones utilizadas: - {@link Repository} Anotación de Spring que indica que esta interfaz
- * es un repositorio.
+ * Annotations used:
+ * - {@link Repository} Spring annotation indicating that this interface is a repository.
  */
 @Repository
 public interface FeatureRepository

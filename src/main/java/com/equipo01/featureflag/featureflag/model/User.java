@@ -1,5 +1,16 @@
 package com.equipo01.featureflag.featureflag.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import java.util.UUID;
+
+import org.hibernate.annotations.Columns;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import com.equipo01.featureflag.featureflag.model.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,32 +21,29 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 /**
- * Entidad que representa a un usuario en el sistema. Incluye detalles como nombre de usuario,
- * contraseña (hashed), roles y estado activo. Utilizado para autenticación y autorización.
+ * Entity representing a user in the system.
+ * Includes details such as username, password (hashed), roles, and active status.
+ * Used for authentication and authorization.
+ * 
+ * Annotations used
+ * - {@link Entity} JPA annotation indicating that this class is a persistent entity.
+ * - {@link Table} JPA annotation that specifies the table name.
+ * - {@link NoArgsConstructor} Generates a no-arguments constructor.
+ * - {@link AllArgsConstructor} Generates a constructor with all arguments.
+ * - {@link Getter} Automatically generates get methods.
+ * - {@link Setter} Automatically generates set methods.
+ * - {@link Builder} Generates the builder pattern for the class.
+ * - {@link Columns} Used to specify details about the database columns.
+ * - {@link UserDetails} Interface that provides information about the user for authentication and authorization.
  *
- * <p>Anotaciones utilizadas - {@link Entity} Anotación de JPA que indica que esta clase es una
- * entidad persistente. - {@link Table} Anotación de JPA que especifica el nombre de la tabla -
- * {@link NoArgsConstructor} Genera un constructor sin argumentos. - {@link AllArgsConstructor}
- * Genera un constructor con todos los argumentos. - {@link Getter} Genera los métodos get
- * automáticamente. - {@link Setter} Genera los métodos set automáticamente. - {@link Builder}
- * Genera el patrón builder para la clase. - {@link Columns} Se utiliza para especificar detalles
- * sobre las columnas de la base de datos. - {@link UserDetails} Interfaz que proporciona
- * información sobre el usuario para la autenticación y autorización.
- *
- * <p>Atributos id: Identificador único del usuario. username: Nombre de usuario para login.
- * password: Contraseña (hashed). roles: Roles asignados (USER, ADMIN, GUEST). active: Usuario
- * activo/inactivo.
+ * Attributes
+ * id: Unique user identifier.
+ * username: Username for login.
+ * password: Password (hashed).
+ * roles: Assigned roles (USER, ADMIN, GUEST).
+ * active: Active/inactive user.
  */
 @NoArgsConstructor
 @AllArgsConstructor
@@ -45,11 +53,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
-  /**
-   * {@link Id} Indica el identificador único de la entidad. {@link GeneratedValue} Especifica la
-   * estrategia de generación de valores para el identificador.
-   */
-  @Id @GeneratedValue private UUID id;
+    /**
+    * {@link Id} Indicates the unique identifier of the entity.
+    * {@link GeneratedValue} Specifies the value generation strategy for the identifier.
+     */
+    @Id
+    @GeneratedValue
+    private UUID id;
 
   @Column(nullable = false, unique = true)
   private String username;

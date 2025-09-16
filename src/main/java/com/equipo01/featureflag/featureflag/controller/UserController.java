@@ -11,26 +11,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 public interface UserController {
   /**
-   * Endpoint para verificar el estado del servicio.
+   * Endpoint to check the health status of the service.
    *
-   * @return "OK" si el servicio está funcionando correctamente.
+   * @return "OK" if the service is functioning correctly.
    */
   public ResponseEntity<String> healthCheck();
 
   /**
-   * Endpoint para registrar un nuevo usuario.
+   * Endpoint to register a new user.
    *
-   * @param userDTO objeto que contiene la información del usuario a registrar.
-   * @return el usuario registrado.
+   * @param userDTO object containing the information of the user to register.
+   * @return the registered user.
    */
   public ResponseEntity<String> registerUser(@Valid @RequestBody UserRequestDTO userDTO);
 
   /**
-   * Endpoint para iniciar sesión de un usuario.
+   * Endpoint to log in a user.
    *
-   * @param loginRequestDto objeto que contiene la información del usuario que intenta iniciar
-   *     sesión.
-   * @return un mensaje indicando el resultado del intento de inicio de sesión.
+   * @param loginRequestDto object containing the information of the user attempting to log in.
+   * @return a message indicating the result of the login attempt.
    */
   public ResponseEntity<String> logginUser(@Valid @RequestBody LoginRequestDto loginRequestDto);
 

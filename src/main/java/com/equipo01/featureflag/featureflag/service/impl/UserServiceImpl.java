@@ -24,14 +24,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Servicio para gestionar las operaciones relacionadas con los usuarios. Utiliza el repositorio
- * UserRepository para interactuar con la base de datos. Utiliza UserMapper para convertir entre
- * entidades y DTOs. Utiliza JwtUtil para generar tokens JWT. Utiliza SecurityConfig para el cifrado
- * de contraseñas. Utiliza AuthenticationManager para gestionar la autenticación de usuarios.
- * Utiliza Logger para registrar información y errores en el servicio.
- *
- * <p>Anotaciones utilizadas: - {@link Service} Anotación de Spring que indica que esta clase es un
- * servicio.
+ * Service for managing user-related operations.
+ * Uses the UserRepository repository to interact with the database.
+ * Uses UserMapper to convert between entities and DTOs.
+ * Uses JwtUtil to generate JWT tokens.
+ * Uses SecurityConfig for password encryption.
+ * Uses AuthenticationManager to manage user authentication.
+ * Uses Logger to log information and errors in the service.
+ * 
+ * Annotations used:
+ * - {@link Service} Spring annotation indicating that this class is a
+ * service.
  */
 @Service
 @RequiredArgsConstructor
@@ -43,11 +46,11 @@ public class UserServiceImpl implements UserService {
   private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
   /**
-   * Registra un nuevo usuario en el sistema.
-   *
-   * @param userRequestDTO el DTO del usuario que contiene la información necesaria para el registro
-   *     y login
-   * @return un token JWT si el registro es exitoso
+     * Registers a new user in the system.
+     *
+     * @param userRequestDTO user's DTO containing the necessary information for
+     *                       registration
+     * @return a JWT token if registration is successful
    */
   @Transactional
   public String registerUser(UserRequestDTO userRequestDTO) {
@@ -96,13 +99,14 @@ public class UserServiceImpl implements UserService {
   }
 
   /**
-   * Inicia sesión de un usuario con las credenciales proporcionadas. Este método autentica al
-   * usuario usando sus credenciales (nombre y contraseña) y, si la autenticación es exitosa, genera
-   * y devuelve un token JWT.
-   *
-   * @param loginRequestDto el DTO del usuario que contiene la información necesaria para el
-   *     registro y login
-   * @return un token JWT si la autenticación es exitosa
+     * Logs in a user with the provided credentials.
+     * This method authenticates the user using their credentials (username and
+     * password) and,
+     * if authentication is successful, generates and returns a JWT token.
+     *
+     * @param loginRequestDto the user's DTO containing the information
+     *                       required for registration and login
+     * @return a JWT token if authentication is successful
    */
   @Transactional(readOnly = true)
   public String loginUser(LoginRequestDto loginDto) {

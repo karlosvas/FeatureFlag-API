@@ -22,11 +22,14 @@ import com.equipo01.featureflag.featureflag.exception.CustomAuthenticationEntryP
 
 
 /**
- * Configuración de seguridad para la aplicación. -Define los beans necesarios para la seguridad
- * (PasswordEncoder, SecurityFilterChain, AuthenticationManager). -Configura las reglas de seguridad
- * HTTP (rutas públicas y protegidas, gestión de sesiones, CSRF). -Agrega filtros personalizados
- * para autenticación y autorización basados en JWT.
- *
+ * Security configuration for the application.
+ * -Defines the beans required for security (PasswordEncoder,
+ * SecurityFilterChain, AuthenticationManager).
+ * -Configures HTTP security rules (public and protected routes, session management,
+ * CSRF).
+ * -Adds custom filters for authentication and authorization based on
+ * JWT.
+ * 
  * @author alex
  */
 @Configuration

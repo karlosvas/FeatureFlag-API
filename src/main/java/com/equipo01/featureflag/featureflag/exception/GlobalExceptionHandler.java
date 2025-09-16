@@ -18,29 +18,30 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 /**
- * GlobalExceptionHandler gestiona de forma centralizada las excepciones lanzadas por los
- * controladores REST.
+ * GlobalExceptionHandler centrally manages exceptions
+ * thrown by REST controllers.
  *
- * <p>Utiliza {@link RestControllerAdvice} para interceptar y personalizar las respuestas de error
- * en toda la API. Cada método maneja un tipo específico de excepción y construye una respuesta
- * estructurada usando {@link ErrorDto}.
+ * Use {@link RestControllerAdvice} to intercept and customize
+ * error responses across the API.
+ * Each method handles a specific type of exception and constructs a structured response
+ * using {@link ErrorDto}.
  *
- * <p>Validaciones: Devuelve una lista de errores detallados si los datos de entrada no cumplen las
- * restricciones. Recursos: Informa si una feature ya existe o no se encuentra. Errores genéricos:
- * Captura cualquier excepción no gestionada y devuelve un error 500.
+ * Validations: Returns a list of detailed errors if the input data does not meet the constraints.
+ * Resources: Reports whether a feature already exists or is not found.
+ * Generic errors: Catches any unhandled exceptions and returns a 500 error.
  *
- * <p>Esto mejora la experiencia del cliente y facilita el debugging en desarrollo y producción.
+ * This improves the customer experience and facilitates debugging in development and production.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-  /**
-   * Maneja cualquier excepción no gestionada específicamente por otros métodos.
-   *
-   * @param ex excepción genérica lanzada en cualquier parte de la aplicación.
-   * @return Error informando que ocurrió un problema inesperado. Devuelve un {@link ErrorDto} con
-   *     código 500 (INTERNAL SERVER ERROR).
-   */
+    /**
+     * Handles any exception not specifically managed by other methods.
+     *
+     * @param ex Generic exception thrown anywhere in the application.
+     * @return Error reporting that an unexpected problem occurred. Returns an
+     *         {@link ErrorResponse} with code 500 (INTERNAL SERVER ERROR).
+     */
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorDto> handleGenericException(Exception ex) {
     if (ex instanceof AccessDeniedException || ex instanceof AuthenticationException) {
@@ -57,13 +58,13 @@ public class GlobalExceptionHandler {
         .body(errorResponse);
   }
 
-  /**
-   * Maneja excepciones de acceso a datos a la base de datos.
-   *
-   * @param ex excepción lanzada cuando se interactua con la base de datos.
-   * @return Error informando que ocurrió un problema en base de datos. Devuelve un {@link ErrorDto}
-   *     con código 500 (INTERNAL SERVER ERROR).
-   */
+    /**
+     * Handles exceptions related to database access.
+     *
+     * @param ex Exception thrown when interacting with the database.
+     * @return Error informing that a problem occurred in the database. Returns
+     *         a {@link ErrorResponse} with code 500 (INTERNAL SERVER ERROR).
+     */
   @ExceptionHandler(DataAccessException.class)
   public ResponseEntity<ErrorDto> handleDataAccessException(DataAccessException ex) {
     ErrorDto errorResponse =
@@ -76,16 +77,17 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(MessageError.DATA_ACCESS_ERROR.getStatus()).body(errorResponse);
   }
 
-  /**
-   * Maneja excepciones de validación de argumentos en los endpoints REST.
-   *
-   * <p>Cuando un DTO no cumple las restricciones de validación (por ejemplo, @NotNull, @Size), este
-   * método recopila todos los errores.
-   *
-   * @param ex excepción lanzada por Spring al fallar la validación.
-   * @return Lista de errores con detalles y mensajes específicos, devueltos en una lista de {@link
-   *     ErrorDto} con código 400 (BAD REQUEST).
-   */
+    /**
+     * Handles validation exceptions for arguments in REST endpoints.
+     *
+     * When a DTO does not meet validation constraints (e.g.,
+     * @NotNull, @Size),
+     * this method collects all errors.
+     *
+     * @param ex Exception thrown by Spring when validation fails.
+     * @return List of errors with specific details and messages, returned in
+     *         a list of {@link ErrorResponse} with code 400 (BAD REQUEST).
+     */
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<List<ErrorDto>> handleValidationException(
       MethodArgumentNotValidException ex) {
@@ -107,13 +109,13 @@ public class GlobalExceptionHandler {
         .body(errorResponses);
   }
 
-  /**
-   * Maneja la excepción cuando se recibe un JSON malformado en la solicitud.
-   *
-   * @param ex excepción lanzada por Spring cuando el JSON no se puede leer.
-   * @return Error informando que el cuerpo de la solicitud no es un JSON válido. Devuelve un {@link
-   *     ErrorDto} con código 400 (BAD REQUEST).
-   */
+    /**
+     * Handles the exception when a malformed JSON is received in the request.
+     *
+     * @param ex Exception thrown by Spring when the JSON cannot be read.
+     * @return Error informing that the request body is not valid JSON.
+     *         Returns an {@link ErrorResponse} with code 400 (BAD REQUEST).
+     */
   @ExceptionHandler(HttpMessageNotReadableException.class)
   public ResponseEntity<ErrorDto> handleJsonParseError(HttpMessageNotReadableException ex) {
     ErrorDto errorResponse =
@@ -126,13 +128,13 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(MessageError.MALFORMED_JSON.getStatus()).body(errorResponse);
   }
 
-  /**
-   * Maneja la excepción cuando una validación de parámetro de método falla.
-   *
-   * @param ex excepción lanzada por el sistema de validación de Java.
-   * @return Error informando que una restricción de validación fue violada. Devuelve un {@link
-   *     ErrorDto} con código 400 (BAD REQUEST).
-   */
+    /**
+     * Handles the exception when a method parameter validation fails.
+     *
+     * @param ex Exception thrown by the Java validation system.
+     * @return Error reporting that a validation constraint was violated.
+     *         Returns an {@link ErrorResponse} with code 400 (BAD REQUEST).
+     */
   @ExceptionHandler(HandlerMethodValidationException.class)
   public ResponseEntity<List<ErrorDto>> handleMethodValidation(
       HandlerMethodValidationException ex) {
@@ -153,13 +155,13 @@ public class GlobalExceptionHandler {
         .body(errorResponses);
   }
 
-  /**
-   * Maneja la excepción cuando se usa un método HTTP no permitido en el endpoint.
-   *
-   * @param ex excepción lanzada por Spring cuando el método HTTP no es soportado.
-   * @return Error informando que el método HTTP no está permitido. Devuelve un {@link ErrorDto} con
-   *     código 405 (METHOD NOT ALLOWED).
-   */
+    /**
+     * Handles the exception when an unsupported HTTP method is used on the endpoint.
+     *
+     * @param ex Exception thrown by Spring when the HTTP method is not supported.
+     * @return Error informing that the HTTP method is not allowed. Returns an
+     *         {@link ErrorResponse} with code 405 (METHOD NOT ALLOWED).
+     */
   @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
   public ResponseEntity<ErrorDto> handleMethodNotSupported(
       HttpRequestMethodNotSupportedException ex) {
@@ -173,20 +175,19 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(MessageError.METHOD_NOT_ALLOWED.getStatus()).body(errorResponse);
   }
 
-  /////////////////////////// CUSTOM EXCEPTION ///////////////////////////
 
   /**
-   * Maneja la excepción personalizada.
+   * Handles the custom exception.
    *
-   * @param ex excepción personalizada lanzada por la lógica de negocio.
-   * @return Error informando validaciones de lógica de negocio. Devuelve un {@link ErrorDto}.
+   * @param ex Custom exception thrown by the business logic.
+   * @return Error reporting business logic validations. Returns a {@link ErrorDto}.
    */
   @ExceptionHandler(FeatureFlagException.class)
   public ResponseEntity<ErrorDto> handleFeatureFlagException(FeatureFlagException ex) {
     if (HttpStatus.NO_CONTENT.equals(ex.getStatus())) {
       return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-    ErrorDto errorResponse =
+        ErrorDto errorResponse =
         ErrorDto.builder()
             .message(ex.getMessage())
             .description(ex.getDescription())
