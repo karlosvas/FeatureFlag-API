@@ -19,9 +19,9 @@ import org.springframework.stereotype.Component;
 public class JwtUtil {
 
     // Secret key for signing and validating JWT tokens
-    @Value("${JWT_SECRET_KEY}")
+    @Value("${application.security.jwt.secret-key}")
     private String secret;
-    @Value("${ACCESS_TOKEN_EXPIRATION}")
+    @Value("${application.security.jwt.expiration}")
     private Long expiration;
 
     /**
