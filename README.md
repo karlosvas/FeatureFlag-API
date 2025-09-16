@@ -105,22 +105,37 @@ docker-compose logs -f app
 
 ### Authentication
 
-| Method | Route                | Description             |
-| ------ | -------------------- | ----------------------- |
-| GET    | `/api/auth/health`   | Check service status    |
-| POST   | `/api/auth/register` | User registration       |
-| POST   | `/api/auth/login`    | Login and JWT retrieval |
+| Method | Route                       | Description             |
+| ------ | --------------------------- | ----------------------- |
+| GET    | `/api/auth/health`          | Check service status    |
+| POST   | `/api/auth/register`        | User registration       |
+| POST   | `/api/auth/login`           | Login and JWT retrieval |
+| POST   | `/api/auth/register/admin`  | Create admin user       |
+| GET    | `/api/auth/users`           | List all users          |
+| GET    | `/api/auth/user/{email}`    | Get user by email       |
+| DELETE | `/api/auth/user/{userId}`   | Delete user by ID       |
+| GET    | `/api/auth/test`            | Verify admin            |
 
 ### Feature Management
 
-| Method | Route                        | Description          |
-| ------ | ---------------------------- | -------------------- |
-| POST   | `/api/features`              | Create new feature   |
-| GET    | `/api/features`              | List all features    |
-| GET    | `/api/features/{id}`         | Get feature detail   |
-| POST   | `/api/features/{id}/enable`  | Enable feature       |
-| POST   | `/api/features/{id}/disable` | Disable feature      |
-| GET    | `/api/features/check`        | Check feature status |
+| Method | Route                         | Description           |
+| ------ | ----------------------------- | --------------------- |
+| PUT    | `/api/features/{id}/{action}` | Change feature status |
+| POST   | `/api/features`               | Create new feature    |
+| GET    | `/api/features`               | List all features     |
+| GET    | `/api/features/{featureId}`   | Get feature detail    |
+| GET    | `/api/features/check`         | Check feature status  |
+| PUT    | `/api/features/{id}`          | Update feature        |
+
+### Feature Configuration
+| Method | Route                                           | Description           |
+| ------ | ---------------------------------------- | --------------------- |
+| PUT    | `/api/features/enable-disable`           | Change feature status |
+| POST   | `/api/features/config`                   | Create new config     |
+| GET    | `/api/features/config/{id}`              | Get config by ID      |
+| GET    | `/api/features/config`                   | List all configs      |
+| GET    | `/api/features/config/{featureConfigId}` | Get config by feature config ID |
+
 
 ## 💾 Data Model
 

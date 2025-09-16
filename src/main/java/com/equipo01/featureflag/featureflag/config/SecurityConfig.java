@@ -1,5 +1,7 @@
 package com.equipo01.featureflag.featureflag.config;
 
+import com.equipo01.featureflag.featureflag.exception.CustomAccessDeniedHandler;
+import com.equipo01.featureflag.featureflag.exception.CustomAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,20 +18,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
 
-import com.equipo01.featureflag.featureflag.exception.CustomAccessDeniedHandler;
-import com.equipo01.featureflag.featureflag.exception.CustomAuthenticationEntryPoint;
-
-
-
 /**
- * Security configuration for the application.
- * -Defines the beans required for security (PasswordEncoder,
- * SecurityFilterChain, AuthenticationManager).
- * -Configures HTTP security rules (public and protected routes, session management,
- * CSRF).
- * -Adds custom filters for authentication and authorization based on
- * JWT.
- * 
+ * Security configuration for the application. -Defines the beans required for security
+ * (PasswordEncoder, SecurityFilterChain, AuthenticationManager). -Configures HTTP security rules
+ * (public and protected routes, session management, CSRF). -Adds custom filters for authentication
+ * and authorization based on JWT.
+ *
  * @author alex
  */
 @Configuration
@@ -55,10 +49,10 @@ public class SecurityConfig {
     return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
   }
 
-    @Bean
-    public CompromisedPasswordChecker compromisedPasswordChecker() {
-        return new HaveIBeenPwnedRestApiPasswordChecker();
-    }
+  @Bean
+  public CompromisedPasswordChecker compromisedPasswordChecker() {
+    return new HaveIBeenPwnedRestApiPasswordChecker();
+  }
 
   @Bean
   public SecurityFilterChain securityFilterChain(

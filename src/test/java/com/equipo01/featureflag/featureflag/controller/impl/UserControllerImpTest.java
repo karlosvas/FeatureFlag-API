@@ -4,6 +4,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import com.equipo01.featureflag.featureflag.dto.request.LoginRequestDto;
+import com.equipo01.featureflag.featureflag.dto.request.UserRequestDTO;
+import com.equipo01.featureflag.featureflag.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -18,13 +23,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import com.equipo01.featureflag.featureflag.dto.request.LoginRequestDto;
-import com.equipo01.featureflag.featureflag.dto.request.UserRequestDTO;
-import com.equipo01.featureflag.featureflag.service.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import net.bytebuddy.utility.RandomString;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -47,7 +45,7 @@ class UserControllerImpTest {
 
   @Test
   void testRegisterUser() throws Exception {
-        String password = RandomString.make() + "#.5A";
+    String password = RandomString.make() + "#.5A";
     UserRequestDTO userRequestDTO =
         UserRequestDTO.builder()
             .username("test")
