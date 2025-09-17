@@ -1,6 +1,14 @@
 -- Schema creation script for Feature Flag API (H2 Database)
 -- This script creates the necessary tables based on the JPA entities
 
+-- Drop indexes if they exist (before dropping tables)
+DROP INDEX IF EXISTS idx_feature_configs_feature_id;
+DROP INDEX IF EXISTS idx_feature_configs_client_id;
+DROP INDEX IF EXISTS idx_feature_configs_environment;
+DROP INDEX IF EXISTS idx_features_name;
+DROP INDEX IF EXISTS idx_users_active;
+DROP INDEX IF EXISTS idx_users_username;
+
 -- Drop tables if they exist (in reverse order due to foreign keys)
 DROP TABLE IF EXISTS feature_configs CASCADE;
 DROP TABLE IF EXISTS features CASCADE;
