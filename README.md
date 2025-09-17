@@ -115,10 +115,6 @@ docker-compose logs -f app
 | GET    | `/api/auth/user/{email}`    | Get user by email       |
 | DELETE | `/api/auth/user/{userId}`   | Delete user by ID       |
 
-## Security
-| Method | Route                       | Description             |
-| GET    | `/api/security/test`        | Verify admin            |
-
 ### Feature Management
 
 | Method | Route                         | Description           |
@@ -129,6 +125,8 @@ docker-compose logs -f app
 | GET    | `/api/features/{featureId}`   | Get feature detail    |
 | GET    | `/api/features/check`         | Check feature status  |
 | PUT    | `/api/features/{id}`          | Update feature        |
+| GET    | `/api/features/test`          | Verify admin          |
+
 
 ### Feature Configuration
 | Method | Route                                           | Description           |
