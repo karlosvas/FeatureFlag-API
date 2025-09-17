@@ -23,9 +23,15 @@ public interface FeatureService {
    * @param name the name of the feature flag
    * @return true if a feature flag with the given name exists, false otherwise
    */
-  public boolean existsByName(String name);
+  boolean existsByName(String name);
 
-  public boolean existsById(UUID id);
+  /**
+   * Checks if a feature flag exists by its UUID.
+   *
+   * @param id the UUID of the feature flag
+   * @return true if a feature flag with the given UUID exists, false otherwise
+   */
+  boolean existsById(UUID id);
 
   /**
    * Retrieves a feature flag by its UUID.
@@ -33,7 +39,7 @@ public interface FeatureService {
    * @param featureId the UUID of the feature flag
    * @return the Feature entity if found
    */
-  public Feature findById(UUID featureId);
+  Feature findById(UUID featureId);
 
   /**
    * Creates a new feature flag.
@@ -41,7 +47,7 @@ public interface FeatureService {
    * @param requestDto the data for the new feature flag
    * @return the created feature flag as a response DTO
    */
-  public FeatureResponseDto createFeature(FeatureRequestDto requestDto);
+  FeatureResponseDto createFeature(FeatureRequestDto requestDto);
 
   /**
    * Retrieves a feature flag by its ID as a string.
@@ -49,9 +55,9 @@ public interface FeatureService {
    * @param featureId the ID of the feature flag as a string
    * @return the feature flag as a response DTO
    */
-  public FeatureResponseDto getFeatureById(String featureId);
+  FeatureResponseDto getFeatureById(String featureId);
 
-  public Boolean checkFeatureIsActive(String nameFeature, UUID clientID, Environment environment);
+  Boolean checkFeatureIsActive(String nameFeature, UUID clientID, Environment environment);
 
   /**
    * Retrieves a paginated list of feature flags, optionally filtered by name and enabled status.
@@ -62,7 +68,7 @@ public interface FeatureService {
    * @param size the number of items per page
    * @return a paginated response DTO containing the list of feature flags
    */
-  public GetFeatureResponseDto getFeatures(
+  GetFeatureResponseDto getFeatures(
       String name, Boolean enabledByDefault, Integer page, Integer size);
 
   /**
@@ -71,7 +77,7 @@ public interface FeatureService {
    * @param featurePage the page of features to check
    * @throws FeatureFlagException if the page is empty
    */
-  public void isPageEmpty(Page<Feature> featurePage);
+  void isPageEmpty(Page<Feature> featurePage);
 
   /**
    * Enables or disable a feature for specifici client or environment. This method will check if the
@@ -88,5 +94,5 @@ public interface FeatureService {
   void updateFeatureForClientOrEnvironment(
       UUID featureId, FeatureToggleRequestDto toggleRequestDto, boolean enabled);
 
-  public void deleteFeature(UUID featureId);
+  void deleteFeature(UUID featureId);
 }

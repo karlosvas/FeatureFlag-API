@@ -20,18 +20,22 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceImplTest {
+class UserServiceImplTest {
   @Mock private UserRepository userRepository;
   @Mock private UserMapper userMapper;
   @Mock private JwtUtil jwtUtil;
   @Mock private PasswordEncoder passwordEncoder;
   @InjectMocks private UserServiceImpl userService;
 
+  @Value("${api.auth}")
+  private String authEndpoint;
+
   @Test
-  public void testRegisterUser() {
+  void testRegisterUser() {
     UserRequestDTO userRequestDTO = mock(UserRequestDTO.class);
     User userEntity = mock(User.class);
     UserDTO userDTO = mock(UserDTO.class);
@@ -48,7 +52,7 @@ public class UserServiceImplTest {
   }
 
   @Test
-  public void testLoginUser() {
+  void testLoginUser() {
     LoginRequestDto loginRequestDto = mock(LoginRequestDto.class);
     User user = mock(User.class);
     when(loginRequestDto.getUsername()).thenReturn("testuser");
@@ -65,7 +69,7 @@ public class UserServiceImplTest {
   }
 
   @Test
-  public void testCheckRegister_throwsFeatureFlagException_whenEmailExists() {
+  void testCheckRegister_throwsFeatureFlagException_whenEmailExists() {
     String email = "test";
     String username = "testuser";
     when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(mock(User.class)));
@@ -77,7 +81,7 @@ public class UserServiceImplTest {
   }
 
   @Test
-  public void testCheckRegister_throwsFeatureFlagException_whenUsernameExists() {
+  void testCheckRegister_throwsFeatureFlagException_whenUsernameExists() {
     String email = "test";
     String username = "testuser";
     when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
@@ -90,7 +94,7 @@ public class UserServiceImplTest {
   }
 
   @Test
-  public void testExistsByClientID_throwsFeatureFlagException_whenClientIDNotExists() {
+  void testExistsByClientID_throwsFeatureFlagException_whenClientIDNotExists() {
     String clientID = "44dc4cdb-aed4-4c55-8c9b-f1751faf47f9";
     UUID cliUuid = UUID.fromString(clientID);
     when(userRepository.existsById(cliUuid)).thenReturn(Boolean.FALSE);
@@ -102,7 +106,7 @@ public class UserServiceImplTest {
   }
 
   @Test
-  public void testExistsByClientID() {
+  void testExistsByClientID() {
     String clientID = "44dc4cdb-aed4-4c55-8c9b-f1751faf47f9";
     UUID cliUuid = UUID.fromString(clientID);
     when(userRepository.existsById(cliUuid)).thenReturn(Boolean.TRUE);

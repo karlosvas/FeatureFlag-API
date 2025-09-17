@@ -15,7 +15,7 @@ public interface UserController {
    *
    * @return "OK" if the service is functioning correctly.
    */
-  public ResponseEntity<String> healthCheck();
+  ResponseEntity<String> healthCheck();
 
   /**
    * Endpoint to register a new user.
@@ -23,7 +23,7 @@ public interface UserController {
    * @param userDTO object containing the information of the user to register.
    * @return the registered user.
    */
-  public ResponseEntity<String> registerUser(@Valid @RequestBody UserRequestDTO userDTO);
+  ResponseEntity<String> registerUser(@Valid @RequestBody UserRequestDTO userDTO);
 
   /**
    * Endpoint to log in a user.
@@ -31,21 +31,21 @@ public interface UserController {
    * @param loginRequestDto object containing the information of the user attempting to log in.
    * @return a message indicating the result of the login attempt.
    */
-  public ResponseEntity<String> logginUser(@Valid @RequestBody LoginRequestDto loginRequestDto);
+  ResponseEntity<String> logginUser(@Valid @RequestBody LoginRequestDto loginRequestDto);
 
   /**
    * Endpoint to retrieve all users in the system.
    *
    * @return ResponseEntity containing a list of all user DTOs.
    */
-  public ResponseEntity<List<UserDTO>> getAllUsers();
+  ResponseEntity<List<UserDTO>> getAllUsers();
 
   /**
    * Endpoint to obtain a user by email.
    *
    * @return ResponseEntity containing the user DTO.
    */
-  public ResponseEntity<UserDTO> getUserByEmail();
+  ResponseEntity<UserDTO> getUserByEmail();
 
   /**
    * Endpoint to delete a user by their UUID.
@@ -53,7 +53,7 @@ public interface UserController {
    * @param id the UUID of the user to delete
    * @return ResponseEntity with no content if deletion is successful.
    */
-  public ResponseEntity<Void> deleteUser(@PathVariable String id);
+  ResponseEntity<Void> deleteUser(@PathVariable String id);
 
   /**
    * Endpoint to register a new admin user.
@@ -61,5 +61,5 @@ public interface UserController {
    * @param userDTO the DTO containing the information of the admin user to register
    * @return ResponseEntity with a message indicating the result of the registration
    */
-  public ResponseEntity<String> registerAdmin(@Valid @RequestBody UserRequestDTO userDTO);
+  ResponseEntity<String> registerAdmin(@Valid @RequestBody UserRequestDTO userDTO);
 }

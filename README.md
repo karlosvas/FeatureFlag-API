@@ -1,4 +1,3 @@
-
 # FeatureFlag API
 
 A robust REST API for dynamic feature flag management in production environments, developed with Spring Boot and PostgreSQL.
@@ -14,7 +13,7 @@ FeatureFlag API allows creating, enabling and disabling functionalities dynamica
 @alexDAW-IOC  
 @angelAntezana  
 @JosCarRub  
-@nescaruncho  
+@nescaruncho
 
 ## Creators of Bytes Colaborativos
 
@@ -31,6 +30,8 @@ Discord Channel: <https://discord.com/invite/YGGcPMzSQk>
 - **Documentation:** Swagger UI
 - **Testing:** Postman + JUnit/Mockito
 - **Containers:** Docker + DevContainers
+- **CI/CD:** GitHub Actions
+- **Static Code Analysis:** SonarQube
 - **Version Control:** Git + GitHub
 
 ## 🚀 Main Features
@@ -42,6 +43,8 @@ Discord Channel: <https://discord.com/invite/YGGcPMzSQk>
 - 📚 Automatic documentation with Swagger
 - 🧪 Testing coverage with JUnit
 - 🐳 Development with Docker and DevContainers
+- 🔄 CI/CD with GitHub Actions
+- 🔍 SonarQube quality gate validation
 
 ## 🔧 Installation and Setup
 
@@ -102,22 +105,40 @@ docker-compose logs -f app
 
 ### Authentication
 
-| Method | Route | Description |
-|--------|-------|-------------|
-| GET  | `/api/auth/health` | Check service status |
-| POST | `/api/auth/register` | User registration |
-| POST | `/api/auth/login` | Login and JWT retrieval |
+| Method | Route                       | Description             |
+| ------ | --------------------------- | ----------------------- |
+| GET    | `/api/auth/health`          | Check service status    |
+| POST   | `/api/auth/register`        | User registration       |
+| POST   | `/api/auth/login`           | Login and JWT retrieval |
+| POST   | `/api/auth/register/admin`  | Create admin user       |
+| GET    | `/api/auth/users`           | List all users          |
+| GET    | `/api/auth/user/{email}`    | Get user by email       |
+| DELETE | `/api/auth/user/{userId}`   | Delete user by ID       |
+
+## Security
+| Method | Route                       | Description             |
+| GET    | `/api/security/test`        | Verify admin            |
 
 ### Feature Management
 
-| Method | Route | Description |
-|--------|-------|-------------|
-| POST | `/api/features` | Create new feature |
-| GET | `/api/features` | List all features |
-| GET | `/api/features/{id}` | Get feature detail |
-| POST | `/api/features/{id}/enable` | Enable feature |
-| POST | `/api/features/{id}/disable` | Disable feature |
-| GET | `/api/features/check` | Check feature status |
+| Method | Route                         | Description           |
+| ------ | ----------------------------- | --------------------- |
+| PUT    | `/api/features/{id}/{action}` | Change feature status |
+| POST   | `/api/features`               | Create new feature    |
+| GET    | `/api/features`               | List all features     |
+| GET    | `/api/features/{featureId}`   | Get feature detail    |
+| GET    | `/api/features/check`         | Check feature status  |
+| PUT    | `/api/features/{id}`          | Update feature        |
+
+### Feature Configuration
+| Method | Route                                           | Description           |
+| ------ | ---------------------------------------- | --------------------- |
+| PUT    | `/api/features/enable-disable`           | Change feature status |
+| POST   | `/api/features/config`                   | Create new config     |
+| GET    | `/api/features/config/{id}`              | Get config by ID      |
+| GET    | `/api/features/config`                   | List all configs      |
+| GET    | `/api/features/config/{featureConfigId}` | Get config by feature config ID |
+
 
 ## 💾 Data Model
 
@@ -188,9 +209,9 @@ GET /api/features/check?feature=dark_mode&clientId=acme123&env=staging
 
 The system checks in order of priority:
 
-  1. Client-specific configuration
-  2. Environment configuration
-  3. Default value (`enabledByDefault`)
+1. Client-specific configuration
+2. Environment configuration
+3. Default value (`enabledByDefault`)
 
 ## 🔍 SonarQube
 
@@ -215,6 +236,7 @@ SonarQube is a static analysis tool that checks your code and signals if somethi
 7. In **Token generation**, set it to **Expires** and click **Generate**.  
    ⚠️ A token will be generated → save it (e.g., in a `.env` file), because it will be needed when running the analysis. Then click **Continue**.
 8. Run analysis on your project:
+
    - Select **Maven**.
    - Copy the commands given by SonarQube.  
      ⚠️ To run locally using containers, the URL must be the **service name of the container**; in this case: `sonarqube`.
@@ -225,11 +247,54 @@ SonarQube is a static analysis tool that checks your code and signals if somethi
      -Dsonar.projectName='FeatureflagApi' \
      -Dsonar.host.url=http://sonarqube:9000 \
      -Dsonar.token=$MY_SONARQUBE_TOKEN
+   ```
 
 ## 📖 Documentation
 
 Access interactive Swagger documentation at: `http://localhost:8080/swagger-ui.html`
 Or access JavaDoc documentation at: `target/site/apidocs/index.html`
+
+## 📊 Monitoring
+
+The application includes built-in monitoring capabilities through Spring Boot Actuator and Micrometer.
+
+### Available Monitoring Endpoints
+
+| Endpoint | Description | Access |
+| -------- | ----------- | ------ |
+| `/api/auth/health` | Custom health check | ✅ Always available |
+| `/actuator/health` | Application health status | ✅ Always available |
+| `/actuator/metrics` | Application metrics | 🔐 Requires authentication |
+| `/actuator/info` | Application information | 🔐 Requires authentication |
+
+### Quick Health Check
+
+```bash
+# Check if the application is running
+curl http://localhost:8080/api/auth/health
+# Response: "OK"
+
+# Detailed health status
+curl http://localhost:8080/actuator/health
+# Response: {"status":"UP"}
+```
+
+### Available Metrics
+
+The application automatically tracks:
+- **HTTP requests**: Response times and status codes
+- **JVM metrics**: Memory usage, garbage collection
+- **Database connections**: Pool status and query performance
+- **Authentication events**: Login attempts and JWT operations
+- **Feature flag usage**: Activation statistics
+
+```bash
+# View all available metrics (requires authentication)
+curl http://localhost:8080/actuator/metrics
+
+# Example: Check JVM memory usage
+curl http://localhost:8080/actuator/metrics/jvm.memory.used
+
 
 ## 🤝 Contributing
 

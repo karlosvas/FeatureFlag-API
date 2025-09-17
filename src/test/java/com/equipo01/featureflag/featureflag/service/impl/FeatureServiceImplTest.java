@@ -32,7 +32,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 
 @ExtendWith(MockitoExtension.class)
-public class FeatureServiceImplTest {
+class FeatureServiceImplTest {
 
   @Mock private FeatureRepository featureRepository;
   @Mock private FeatureMapper featureMapper;
@@ -200,7 +200,7 @@ public class FeatureServiceImplTest {
   }
 
   @Test
-  public void testCreateFeature() {
+  void testCreateFeature() {
     FeatureRequestDto featureRequestDto = mock(FeatureRequestDto.class);
     Feature feature = mock(Feature.class);
     Feature expectedFeature = mock(Feature.class);
@@ -213,7 +213,7 @@ public class FeatureServiceImplTest {
   }
 
   @Test
-  public void testGetFeatureById() {
+  void testGetFeatureById() {
     String featureId = "44dc4cdb-aed4-4c55-8c9b-f1751faf47f9";
     UUID featureUUID = UUID.fromString(featureId);
     Feature expectedFeature = mock(Feature.class);
@@ -223,7 +223,7 @@ public class FeatureServiceImplTest {
   }
 
   @Test
-  public void testGetFeatures() {
+  void testGetFeatures() {
     int page = 0;
     int size = 10;
     Boolean enabledByDefault = true;
@@ -239,7 +239,7 @@ public class FeatureServiceImplTest {
   }
 
   @Test
-  public void testIsPageEmpty_throwsFeatureFlagException() {
+  void testIsPageEmpty_throwsFeatureFlagException() {
     Page<Feature> featurePage = mock(Page.class);
     when(featurePage.isEmpty()).thenReturn(true);
     FeatureFlagException result =
@@ -248,7 +248,7 @@ public class FeatureServiceImplTest {
   }
 
   @Test
-  public void testExistsByName_throwsFeatureFlagException() {
+  void testExistsByName_throwsFeatureFlagException() {
     String featureName = "Test Feature";
     when(featureRepository.existsByName(featureName)).thenReturn(Boolean.TRUE);
     FeatureFlagException result =
@@ -259,7 +259,7 @@ public class FeatureServiceImplTest {
   }
 
   @Test
-  public void testExistsByName() {
+  void testExistsByName() {
     String featureName = "Test Feature";
     when(featureRepository.existsByName(featureName)).thenReturn(Boolean.FALSE);
     boolean exists = featureServiceImpl.existsByName(featureName);
@@ -268,7 +268,7 @@ public class FeatureServiceImplTest {
   }
 
   @Test
-  public void testExistsById_throwsFeatureFlagException() {
+  void testExistsById_throwsFeatureFlagException() {
     UUID featureUUID = mock(UUID.class);
     when(featureRepository.existsById(featureUUID)).thenReturn(Boolean.TRUE);
     FeatureFlagException result =
@@ -278,7 +278,7 @@ public class FeatureServiceImplTest {
   }
 
   @Test
-  public void testFindById_throwsFeatureFlagException() {
+  void testFindById_throwsFeatureFlagException() {
     String featureId = "44dc4cdb-aed4-4c55-8c9b-f1751faf47f9";
     UUID featureUUID = UUID.fromString(featureId);
     when(featureRepository.findById(featureUUID)).thenReturn(Optional.empty());
@@ -289,7 +289,7 @@ public class FeatureServiceImplTest {
   }
 
   @Test
-  public void testFindById() {
+  void testFindById() {
     String featureId = "44dc4cdb-aed4-4c55-8c9b-f1751faf47f9";
     UUID featureUUID = UUID.fromString(featureId);
     Feature expectedFeature = mock(Feature.class);
@@ -300,7 +300,7 @@ public class FeatureServiceImplTest {
   }
 
   @Test
-  public void testFindByName_throwsFeatureFlagException() {
+  void testFindByName_throwsFeatureFlagException() {
     String featureName = "Test Feature";
     when(featureRepository.findByName(featureName)).thenReturn(Optional.empty());
     FeatureFlagException result =
@@ -310,7 +310,7 @@ public class FeatureServiceImplTest {
   }
 
   @Test
-  public void testFindByName() {
+  void testFindByName() {
     String featureName = "Test Feature";
     Feature expectedFeature = mock(Feature.class);
     when(featureRepository.findByName(featureName)).thenReturn(Optional.of(expectedFeature));
@@ -320,7 +320,7 @@ public class FeatureServiceImplTest {
   }
 
   @Test
-  public void testCheckFeatureIsActive_returnFalseByEnvironment() {
+  void testCheckFeatureIsActive_returnFalseByEnvironment() {
     String featureName = "Test Feature";
     Environment environment = Environment.DEV;
     UUID clientID = UUID.randomUUID();
@@ -340,7 +340,7 @@ public class FeatureServiceImplTest {
   }
 
   @Test
-  public void testCheckFeatureIsActive_returnFalseByEnabled() {
+  void testCheckFeatureIsActive_returnFalseByEnabled() {
     String featureName = "Test Feature";
     Environment environment = Environment.DEV;
     UUID clientID = UUID.randomUUID();
@@ -360,7 +360,7 @@ public class FeatureServiceImplTest {
   }
 
   @Test
-  public void testCheckFeatureIsActive_returnTrue() {
+  void testCheckFeatureIsActive_returnTrue() {
     String featureName = "Test Feature";
     Environment environment = Environment.DEV;
     UUID clientID = UUID.randomUUID();
