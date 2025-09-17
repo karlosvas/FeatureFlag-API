@@ -114,7 +114,10 @@ docker-compose logs -f app
 | GET    | `/api/auth/users`           | List all users          |
 | GET    | `/api/auth/user/{email}`    | Get user by email       |
 | DELETE | `/api/auth/user/{userId}`   | Delete user by ID       |
-| GET    | `/api/auth/test`            | Verify admin            |
+
+## Security
+| Method | Route                       | Description             |
+| GET    | `/api/security/test`        | Verify admin            |
 
 ### Feature Management
 
@@ -250,6 +253,48 @@ SonarQube is a static analysis tool that checks your code and signals if somethi
 
 Access interactive Swagger documentation at: `http://localhost:8080/swagger-ui.html`
 Or access JavaDoc documentation at: `target/site/apidocs/index.html`
+
+## 📊 Monitoring
+
+The application includes built-in monitoring capabilities through Spring Boot Actuator and Micrometer.
+
+### Available Monitoring Endpoints
+
+| Endpoint | Description | Access |
+| -------- | ----------- | ------ |
+| `/api/auth/health` | Custom health check | ✅ Always available |
+| `/actuator/health` | Application health status | ✅ Always available |
+| `/actuator/metrics` | Application metrics | 🔐 Requires authentication |
+| `/actuator/info` | Application information | 🔐 Requires authentication |
+
+### Quick Health Check
+
+```bash
+# Check if the application is running
+curl http://localhost:8080/api/auth/health
+# Response: "OK"
+
+# Detailed health status
+curl http://localhost:8080/actuator/health
+# Response: {"status":"UP"}
+```
+
+### Available Metrics
+
+The application automatically tracks:
+- **HTTP requests**: Response times and status codes
+- **JVM metrics**: Memory usage, garbage collection
+- **Database connections**: Pool status and query performance
+- **Authentication events**: Login attempts and JWT operations
+- **Feature flag usage**: Activation statistics
+
+```bash
+# View all available metrics (requires authentication)
+curl http://localhost:8080/actuator/metrics
+
+# Example: Check JVM memory usage
+curl http://localhost:8080/actuator/metrics/jvm.memory.used
+
 
 ## 🤝 Contributing
 

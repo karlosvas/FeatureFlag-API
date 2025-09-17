@@ -8,7 +8,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,metrics,prometheus,info
+        include: health,metrics,info
   endpoint:
     health:
       show-details: when-authorized
@@ -16,10 +16,6 @@ management:
     enable:
       http: true
       jvm: true
-  prometheus:
-    metrics:
-      export:
-        enabled: true
 
 application:
   security:
@@ -31,6 +27,7 @@ api:
   auth: /api/auth
   features: /api/features
   configurations: /api/configurations
+  security: /api/security
 
 springdoc:
   api-docs:

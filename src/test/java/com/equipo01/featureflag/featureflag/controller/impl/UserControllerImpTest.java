@@ -38,6 +38,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 class UserControllerImpTest {
   @Value("${api.auth}")
   private String authEndpoint;
+  @Value("${api.security}")
+  private String securityEndpoint;
 
   @Autowired private MockMvc mockMvc;
   @MockitoBean private UserService userService;
@@ -172,7 +174,7 @@ void testGetUserByEmail() throws Exception {
   @Test
   void testCheckPermissionTest() throws Exception {
     mockMvc
-        .perform(MockMvcRequestBuilders.get(authEndpoint + "/test")
+        .perform(MockMvcRequestBuilders.get(securityEndpoint + "/test")
             .with(user("admin").roles("ADMIN")))
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().string("Test permission ok"));
@@ -181,7 +183,7 @@ void testGetUserByEmail() throws Exception {
   @Test
   void testCheckPermissionTestWithoutAdminRole_shouldReturnForbidden() throws Exception {
     mockMvc
-        .perform(MockMvcRequestBuilders.get(authEndpoint + "/test")
+        .perform(MockMvcRequestBuilders.get(securityEndpoint + "/test")
             .with(user("user").roles("USER")))
         .andExpect(MockMvcResultMatchers.status().isForbidden());
   }

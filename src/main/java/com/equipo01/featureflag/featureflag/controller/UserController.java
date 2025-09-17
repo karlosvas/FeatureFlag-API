@@ -62,11 +62,4 @@ public interface UserController {
    * @return ResponseEntity with a message indicating the result of the registration
    */
   ResponseEntity<String> registerAdmin(@Valid @RequestBody UserRequestDTO userDTO);
-
-  /**
-   * Tests permission validation for feature configuration operations.
-   *
-   * @return a message indicating the permission test result and user access level
-   */
-  ResponseEntity<String> checkPermissionTest();
 }
