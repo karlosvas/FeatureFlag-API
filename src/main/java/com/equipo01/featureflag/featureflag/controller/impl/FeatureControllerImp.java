@@ -82,6 +82,7 @@ public class FeatureControllerImp implements FeatureController {
       summary = "Enable or disable a feature configuration for a specific client or environment",
       description =
           "Enables or disables a feature configuration for a specific client or environment based on the 'action' parameter. Supports gradual rollouts and A/B testing scenarios.")
+@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
   public ResponseEntity<Void> updateFeatureForClientOrEnvironment(
       @PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format")
           String id,
@@ -244,5 +245,28 @@ public class FeatureControllerImp implements FeatureController {
     UUID uuid = UUID.fromString(featureId);
     featureService.deleteFeature(uuid);
     return ResponseEntity.noContent().build();
+  }
+
+    /**
+   * Test endpoint for verifying administrative permissions.
+   *
+   * @return ResponseEntity with a success message if the user has proper permissions
+   * @throws AccessDeniedException if the user does not have ADMIN role
+   */
+  @GetMapping("/test")
+  @PreAuthorize("hasRole('ADMIN')")
+  @SwaggerApiResponses
+  @ApiResponse(
+      responseCode = "200",
+      description = "Admin permission test successful",
+      content =
+          @Content(
+              mediaType = "text/plain",
+              schema = @Schema(type = "string", example = "Test permission ok")))
+  @Operation(
+      summary = "Test endpoint for verifying ADMIN permissions",
+      description = "Accessible only by users with ADMIN role to confirm permission settings.")
+  public ResponseEntity<String> checkPermissionTest() {
+    return ResponseEntity.ok("Test permission ok");
   }
 }

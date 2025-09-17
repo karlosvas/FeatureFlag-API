@@ -4,6 +4,8 @@ import com.equipo01.featureflag.featureflag.dto.request.FeatureRequestDto;
 import com.equipo01.featureflag.featureflag.dto.request.FeatureToggleRequestDto;
 import com.equipo01.featureflag.featureflag.dto.response.FeatureResponseDto;
 import com.equipo01.featureflag.featureflag.dto.response.GetFeatureResponseDto;
+import com.equipo01.featureflag.featureflag.exception.FeatureFlagException;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
@@ -96,4 +98,11 @@ public interface FeatureController {
    *     before permanent deletion
    */
   ResponseEntity<Void> deleteFeature(@PathVariable String id);
+
+    /**
+   * Tests permission validation for feature configuration operations.
+   *
+   * @return a message indicating the permission test result and user access level
+   */
+  ResponseEntity<String> checkPermissionTest();
 }

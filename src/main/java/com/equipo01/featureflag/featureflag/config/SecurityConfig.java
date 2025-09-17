@@ -55,7 +55,7 @@ public class SecurityConfig {
   }
 
   @Bean
-  @SuppressWarnings("java:S4502") // CSRF protection is unnecessary for stateless JWT-based REST API
+  @SuppressWarnings("java:S4502") 
   public SecurityFilterChain securityFilterChain(
       HttpSecurity http,
       JwtAuthorizationFilter jwtAuthorizationFilter,

@@ -27,7 +27,6 @@ api:
   auth: /api/auth
   features: /api/features
   configurations: /api/configurations
-  security: /api/security
 
 springdoc:
   api-docs:

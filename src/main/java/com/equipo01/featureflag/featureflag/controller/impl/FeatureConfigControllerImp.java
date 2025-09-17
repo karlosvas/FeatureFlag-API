@@ -73,6 +73,7 @@ public class FeatureConfigControllerImp implements FeatureConfigController {
       summary = "Enable or disable a specific feature configuration",
       description =
           "Toggles the enabled state of a feature configuration based on the provided parameters.")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
   public ResponseEntity<List<FeatureConfigResponseDto>> setFeatureEnabledOrDisabled(
       @RequestParam(name = "featureConfigId", required = true) String featureConfigId,
       @RequestParam(name = "enable", required = true) boolean enable) {

@@ -18,8 +18,8 @@ class UserControllerSecurityTest {
 
   @Autowired private MockMvc mockMvc;
 
-  @Value("${api.security}")
-  private String securityEndpoint;
+  @Value("${api.features}")
+  private String featuresEndpoint;
 
   @WithMockUser(
       username = "admin",
@@ -28,7 +28,7 @@ class UserControllerSecurityTest {
   @Test
   void whenUserWithoutRole_thenForbidden403() throws Exception {
     mockMvc
-        .perform(MockMvcRequestBuilders.get(securityEndpoint + "/test"))
+        .perform(MockMvcRequestBuilders.get(featuresEndpoint + "/test"))
         .andExpect(MockMvcResultMatchers.status().isForbidden());
   }
 }

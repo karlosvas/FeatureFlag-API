@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -204,5 +205,22 @@ class FeatureControllerImpTest {
         () ->
             assertTrue(
                 result.getResponse().getContentAsString().contains("Size must be at least 1")));
+  }
+
+    @Test
+  void testCheckPermissionTest() throws Exception {
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(featuresEndpoint + "/test")
+            .with(user("admin").roles("ADMIN")))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().string("Test permission ok"));
+  }
+
+  @Test
+  void testCheckPermissionTestWithoutAdminRole_shouldReturnForbidden() throws Exception {
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(featuresEndpoint + "/test")
+            .with(user("user").roles("USER")))
+        .andExpect(MockMvcResultMatchers.status().isForbidden());
   }
 }
