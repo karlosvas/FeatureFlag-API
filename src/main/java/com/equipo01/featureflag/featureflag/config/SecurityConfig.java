@@ -55,13 +55,18 @@ public class SecurityConfig {
   }
 
   @Bean
+  @SuppressWarnings("java:S4502") // CSRF protection is unnecessary for stateless JWT-based REST API
   public SecurityFilterChain securityFilterChain(
       HttpSecurity http,
       JwtAuthorizationFilter jwtAuthorizationFilter,
       CustomAccessDeniedHandler customAccessDeniedHandler,
       CustomAuthenticationEntryPoint customAuthenticationEntryPoint)
       throws Exception {
-    http.csrf(csrf -> csrf.disable())
+    http
+        // CSRF disabled for REST API with JWT authentication
+        // JWT tokens provide protection against CSRF attacks as they are not automatically sent by browsers
+        // All sensitive operations require explicit authentication via JWT tokens
+        .csrf(csrf -> csrf.disable())
         .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             auth ->
