@@ -1,72 +1,108 @@
 package com.equipo01.featureflag.featureflag.controller;
 
-import java.util.List;
-import java.util.UUID;
+import com.equipo01.featureflag.featureflag.dto.request.FeatureRequestDto;
+import com.equipo01.featureflag.featureflag.dto.request.FeatureToggleRequestDto;
+import com.equipo01.featureflag.featureflag.dto.response.FeatureResponseDto;
+import com.equipo01.featureflag.featureflag.dto.response.GetFeatureResponseDto;
+import com.equipo01.featureflag.featureflag.exception.FeatureFlagException;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.equipo01.featureflag.featureflag.anotations.SwaggerApiResponses;
-import com.equipo01.featureflag.featureflag.dto.FeatureRequestDto;
-import com.equipo01.featureflag.featureflag.dto.FeatureResponseDto;
-import com.equipo01.featureflag.featureflag.service.FeatureService;
-
-import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
-import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
-@RestController
-@RequestMapping("${api.features}")
-@RequiredArgsConstructor
-public class FeatureController {
+public interface FeatureController {
+  /**
+   * Creates a new feature flag.
+   *
+   * @param requestDto data of the feature flag to create
+   * @return the created feature flag with HTTP status 201
+   */
+  ResponseEntity<FeatureResponseDto> createFeature(
+      @Valid @RequestBody FeatureRequestDto requestDto);
 
-    private final FeatureService featureService;
+  /**
+   * Obtains a paginated list of all feature flags, with optional filters by name and enabled
+   * status.
+   *
+   * @param name optional filter by name (partial match)
+   * @param enabledByDefault optional filter by enabled status
+   * @param page page number for pagination (default: 0)
+   * @param size page size for pagination (default: 10)
+   * @return a paginated list of feature flags matching the applied filters
+   */
+  ResponseEntity<GetFeatureResponseDto> getFeatures(
+      @RequestParam(value = "name", required = false) String name,
+      @RequestParam(value = "enabled", required = false) Boolean enabledByDefault,
+      @RequestParam(value = "page", defaultValue = "0", required = false)
+          @Min(value = 0, message = "Page must be at least 0")
+          Integer page,
+      @RequestParam(value = "size", defaultValue = "10", required = false)
+          @Min(value = 1, message = "Size must be at least 1")
+          Integer size);
+
+  /**
+   * Retrieves details of a specific feature flag by its UUID.
+   *
+   * @param featureId the UUID of the feature flag
+   * @return the feature flag details
+   */
+  ResponseEntity<FeatureResponseDto> getFeature(
+      @PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format")
+          String featureId);
+
+  /**
+   * Checks if a specific feature flag is active for a given client and environment.
+   *
+   * @param nameFeature the name of the feature flag to evaluate
+   * @param clientID the unique identifier of the client requesting the feature status
+   * @param environment the target environment (dev, staging, prod, etc.)
+   * @return true if the feature is active for the given context, false otherwise
+   * @apiNote This endpoint is designed for high-frequency usage by client applications and should
+   *     have minimal latency impact on application performance
+   */
+  ResponseEntity<Boolean> checkFeatureIsActive(
+      @RequestParam String nameFeature,
+      @RequestParam String clientID,
+      @RequestParam String environment);
+
+  /**
+   * Updates feature flag configuration for specific clients or environments.
+   *
+   * @param id the UUID of the feature flag to update (must be valid UUID format)
+   * @param action the update action to perform (enable, disable, configure, etc.)
+   * @param toggleRequestDto the configuration data for the update operation
+   * @return the updated feature configuration or confirmation of the operation
+   * @throws IllegalArgumentException if the UUID format is invalid
+   * @throws FeatureFlagException if the feature is not found or action is unsupported
+   * @apiNote This endpoint supports both immediate and scheduled feature updates depending on the
+   *     configuration provided in the request DTO
+   */
+  ResponseEntity<Void> updateFeatureForClientOrEnvironment(
+      @PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format")
+          String id,
+      @PathVariable String action,
+      @RequestBody FeatureToggleRequestDto toggleRequestDto);
+
+  /**
+   * Deletes a feature flag from the system.
+   *
+   * @param id the UUID of the feature flag to delete
+   * @return empty response with HTTP status 204 (No Content) on successful deletion
+   * @throws FeatureFlagException if the feature is not found or deletion is not allowed
+   * @throws SecurityException if the user lacks permission to delete the feature
+   * @apiNote This operation is irreversible. Consider disabling the feature first to test impact
+   *     before permanent deletion
+   */
+  ResponseEntity<Void> deleteFeature(@PathVariable String id);
 
     /**
-     * Creates a new feature flag.
-     *
-     * @param requestDto the feature flag data to create
-     * @return the created feature flag with HTTP 201 status
-     */
-    @PostMapping
-    @SwaggerApiResponses
-    @Operation(summary = "Crea una nueva feature flag", description = "Crea una nueva feature flag con los datos proporcionados y devuelve la feature creada.")
-    public ResponseEntity<FeatureResponseDto> createFeature(@Valid @RequestBody FeatureRequestDto requestDto) {
-        FeatureResponseDto responseDto = featureService.createFeature(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
-    }
-
-    /**
-     * Retrieves a list of all feature flags.
-     *
-     * @return a list of feature flags
-     */
-    @GetMapping
-    @SwaggerApiResponses
-    @Operation(summary = "Obtiene todas las feature flags", description = "Devuelve una lista de todas las feature flags disponibles.")
-    public ResponseEntity<List<FeatureResponseDto>> getFeatures() {
-        return ResponseEntity.ok(featureService.getAllFeatures());
-    }
-
-    /**
-     * Retrieves details of a specific feature flag by its UUID.
-     *
-     * @param featureId the UUID of the feature flag
-     * @return the feature flag details
-     */
-    @GetMapping("/{featureId}")
-    @SwaggerApiResponses
-    @Operation(summary = "Obtiene una feature flag por su ID", description = "Devuelve los detalles de una feature flag específica identificada por su UUID.")
-    public ResponseEntity<FeatureResponseDto> getFeature(@PathVariable @Pattern(regexp = "^[0-9a-fA-F\\-]{36}$", message = "Invalid UUID format") String featureId) {
-            UUID uuid = UUID.fromString(featureId);
-        return ResponseEntity.ok(featureService.getFeatureById(uuid));
-    }
-
+   * Tests permission validation for feature configuration operations.
+   *
+   * @return a message indicating the permission test result and user access level
+   */
+  ResponseEntity<String> checkPermissionTest();
 }

@@ -1,13 +1,14 @@
 package com.equipo01.featureflag.featureflag.model.enums;
+
 /*
- * Representa los diferentes entornos donde una funcionalidad puede estar activa
+ * Represents the different environments where a feature may be active.
  *
- * DEV: Entorno de desarrollo, donde se realizan pruebas y se implementan nuevas características.
- * STAGING: Entorno de preproducción, donde se realizan pruebas finales antes de la producción.
- * PROD: Entorno de producción, donde la funcionalidad está disponible para los usuarios finales.
+ * DEV: Development environment, where testing is performed and new features are implemented.
+ * STAGING: Pre-production environment, where final testing is performed before production.
+ * PROD: Production environment, where the feature is available to end users.
  */
 public enum Environment {
-    DEV,
-    STAGING,
-    PROD
+  DEV,
+  STAGING,
+  PROD
 }

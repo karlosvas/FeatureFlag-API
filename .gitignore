@@ -35,3 +35,4 @@ build/
 
 ### Environment Variables
 .devcontainer/devcontainer.env
+.devcontainer/sonarqube.env

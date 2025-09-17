@@ -1,14 +1,13 @@
 package com.equipo01.featureflag.featureflag.model.enums;
 
 /**
- * Enum que representa los roles de usuario en el sistema.
- * 
- * ADMIN: Usuario con permisos administrativos.
- * USER: Usuario estándar con permisos limitados.
- * GUEST: Usuario invitado con acceso muy restringido.
+ * Enum representing user roles in the system.
+ *
+ * <p>ADMIN: User with administrative permissions. USER: Standard user with limited permissions.
+ * GUEST: Guest user with very restricted access.
  */
 public enum Role {
-    ADMIN,
-    USER,
-    GUEST
+  ADMIN,
+  USER,
+  GUEST
 }
