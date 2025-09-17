@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("staging")
-class UserControllerTest {
+class UserControllerSecurityTest {
 
   @Autowired private MockMvc mockMvc;
 
